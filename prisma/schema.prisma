@@ -1,0 +1,54 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // 开发阶段用 SQLite，上线时让 Huey 改成 postgresql
+  url      = env("DATABASE_URL")
+}
+
+// 1. 区域/厂商表 (例如：湖南中烟、上海中烟)
+model Region {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique // 如 "湖南中烟"
+  products Product[]
+}
+
+// 2. 香烟产品表 (SKU)
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String   // 如 "软白沙", "和天下"
+  regionId  Int
+  region    Region   @relation(fields: [regionId], references: [id])
+  
+  // 基础信息
+  standardPrice Float? // 标准指导价(可选)
+  isFocus       Boolean @default(false) // 是否重点关注(比如高价烟)
+  
+  priceHistory  PriceRecord[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([name, regionId]) // 防止同一区域下有重名烟
+}
+
+// 3. 价格记录表 (记录每一次抓取/上传的数据)
+model PriceRecord {
+  id          Int      @id @default(autoincrement())
+  productId   Int
+  product     Product  @relation(fields: [productId], references: [id])
+  
+  price       Float    // 当日回收价 (如 88.0)
+  date        DateTime // 报价单日期 (从图片标题提取，如 2025-01-05)
+  
+  // 涨跌状态 (相比上一次)
+  trend       String?  // "up", "down", "stable"
+  
+  // 图片里的备注信息 (例如红色小字 "老货扣钱")
+  note        String?  
+  
+  batchId     String?  // 关联到某次具体的上传批次
+  createdAt   DateTime @default(now())
+}

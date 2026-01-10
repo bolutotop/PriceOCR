@@ -5,7 +5,7 @@
 `sudo apt update && sudo apt upgrade -y`
 
 - 安装基础工具 (git, curl, wget, zip)
-`sudo apt install -y git curl wget unzip build-essential`
+`sudo apt install -y git curl wget tar build-essential`
 
 - nodejs环境
 `sudo apt install nodejs`

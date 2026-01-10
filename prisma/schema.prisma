@@ -5,50 +5,59 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite" // 开发阶段用 SQLite，上线时让 Huey 改成 postgresql
+  provider = "sqlite" // 开发阶段推荐用 sqlite，上线可换 postgresql
   url      = env("DATABASE_URL")
 }
 
-// 1. 区域/厂商表 (例如：湖南中烟、上海中烟)
-model Region {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique // 如 "湖南中烟"
-  products Product[]
+// 1. 标签/分类 (例如: 湖南中烟, 高端系列)
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  order     Int       @default(0) // 排序用
+  products  Product[]
 }
 
-// 2. 香烟产品表 (SKU)
+// 2. 香烟基础库 (例如: 软白沙)
 model Product {
-  id        Int      @id @default(autoincrement())
-  name      String   // 如 "软白沙", "和天下"
-  regionId  Int
-  region    Region   @relation(fields: [regionId], references: [id])
+  id         String   @id @default(cuid())
+  name       String   @unique
+  alias      String?  // 别名，用于 OCR 容错匹配
   
-  // 基础信息
-  standardPrice Float? // 标准指导价(可选)
-  isFocus       Boolean @default(false) // 是否重点关注(比如高价烟)
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
   
-  priceHistory  PriceRecord[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  @@unique([name, regionId]) // 防止同一区域下有重名烟
+  // 价格历史记录
+  priceHistory PriceItem[] 
 }
 
-// 3. 价格记录表 (记录每一次抓取/上传的数据)
-model PriceRecord {
-  id          Int      @id @default(autoincrement())
-  productId   Int
-  product     Product  @relation(fields: [productId], references: [id])
+// 3. 报价单/批次 (一次上传对应一个批次)
+model PriceSheet {
+  id         String      @id @default(cuid())
+  title      String?     // 可选标题，例如 "晚班报价"
   
-  price       Float    // 当日回收价 (如 88.0)
-  date        DateTime // 报价单日期 (从图片标题提取，如 2025-01-05)
+  // --- 关键修改 ---
+  createdAt  DateTime    @default(now()) // 系统记录时间 (你什么时候点的保存)
+  recordDate DateTime    @default(now()) // 业务行情时间 (这张表是哪天的价格) -> 用于画折线图
+  // ----------------
   
-  // 涨跌状态 (相比上一次)
-  trend       String?  // "up", "down", "stable"
+  items      PriceItem[]
+}
+
+// 4. 具体价格条目
+model PriceItem {
+  id           String     @id @default(cuid())
+  price        Float
   
-  // 图片里的备注信息 (例如红色小字 "老货扣钱")
-  note        String?  
-  
-  batchId     String?  // 关联到某次具体的上传批次
-  createdAt   DateTime @default(now())
+  // 属于哪张单子
+  sheetId      String
+  sheet        PriceSheet @relation(fields: [sheetId], references: [id], onDelete: Cascade)
+
+  // 属于哪个产品
+  // 注意：我们允许 productId 为空，防止识别出了新烟但库里没有时报错，
+  // 但为了画图，我们后续会尽量保证它关联上 Product
+  productId    String?    
+  product      Product?   @relation(fields: [productId], references: [id])
+
+  // 冗余存一个名字，方便直接查询显示
+  rawName      String     
 }

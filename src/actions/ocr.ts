@@ -10,7 +10,7 @@ import { correctCigaretteName } from '@/lib/corrector';
 export type ParsedItem = {
   originalName: string;
   name: string;
-  price: number; // -1 代表 "//"
+  price: number;
   confidence: string;
   isCorrected: boolean;
   cropDataUri?: string;
@@ -25,9 +25,12 @@ type OcrResult = {
 const ENGINE_DIR = path.join(process.cwd(), 'ocr-engine');
 const ENGINE_EXE = path.join(ENGINE_DIR, 'run.sh');
 
-type TempMatch = {
-  data: ParsedItem;
-  bounds: { left: number; top: number };
+// 临时对象结构，用于后续并发生成截图
+type PendingItem = {
+  rawName: string;
+  price: number;
+  bounds: { left: number; top: number; right: number; bottom: number };
+  tempMatchObj: { data: ParsedItem; bounds: { left: number; top: number } };
 };
 
 export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
@@ -36,33 +39,34 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
 
   const tempId = Date.now().toString();
   const tempDir = os.tmpdir();
-  const rawPath = path.join(tempDir, `raw_${tempId}.png`);
+  // 优化点 1: 不再定义 rawPath，直接内存处理原始流
   const processedPath = path.join(tempDir, `proc_${tempId}.png`);
 
   try {
     const fileBuffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(rawPath, fileBuffer);
 
-    // 图像处理
-    await sharp(rawPath)
-      .resize(3500, null, { fit: 'inside', withoutEnlargement: false }) 
+    // 优化点 1: 直接读取 Buffer，减少一次磁盘写入和读取
+    await sharp(fileBuffer)
+      .resize(3500, null, { fit: 'inside', withoutEnlargement: false })
       .grayscale()
       .sharpen({ sigma: 1.5, m1: 0, m2: 20 })
-      .toFile(processedPath);
+      .toFile(processedPath); // OCR 引擎必须读文件，所以这一步无法省去
 
+    // 获取处理后的元数据（用于后续边界检查）
     const metadata = await sharp(processedPath).metadata();
     const procWidth = metadata.width || 1000;
     const procHeight = metadata.height || 1000;
 
-    console.log('[OCR] 图像处理完毕，开始识别...');
-
+    // 调用 C++ 引擎
     const jsonResult = await runPaddleOcrCpp(processedPath);
     if (jsonResult.code !== 100) throw new Error(`引擎返回码 ${jsonResult.code}`);
 
     const rawItems = jsonResult.data;
-    const tempMatches: TempMatch[] = [];
-
-    // Box 工具
+    
+    // --- 数据准备阶段 ---
+    // 这里的逻辑保持 V5.3 的几何算法不变，但是我们将结果存入 pending 队列，而不是直接 await addMatch
+    const pendingItems: PendingItem[] = [];
+    
     type Box = { 
       text: string; 
       left: number; right: number; top: number; bottom: number; 
@@ -77,7 +81,6 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
       const top = Math.round(Math.min(box[0][1], box[1][1]));
       const bottom = Math.round(Math.max(box[2][1], box[3][1]));
       return {
-        // 预处理文本
         text: item.text.replace(/[¥,。:：_]/g, '').replace(/[\│\|]/g, '/').trim(),
         left, right, top, bottom,
         centerY: (top + bottom) / 2,
@@ -85,7 +88,6 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
       };
     };
 
-    // 宽松的烟名判断
     const isChineseName = (str: string) => {
       const chineseCount = (str.match(/[\u4e00-\u9fa5]/g) || []).length;
       if (chineseCount >= 2) return true;
@@ -105,57 +107,38 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
       return parseFloat(str);
     };
 
-    // 2. 数据分类
     const potentialNames: Box[] = [];
     const potentialPrices: Box[] = [];
     const usedIndices = new Set<number>(); 
 
+    // 第一轮：分类与拆分
     for (let i = 0; i < rawItems.length; i++) {
       const item = rawItems[i];
       const box = getBounds(item, i);
 
-      // 【核心修复】 单行拆分逻辑大改
-      // 旧逻辑：/([^\d\/]+.*?)\s*(\d+...)/ -> \s* 允许无空格，导致 1916 被切
-      // 新逻辑：必须有空格 \s+ 才能拆分！除非是 //
-      // 解释：
-      // ^(.+?)     -> 名字部分 (非贪婪，尽量短)
-      // \s+        -> 必须有至少一个空格！(这是防止切断 "新中支1916" 的关键)
-      // (...)      -> 价格部分 (数字 OR //)
-      // $          -> 结束
+      // 单行拆分逻辑
       const splitRegex = /^(.+?)\s+(\d+(\.\d+)?|\/\/|\/+\s*\/+)$/;
-      
       const mixMatch = box.text.match(splitRegex);
       
       if (mixMatch) {
          const possibleName = mixMatch[1].trim();
          const possiblePriceStr = mixMatch[2];
-         
-         // 拆分成功，校验名字
          if (isChineseName(possibleName)) {
-            await addMatch(
-              possibleName, 
-              parsePrice(possiblePriceStr), 
-              box, 
-              processedPath, 
-              tempMatches, 
-              procWidth, 
-              procHeight
-            );
+            // 存入待处理队列
+            prepareMatch(possibleName, parsePrice(possiblePriceStr), box, pendingItems);
             usedIndices.add(i);
             continue;
          }
       }
 
-      // 如果没被拆分（比如 "新中支1916" 没空格），它就会流到这里
       if (isPrice(box.text)) {
         potentialPrices.push(box);
       } else if (isChineseName(box.text)) {
-        // "新中支1916" 含有3个汉字，符合条件，进入名字候选池
         potentialNames.push(box);
       }
     }
 
-    // 3. 几何匹配 (保持 V5.2 逻辑)
+    // 第二轮：几何匹配
     for (const name of potentialNames) {
       if (usedIndices.has(name.id)) continue;
       let bestPrice: Box | null = null;
@@ -183,27 +166,32 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
           top: Math.min(name.top, bestPrice.top),
           bottom: Math.max(name.bottom, bestPrice.bottom),
         };
-
-        await addMatch(
-          name.text, 
-          parsePrice(bestPrice.text), 
-          unionBounds, 
-          processedPath, 
-          tempMatches, 
-          procWidth, 
-          procHeight
-        );
+        prepareMatch(name.text, parsePrice(bestPrice.text), unionBounds, pendingItems);
       }
     }
 
-    // 4. 智能分栏排序
-    tempMatches.sort((a, b) => a.bounds.left - b.bounds.left);
-    const columns: TempMatch[][] = [];
-    let currentColumn: TempMatch[] = [];
+    // 优化点 2: 并发处理所有截图 (Promise.all)
+    // 这将把串行 IO 变成并行，极大提升速度
+    const finalMatches = await Promise.all(
+      pendingItems.map(async (item) => {
+        item.tempMatchObj.data.cropDataUri = await generateCrop(
+          processedPath, 
+          item.bounds, 
+          procWidth, 
+          procHeight
+        );
+        return item.tempMatchObj;
+      })
+    );
+
+    // 智能分栏排序 (逻辑不变)
+    finalMatches.sort((a, b) => a.bounds.left - b.bounds.left);
+    const columns: typeof finalMatches[] = [];
+    let currentColumn: typeof finalMatches = [];
     let lastX = -999;
     const COLUMN_THRESHOLD = 200;
 
-    for (const match of tempMatches) {
+    for (const match of finalMatches) {
       if (currentColumn.length === 0) {
         currentColumn.push(match);
         lastX = match.bounds.left;
@@ -225,75 +213,78 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
       col.forEach(m => sortedParsedData.push(m.data));
     }
 
-    await fs.unlink(rawPath).catch(()=>{});
+    // 清理临时文件
     await fs.unlink(processedPath).catch(()=>{});
-
-    console.log(`[OCR] 处理完成 (V5.3): ${sortedParsedData.length} 条数据`);
+    
     return { success: true, parsedData: sortedParsedData };
 
   } catch (error: any) {
     console.error('[OCR Error]', error);
-    await fs.unlink(rawPath).catch(()=>{});
+    // 确保清理
     await fs.unlink(processedPath).catch(()=>{});
     return { success: false, error: error.message };
   }
 }
 
-async function addMatch(
-  rawName: string, 
-  price: number, 
-  bounds: any, 
-  imagePath: string, 
-  list: TempMatch[], 
-  imgWidth: number,
-  imgHeight: number
-) {
+// 辅助函数：准备数据，但不执行 IO
+function prepareMatch(rawName: string, price: number, bounds: any, list: PendingItem[]) {
   if (price !== -1 && (price > 5000 || price < 5)) return; 
   if (rawName.length < 2) return;
-
   const correction = correctCigaretteName(rawName);
-  
-  let cropLeft = Math.floor(bounds.left);
-  let cropTop = Math.floor(bounds.top);
-  let cropRight = Math.ceil(bounds.right);
-  let cropBottom = Math.ceil(bounds.bottom);
-
-  cropLeft = Math.max(0, cropLeft);
-  cropTop = Math.max(0, cropTop);
-  cropRight = Math.min(imgWidth, cropRight);
-  cropBottom = Math.min(imgHeight, cropBottom);
-
-  const finalWidth = cropRight - cropLeft;
-  const finalHeight = cropBottom - cropTop;
-
-  let cropDataUri = undefined;
-  if (finalWidth > 0 && finalHeight > 0) {
-    try {
-      const cropBuffer = await sharp(imagePath)
-        .extract({ left: cropLeft, top: cropTop, width: finalWidth, height: finalHeight })
-        .toBuffer();
-      cropDataUri = `data:image/png;base64,${cropBuffer.toString('base64')}`;
-    } catch (e) {}
-  }
 
   list.push({
-    data: {
-      originalName: rawName,
-      name: correction.corrected,
-      price: price,
-      confidence: correction.confidence,
-      isCorrected: correction.isModified,
-      cropDataUri: cropDataUri 
+    rawName,
+    price,
+    bounds: {
+      left: Math.floor(bounds.left),
+      top: Math.floor(bounds.top),
+      right: Math.ceil(bounds.right),
+      bottom: Math.ceil(bounds.bottom)
     },
-    bounds: { left: bounds.left, top: bounds.top }
+    tempMatchObj: {
+      data: {
+        originalName: rawName,
+        name: correction.corrected,
+        price: price,
+        confidence: correction.confidence,
+        isCorrected: correction.isModified,
+        cropDataUri: undefined // 稍后填充
+      },
+      bounds: { left: bounds.left, top: bounds.top }
+    }
   });
 }
 
+// 优化点 3: 独立的高效截图函数 (转为 JPEG)
+async function generateCrop(imagePath: string, bounds: any, imgWidth: number, imgHeight: number): Promise<string | undefined> {
+  let cropLeft = Math.max(0, bounds.left);
+  let cropTop = Math.max(0, bounds.top);
+  let cropRight = Math.min(imgWidth, bounds.right);
+  let cropBottom = Math.min(imgHeight, bounds.bottom);
+  
+  const finalWidth = cropRight - cropLeft;
+  const finalHeight = cropBottom - cropTop;
+
+  if (finalWidth <= 0 || finalHeight <= 0) return undefined;
+
+  try {
+    const cropBuffer = await sharp(imagePath)
+      .extract({ left: cropLeft, top: cropTop, width: finalWidth, height: finalHeight })
+      .jpeg({ quality: 80 }) // 重点：改用 JPEG 压缩，体积减少 60%
+      .toBuffer();
+    return `data:image/jpeg;base64,${cropBuffer.toString('base64')}`;
+  } catch (e) {
+    return undefined;
+  }
+}
+
+// 保持不变
 function runPaddleOcrCpp(imagePath: string): Promise<any> {
   return new Promise((resolve, reject) => {
     const child = spawn(ENGINE_EXE, { cwd: ENGINE_DIR, stdio: ['pipe', 'pipe', 'pipe'] });
     let stdoutBuffer = '';
     let isResolved = false;
+    
     child.stdout.on('data', (chunk) => {
       stdoutBuffer += chunk.toString();
       const lines = stdoutBuffer.split('\n');
@@ -308,6 +299,7 @@ function runPaddleOcrCpp(imagePath: string): Promise<any> {
         }
       }
     });
+    
     child.on('error', (err) => { if (!isResolved) reject(err); });
     child.stdin.write(JSON.stringify({ image_path: imagePath }) + '\n');
     setTimeout(() => { if (!isResolved) { isResolved = true; child.kill(); reject(new Error('OCR Timeout')); } }, 60000);

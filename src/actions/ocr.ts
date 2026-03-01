@@ -1,11 +1,15 @@
 'use server';
 
-import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';
+import { createReadStream } from 'fs';
 import os from 'os';
 import sharp from 'sharp';
-import { correctCigaretteName } from '@/lib/corrector';
+
+import * as $dara from '@darabonba/typescript';
+import ocr_api, * as $ocr_api from '@alicloud/ocr-api20210707';
+import { $OpenApiUtil } from '@alicloud/openapi-core';
+import Credential, { Config as CredentialConfig } from '@alicloud/credentials';
 
 export type ParsedItem = {
   originalName: string;
@@ -22,286 +26,307 @@ type OcrResult = {
   error?: string;
 };
 
-const ENGINE_DIR = path.join(process.cwd(), 'ocr-engine');
-const ENGINE_EXE = path.join(ENGINE_DIR, 'run.sh');
-
-// 临时对象结构，用于后续并发生成截图
-type PendingItem = {
+type MatchedPair = {
   rawName: string;
   price: number;
-  bounds: { left: number; top: number; right: number; bottom: number };
-  tempMatchObj: { data: ParsedItem; bounds: { left: number; top: number } };
+  unionBounds: { left: number; top: number; right: number; bottom: number };
+  rawPoints?: any; 
 };
 
 export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
-  const file = formData.get('file') as File;
-  if (!file) return { success: false, error: '无文件' };
+  const file = formData.get('file') as File | null;
+  const imageUrl = formData.get('imageUrl') as string | null;
+
+  if (!file && !imageUrl) return { success: false, error: '未接收到图片或链接' };
 
   const tempId = Date.now().toString();
   const tempDir = os.tmpdir();
-  // 优化点 1: 不再定义 rawPath，直接内存处理原始流
-  const processedPath = path.join(tempDir, `proc_${tempId}.png`);
+  const processedPath = path.join(tempDir, `proc_${tempId}.jpg`); 
 
   try {
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    let fileBuffer: Buffer;
+    if (imageUrl) {
+      const fetchRes = await fetch(imageUrl);
+      if (!fetchRes.ok) throw new Error('无法下载指定的网络图片');
+      fileBuffer = Buffer.from(await fetchRes.arrayBuffer());
+    } else if (file) {
+      fileBuffer = Buffer.from(await file.arrayBuffer());
+    } else {
+      throw new Error('无效的输入');
+    }
 
-    // 优化点 1: 直接读取 Buffer，减少一次磁盘写入和读取
     await sharp(fileBuffer)
+      .rotate() 
       .resize(3500, null, { fit: 'inside', withoutEnlargement: false })
       .grayscale()
       .sharpen({ sigma: 1.5, m1: 0, m2: 20 })
-      .toFile(processedPath); // OCR 引擎必须读文件，所以这一步无法省去
+      .jpeg({ quality: 80 }) 
+      .toFile(processedPath);
 
-    // 获取处理后的元数据（用于后续边界检查）
     const metadata = await sharp(processedPath).metadata();
     const procWidth = metadata.width || 1000;
     const procHeight = metadata.height || 1000;
 
-    // 调用 C++ 引擎
-    const jsonResult = await runPaddleOcrCpp(processedPath);
-    if (jsonResult.code !== 100) throw new Error(`引擎返回码 ${jsonResult.code}`);
+    const subImage = await runAliyunOcr({
+       type: imageUrl ? 'url' : 'file',
+       payload: imageUrl || processedPath
+    });
 
-    const rawItems = jsonResult.data;
-    
-    // --- 数据准备阶段 ---
-    // 这里的逻辑保持 V5.3 的几何算法不变，但是我们将结果存入 pending 队列，而不是直接 await addMatch
-    const pendingItems: PendingItem[] = [];
-    
-    type Box = { 
-      text: string; 
-      left: number; right: number; top: number; bottom: number; 
-      centerY: number; 
-      id: number;
-    };
-
-    const getBounds = (item: any, idx: number): Box => {
-      const box = item.box;
-      const left = Math.round(Math.min(box[0][0], box[3][0]));
-      const right = Math.round(Math.max(box[1][0], box[2][0]));
-      const top = Math.round(Math.min(box[0][1], box[1][1]));
-      const bottom = Math.round(Math.max(box[2][1], box[3][1]));
-      return {
-        text: item.text.replace(/[¥,。:：_]/g, '').replace(/[\│\|]/g, '/').trim(),
-        left, right, top, bottom,
-        centerY: (top + bottom) / 2,
-        id: idx
-      };
-    };
+    const matchedPairs: MatchedPair[] = [];
 
     const isChineseName = (str: string) => {
       const chineseCount = (str.match(/[\u4e00-\u9fa5]/g) || []).length;
-      if (chineseCount >= 2) return true;
-      if (chineseCount >= 1 && str.length >= 3) return true;
-      return false;
+      return chineseCount >= 2 || (chineseCount >= 1 && str.length >= 3);
     };
-
     const isPrice = (str: string) => {
-      if (/^\d+(\.\d+)?$/.test(str)) return true;
-      const clean = str.replace(/\s+/g, '');
+      const clean = str.replace(/[¥,元\s]/g, '');
+      if (/^\d+(\.\d+)?$/.test(clean)) return true;
       return clean.includes('//') || clean === '/';
     };
-
     const parsePrice = (str: string): number => {
-      const clean = str.replace(/\s+/g, '');
+      const clean = str.replace(/[¥,元\s]/g, '');
       if (clean.includes('//') || clean === '/') return -1;
-      return parseFloat(str);
+      return parseFloat(clean) || 0;
+    };
+    
+    const getBoundsFromPoints = (pts: any[]) => {
+      if (!pts || pts.length === 0) return { left: 0, right: 0, top: 0, bottom: 0 };
+      const getX = (p: any) => p.x !== undefined ? p.x : (p.X !== undefined ? p.X : 0);
+      const getY = (p: any) => p.y !== undefined ? p.y : (p.Y !== undefined ? p.Y : 0);
+      
+      const xs = pts.map(getX);
+      const ys = pts.map(getY);
+      
+      return {
+        left: Math.round(Math.min(...xs)),
+        right: Math.round(Math.max(...xs)),
+        top: Math.round(Math.min(...ys)),
+        bottom: Math.round(Math.max(...ys)),
+      };
     };
 
-    const potentialNames: Box[] = [];
-    const potentialPrices: Box[] = [];
-    const usedIndices = new Set<number>(); 
+    if (subImage.tableInfo && subImage.tableInfo.tableDetails && subImage.tableInfo.tableDetails.length > 0) {
+      const cells = subImage.tableInfo.tableDetails[0].cellDetails || [];
 
-    // 第一轮：分类与拆分
-    for (let i = 0; i < rawItems.length; i++) {
-      const item = rawItems[i];
-      const box = getBounds(item, i);
-
-      // 单行拆分逻辑
-      const splitRegex = /^(.+?)\s+(\d+(\.\d+)?|\/\/|\/+\s*\/+)$/;
-      const mixMatch = box.text.match(splitRegex);
-      
-      if (mixMatch) {
-         const possibleName = mixMatch[1].trim();
-         const possiblePriceStr = mixMatch[2];
-         if (isChineseName(possibleName)) {
-            // 存入待处理队列
-            prepareMatch(possibleName, parsePrice(possiblePriceStr), box, pendingItems);
-            usedIndices.add(i);
-            continue;
-         }
+      const rows: { [r: number]: any[] } = {};
+      for (const cell of cells) {
+        const r = cell.rowStart;
+        if (!rows[r]) rows[r] = [];
+        rows[r].push(cell);
       }
 
-      if (isPrice(box.text)) {
-        potentialPrices.push(box);
-      } else if (isChineseName(box.text)) {
-        potentialNames.push(box);
-      }
-    }
+      for (const r of Object.keys(rows).map(Number).sort((a,b)=>a-b)) {
+        const rowCells = rows[r].sort((a: any, b: any) => a.columnStart - b.columnStart);
+        
+        let currentNameCell: any = null;
+        for (const cell of rowCells) {
+          const text = (cell.cellContent || "").replace(/[¥,。:：_]/g, '').replace(/[\│\|]/g, '/').trim();
+          if (!text) continue;
 
-    // 第二轮：几何匹配
-    for (const name of potentialNames) {
-      if (usedIndices.has(name.id)) continue;
-      let bestPrice: Box | null = null;
-      let minDistance = 999999; 
+          if (isChineseName(text)) {
+            currentNameCell = { 
+              text, 
+              bounds: getBoundsFromPoints(cell.cellPoints),
+              rawPoints: cell.cellPoints
+            };
+          } 
+          else if (isPrice(text) && currentNameCell) {
+            const priceBounds = getBoundsFromPoints(cell.cellPoints);
+            const unionBounds = {
+              left: Math.min(currentNameCell.bounds.left, priceBounds.left),
+              top: Math.min(currentNameCell.bounds.top, priceBounds.top),
+              right: Math.max(currentNameCell.bounds.right, priceBounds.right),
+              bottom: Math.max(currentNameCell.bounds.bottom, priceBounds.bottom),
+            };
 
-      for (const price of potentialPrices) {
-        if (usedIndices.has(price.id)) continue;
-        if (price.left <= name.left) continue; 
-        if (Math.abs(price.centerY - name.centerY) > 20) continue;
-
-        const distance = price.left - name.right;
-        if (distance < -20 || distance > 280) continue;
-
-        if (distance < minDistance) {
-          minDistance = distance;
-          bestPrice = price;
+            matchedPairs.push({
+              rawName: currentNameCell.text,
+              price: parsePrice(text),
+              unionBounds: unionBounds 
+            });
+            currentNameCell = null; 
+          }
         }
       }
+    } 
+    else if (subImage.blockInfo && subImage.blockInfo.blockDetails) {
+      const blocks = subImage.blockInfo.blockDetails;
+      
+      const potentialNames: any[] = [];
+      const potentialPrices: any[] = [];
+      
+      blocks.forEach((b: any, i: number) => {
+        const bounds = getBoundsFromPoints(b.blockPoints);
+        const text = (b.blockContent || "").replace(/[¥,。:：_]/g, '').replace(/[\│\|]/g, '/').trim();
+        const item = { id: i, text, ...bounds, centerY: (bounds.top + bounds.bottom) / 2 };
 
-      if (bestPrice) {
-        usedIndices.add(bestPrice.id);
-        const unionBounds = {
-          left: name.left,
-          right: bestPrice.right,
-          top: Math.min(name.top, bestPrice.top),
-          bottom: Math.max(name.bottom, bestPrice.bottom),
-        };
-        prepareMatch(name.text, parsePrice(bestPrice.text), unionBounds, pendingItems);
+        const mixMatch = text.match(/^(.+?)\s+(\d+(\.\d+)?|\/\/|\/+\s*\/+)$/);
+        if (mixMatch && isChineseName(mixMatch[1].trim())) {
+          matchedPairs.push({ rawName: mixMatch[1].trim(), price: parsePrice(mixMatch[2]), unionBounds: bounds });
+        } else if (isPrice(text)) {
+          potentialPrices.push(item);
+        } else if (isChineseName(text)) {
+          potentialNames.push(item);
+        }
+      });
+
+      for (const name of potentialNames) {
+        let bestPrice: any = null;
+        let minDistance = 9999; 
+        for (const price of potentialPrices) {
+          if (price.left <= name.left || Math.abs(price.centerY - name.centerY) > 25) continue;
+          const distance = price.left - name.right;
+          if (distance > -30 && distance < 350 && distance < minDistance) {
+            minDistance = distance;
+            bestPrice = price;
+          }
+        }
+        if (bestPrice) {
+          const unionBounds = {
+            left: Math.min(name.left, bestPrice.left),
+            top: Math.min(name.top, bestPrice.top),
+            right: Math.max(name.right, bestPrice.right),
+            bottom: Math.max(name.bottom, bestPrice.bottom),
+          };
+
+          matchedPairs.push({ rawName: name.text, price: parsePrice(bestPrice.text), unionBounds: unionBounds });
+          bestPrice.left = -9999; 
+        }
       }
     }
 
-    // 优化点 2: 并发处理所有截图 (Promise.all)
-    // 这将把串行 IO 变成并行，极大提升速度
-    const finalMatches = await Promise.all(
-      pendingItems.map(async (item) => {
-        item.tempMatchObj.data.cropDataUri = await generateCrop(
-          processedPath, 
-          item.bounds, 
-          procWidth, 
-          procHeight
-        );
-        return item.tempMatchObj;
+    // 🚨 移除了纠错器调用，直接将 rawName 作为最终 name
+    const finalItems = await Promise.all(
+      matchedPairs.map(async (pair) => {
+        const cropDataUri = await generateCrop(processedPath, pair.unionBounds, procWidth, procHeight);
+        
+        return {
+          originalName: pair.rawName,
+          name: pair.rawName, // 👈 直接使用原始识别出来的名字
+          price: pair.price,
+          confidence: '1.0', // 👈 默认满信度
+          isCorrected: false, // 👈 永远为 false，前端不再显示黄色的原名提示
+          cropDataUri: cropDataUri,
+          _left: pair.unionBounds.left,
+          _top: pair.unionBounds.top
+        };
       })
     );
 
-    // 智能分栏排序 (逻辑不变)
-    finalMatches.sort((a, b) => a.bounds.left - b.bounds.left);
-    const columns: typeof finalMatches[] = [];
-    let currentColumn: typeof finalMatches = [];
-    let lastX = -999;
-    const COLUMN_THRESHOLD = 200;
+    const validItems = finalItems.filter(i => (i.price === -1 || (i.price >= 5 && i.price <= 5000)));
 
-    for (const match of finalMatches) {
-      if (currentColumn.length === 0) {
-        currentColumn.push(match);
-        lastX = match.bounds.left;
+    validItems.sort((a, b) => a._left - b._left);
+    const columns: typeof validItems[] = [];
+    let currentColumn: typeof validItems = [];
+    let lastX = -999;
+    
+    for (const item of validItems) {
+      if (currentColumn.length === 0 || item._left - lastX <= 250) {
+        currentColumn.push(item);
       } else {
-        if (match.bounds.left - lastX > COLUMN_THRESHOLD) {
-          columns.push(currentColumn);
-          currentColumn = [match];
-          lastX = match.bounds.left; 
-        } else {
-          currentColumn.push(match);
-        }
+        columns.push(currentColumn);
+        currentColumn = [item];
       }
+      lastX = item._left;
     }
     if (currentColumn.length > 0) columns.push(currentColumn);
 
-    const sortedParsedData: ParsedItem[] = [];
+    const sortedData: ParsedItem[] = [];
     for (const col of columns) {
-      col.sort((a, b) => a.bounds.top - b.bounds.top);
-      col.forEach(m => sortedParsedData.push(m.data));
+      col.sort((a, b) => a._top - b._top);
+      col.forEach(item => {
+        const { _left, _top, ...rest } = item; 
+        sortedData.push(rest);
+      });
     }
 
-    // 清理临时文件
     await fs.unlink(processedPath).catch(()=>{});
-    
-    return { success: true, parsedData: sortedParsedData };
+    return { success: true, parsedData: sortedData };
 
   } catch (error: any) {
     console.error('[OCR Error]', error);
-    // 确保清理
     await fs.unlink(processedPath).catch(()=>{});
     return { success: false, error: error.message };
   }
 }
 
-// 辅助函数：准备数据，但不执行 IO
-function prepareMatch(rawName: string, price: number, bounds: any, list: PendingItem[]) {
-  if (price !== -1 && (price > 5000 || price < 5)) return; 
-  if (rawName.length < 2) return;
-  const correction = correctCigaretteName(rawName);
-
-  list.push({
-    rawName,
-    price,
-    bounds: {
-      left: Math.floor(bounds.left),
-      top: Math.floor(bounds.top),
-      right: Math.ceil(bounds.right),
-      bottom: Math.ceil(bounds.bottom)
-    },
-    tempMatchObj: {
-      data: {
-        originalName: rawName,
-        name: correction.corrected,
-        price: price,
-        confidence: correction.confidence,
-        isCorrected: correction.isModified,
-        cropDataUri: undefined // 稍后填充
-      },
-      bounds: { left: bounds.left, top: bounds.top }
-    }
-  });
-}
-
-// 优化点 3: 独立的高效截图函数 (转为 JPEG)
 async function generateCrop(imagePath: string, bounds: any, imgWidth: number, imgHeight: number): Promise<string | undefined> {
-  let cropLeft = Math.max(0, bounds.left);
-  let cropTop = Math.max(0, bounds.top);
-  let cropRight = Math.min(imgWidth, bounds.right);
-  let cropBottom = Math.min(imgHeight, bounds.bottom);
+  let PADDING = 15; 
+  let cropLeft = Math.max(0, bounds.left - PADDING);
+  let cropTop = Math.max(0, bounds.top - PADDING);
+  let cropRight = Math.min(imgWidth, bounds.right + PADDING); 
+  let cropBottom = Math.min(imgHeight, bounds.bottom + PADDING);
   
   const finalWidth = cropRight - cropLeft;
   const finalHeight = cropBottom - cropTop;
 
-  if (finalWidth <= 0 || finalHeight <= 0) return undefined;
+  if (finalWidth <= 0 || finalHeight <= 0 || isNaN(finalWidth) || isNaN(finalHeight)) {
+     return undefined;
+  }
 
   try {
     const cropBuffer = await sharp(imagePath)
       .extract({ left: cropLeft, top: cropTop, width: finalWidth, height: finalHeight })
-      .jpeg({ quality: 80 }) // 重点：改用 JPEG 压缩，体积减少 60%
+      .jpeg({ quality: 80 })
       .toBuffer();
     return `data:image/jpeg;base64,${cropBuffer.toString('base64')}`;
-  } catch (e) {
+  } catch (e: any) {
+    console.log(`[OCR 切图异常]`, bounds, e.message);
     return undefined;
   }
 }
 
-// 保持不变
-function runPaddleOcrCpp(imagePath: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    const child = spawn(ENGINE_EXE, { cwd: ENGINE_DIR, stdio: ['pipe', 'pipe', 'pipe'] });
-    let stdoutBuffer = '';
-    let isResolved = false;
-    
-    child.stdout.on('data', (chunk) => {
-      stdoutBuffer += chunk.toString();
-      const lines = stdoutBuffer.split('\n');
-      stdoutBuffer = lines.pop() || ''; 
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.startsWith('{') && trimmed.includes('"code":')) {
-          try {
-            const result = JSON.parse(trimmed);
-            if (!isResolved) { isResolved = true; resolve(result); child.kill(); }
-          } catch (e) {}
-        }
-      }
-    });
-    
-    child.on('error', (err) => { if (!isResolved) reject(err); });
-    child.stdin.write(JSON.stringify({ image_path: imagePath }) + '\n');
-    setTimeout(() => { if (!isResolved) { isResolved = true; child.kill(); reject(new Error('OCR Timeout')); } }, 60000);
+async function runAliyunOcr(source: { type: 'url' | 'file', payload: string }): Promise<any> {
+  if (!process.env.ALIYUN_AK_ID || !process.env.ALIYUN_AK_SECRET) {
+    throw new Error("配置缺失: 未读取到阿里云密钥，请检查 .env 文件");
+  }
+
+  let credConfig = new CredentialConfig({
+    type: 'access_key', 
+    accessKeyId: process.env.ALIYUN_AK_ID,
+    accessKeySecret: process.env.ALIYUN_AK_SECRET,
   });
+  let credential = new Credential(credConfig);
+
+  let config = new $OpenApiUtil.Config({
+    credential: credential,
+  });
+  config.endpoint = `ocr-api.cn-hangzhou.aliyuncs.com`;
+  let client = new ocr_api(config);
+
+  let reqObj: any = { 
+    type: "Table", 
+    outputCoordinate: "points",
+    outputOricoord: true
+  };
+  
+  if (source.type === 'url') {
+    reqObj.url = source.payload;
+  } else {
+    reqObj.body = createReadStream(source.payload) as any;
+  }
+
+  let recognizeAllTextRequest = new $ocr_api.RecognizeAllTextRequest(reqObj);
+
+  let runtime = new $dara.RuntimeOptions({
+    readTimeout: 15000,
+    connectTimeout: 10000,
+  });
+
+  try {
+    let resp = await client.recognizeAllTextWithOptions(recognizeAllTextRequest, runtime);
+    
+    const data = resp.body?.data;
+    if (!data || !data.subImages || data.subImages.length === 0) {
+      throw new Error("接口未返回有效的数据块");
+    }
+
+    return data.subImages[0];
+
+  } catch (__err: any) {
+    if (__err instanceof $dara.ResponseError) {
+      throw new Error(`阿里云拒绝: ${__err.message}`);
+    }
+    throw new Error(`网络或解析异常: ${__err.message}`);
+  }
 }

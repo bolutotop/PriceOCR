@@ -1,65 +1,51 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
-import { ParsedItem } from './ocr'; // 引用之前的类型定义
-
-const prisma = new PrismaClient();
-
-type SaveResult = {
-  success: boolean;
-  message?: string;
-  sheetId?: string;
-};
+import prisma from '@/lib/prisma'; 
+import { ParsedItem } from './ocr';
 
 export async function savePriceSheet(
   items: ParsedItem[], 
-  recordDateStr: string, // 用户选的日期字符串 "2023-10-27"
-  note?: string
-): Promise<SaveResult> {
+  recordDateStr: string, 
+  titleOrNote: string,   
+  marketType: string     
+) {
   try {
-    // 1. 转换日期
-    const recordDate = new Date(recordDateStr);
-    
-    // 2. 开启事务：一次性写入单据和所有价格
-    const sheet = await prisma.$transaction(async (tx) => {
-      // A. 创建报价单头
-      const newSheet = await tx.priceSheet.create({
+    const bizDate = new Date(recordDateStr);
+
+    await prisma.$transaction(async (tx) => {
+      const sheet = await tx.priceSheet.create({
         data: {
-          title: note || `${recordDateStr} 报价单`,
-          recordDate: recordDate,
+          recordDate: bizDate,
+          title: titleOrNote,
+          marketType: marketType, 
         },
       });
 
-      // B. 遍历所有条目并保存
       for (const item of items) {
-        // 忽略无效价格或名字
-        if (item.price <= 0 || !item.name) continue;
+        // 🚨 核心修复 2：彻底清除 OCR 带来的空格和换行，确保唯一性
+        const cleanName = item.name.replace(/\s+/g, '').trim();
+        if (!cleanName) continue; // 防止空行导致异常
 
-        // C. 尝试匹配标准库里的烟 (自动归类核心逻辑)
-        // 我们用 OCR 修正后的名字去库里查
-        const existingProduct = await tx.product.findUnique({
-          where: { name: item.name },
+        const product = await tx.product.upsert({
+          where: { name: cleanName },
+          update: {}, 
+          create: { name: cleanName },
         });
 
-        // D. 创建价格行
         await tx.priceItem.create({
           data: {
-            sheetId: newSheet.id,
             price: item.price,
-            rawName: item.originalName, // 存原始 OCR 名字留底
-            // 如果库里有这烟，就关联上 ID (这样主页就能按分类统计了)
-            productId: existingProduct ? existingProduct.id : undefined, 
+            rawName: item.originalName || item.name, 
+            sheetId: sheet.id,
+            productId: product.id,
           },
         });
       }
-
-      return newSheet;
     });
 
-    return { success: true, sheetId: sheet.id };
-
+    return { success: true };
   } catch (error: any) {
-    console.error('保存失败:', error);
+    console.error('保存报价单失败:', error);
     return { success: false, message: error.message };
   }
 }

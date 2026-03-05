@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,55 +7,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 1. 标签/分类 (例如: 湖南中烟, 高端系列)
-model Category {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  order     Int       @default(0) // 排序用
-  products  Product[]
-}
-
-// 2. 香烟基础库 (例如: 软白沙)
+// 1. 香烟基础库 (彻底抛弃地区标签，回归极简)
 model Product {
-  id         String   @id @default(cuid())
-  name       String   @unique
-  alias      String?  // 别名，用于 OCR 容错匹配
-  
-  categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [id])
+  id           String      @id @default(cuid())
+  name         String      @unique
+  alias        String?     // 别名，用于 OCR 容错匹配
   
   // 价格历史记录
   priceHistory PriceItem[] 
 }
 
-// 3. 报价单/批次 (一次上传对应一个批次)
+// 2. 报价单/批次 (一次上传对应一个批次)
 model PriceSheet {
   id         String      @id @default(cuid())
   title      String?     // 可选标题，例如 "晚班报价"
   
-  // --- 关键修改 ---
+  // --- 核心新增：行情标签 ---
+  marketType String      // 行情区分："EXPRESS" (快递行情) 或 "GUANGHUO" (广货行情)
+  
+  // --- 时间线 ---
   createdAt  DateTime    @default(now()) // 系统记录时间 (你什么时候点的保存)
   recordDate DateTime    @default(now()) // 业务行情时间 (这张表是哪天的价格) -> 用于画折线图
-  // ----------------
   
   items      PriceItem[]
 }
 
-// 4. 具体价格条目
+// 3. 具体价格条目
 model PriceItem {
-  id           String     @id @default(cuid())
-  price        Float
+  id         String      @id @default(cuid())
+  price      Float
   
   // 属于哪张单子
-  sheetId      String
-  sheet        PriceSheet @relation(fields: [sheetId], references: [id], onDelete: Cascade)
+  sheetId    String
+  sheet      PriceSheet  @relation(fields: [sheetId], references: [id], onDelete: Cascade)
 
-  // 属于哪个产品
-  // 注意：我们允许 productId 为空，防止识别出了新烟但库里没有时报错，
-  // 但为了画图，我们后续会尽量保证它关联上 Product
-  productId    String?    
-  product      Product?   @relation(fields: [productId], references: [id])
+  // 属于哪个产品 (允许为空，防报错)
+  productId  String?    
+  product    Product?    @relation(fields: [productId], references: [id])
 
   // 冗余存一个名字，方便直接查询显示
-  rawName      String     
+  rawName    String     
 }

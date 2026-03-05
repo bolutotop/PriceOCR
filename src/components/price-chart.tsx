@@ -1,63 +1,70 @@
 'use client';
 
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
 } from 'recharts';
-import { format } from 'date-fns';
 
-type ChartData = {
-  date: string;
-  displayDate: Date;
-  price: number;
-  sheetTitle: string | null;
-};
-
-export function PriceChart({ data }: { data: ChartData[] }) {
-  if (data.length === 0) {
-    return (
-      <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg border border-dashed text-slate-400">
-        暂无价格历史数据
-      </div>
-    );
-  }
-
-  // 计算Y轴范围，让曲线看起来波动更明显，而不是缩成一条直线
-  const prices = data.map(d => d.price);
-  const minPrice = Math.min(...prices);
-  const maxPrice = Math.max(...prices);
-  const domainMin = Math.floor(minPrice * 0.95); // Y轴下限留一点空隙
-  const domainMax = Math.ceil(maxPrice * 1.05);  // Y轴上限留一点空隙
-
+export function PriceChart({ data }: { data: any[] }) {
+  // 找出最大值和最小值，用于让折线图的上下留出一点空间，不要贴边
+  const allPrices = data.flatMap(d => [d.expressPrice, d.guanghuoPrice]).filter(p => p !== undefined && p !== null);
+  const minPrice = allPrices.length > 0 ? Math.min(...allPrices) * 0.95 : 0;
+  
   return (
-    <div className="h-[300px] w-full">
+    <div className="h-[300px] w-full mt-4">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
           <XAxis 
             dataKey="date" 
-            tickFormatter={(str) => format(new Date(str), 'MM-dd')}
-            tick={{ fontSize: 12, fill: '#64748b' }}
-            axisLine={false}
-            tickLine={false}
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fontSize: 12, fill: '#64748b' }} 
             dy={10}
           />
           <YAxis 
-            domain={[domainMin, domainMax]} 
+            domain={[minPrice, 'auto']} 
+            axisLine={false} 
+            tickLine={false} 
             tick={{ fontSize: 12, fill: '#64748b' }}
-            axisLine={false}
-            tickLine={false}
+            tickFormatter={(val) => `¥${val}`}
           />
           <Tooltip 
             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-            labelFormatter={(label) => format(new Date(label), 'yyyy年MM月dd日')}
+            labelStyle={{ fontWeight: 'bold', color: '#0f172a', marginBottom: '8px' }}
+            formatter={(value: number, name: string) => {
+              if (name === 'expressPrice') return [`¥${value}`, '🚀 快递价'];
+              if (name === 'guanghuoPrice') return [`¥${value}`, '📦 广货价'];
+              return [value, name];
+            }}
+          />
+          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
+          
+          <Line 
+            name="expressPrice"
+            type="monotone" 
+            dataKey="expressPrice" 
+            stroke="#2563eb" // 快递用蓝色
+            strokeWidth={3} 
+            dot={{ r: 4, strokeWidth: 2 }} 
+            activeDot={{ r: 6 }}
+            connectNulls={true} // 如果某天没发快递报价，线条直接连过去
           />
           <Line 
+            name="guanghuoPrice"
             type="monotone" 
-            dataKey="price" 
-            stroke="#2563eb" 
+            dataKey="guanghuoPrice" 
+            stroke="#059669" // 广货用绿色
             strokeWidth={3} 
-            dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }}
+            dot={{ r: 4, strokeWidth: 2 }} 
             activeDot={{ r: 6 }}
+            connectNulls={true}
           />
         </LineChart>
       </ResponsiveContainer>

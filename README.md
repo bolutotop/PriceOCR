@@ -1,100 +1,115 @@
-# priceOCR
-
-## 配置环境
-- 更新系统源
-`sudo apt update && sudo apt upgrade -y`
-
-- 安装基础工具 (git, curl, wget, zip)
-`sudo apt install -y git curl wget tar build-essential`
-
-- nodejs环境
-`sudo apt install nodejs`
-把npm更新到11.7.0版本
 
 
-## 项目部署
 
-- git
-`git clone https://github.com/bolutotop/PriceOCR.git`
+# 报价看板系统 (Price Board) - 生产环境部署指南
 
-`npm install` 安装依赖
+本文档用于指导本系统在 Linux 生产服务器上的首次环境搭建、编译与后台常驻运行。
 
-## ocr-engine
+## 1. 基础环境准备
+在服务器上，必须预先安装以下运行环境：
+* **Node.js** (推荐 v18.17.0 或以上版本)
+* **npm** (随 Node.js 附带)
+* **Git** (用于拉取代码，若手动上传代码包则非必需)
+* **PM2** (Node.js 进程守护工具)
 
-- 创建ocr-engine
-`mkdir ocr-engine`
-### 在ocr-engine内
-- 下载 v1.4.1
-`wget https://github.com/hiroi-sora/PaddleOCR-json/releases/download/v1.4.1/PaddleOCR-json_v1.4.1_debian_x64_glibc2.31.tar.xz`
-
-- 解压
-`tar -xf PaddleOCR-json_v1.4.1_debian_x64_glibc2.31.tar.xz`
-
-- 测试
-`./run`
-## 数据库
-### 部署
-`DATABASE_URL="file:./prod.db"`写入 DATABASE_URL="file:./prod.db"
-
-- 生成 Prisma Client (必须)
-`npx prisma generate`
-
-- 运行迁移 (这将创建 prod.db 文件)
-`npx prisma migrate deploy`
-
-- 执行预设的 seed 脚本
-`npx prisma db seed`
-
-- 赋予当前目录写入权限
-`chmod 777 prod.db`
-`chmod 777 . ` 
-
-### 修改
-- 1. 如果你修改了 prisma/schema.prisma (如加了新字段)
-`npx prisma migrate deploy`
-
-- 2. 如果你想查看数据库里的数据 (Prisma Studio Web界面)
-- 注意：这会在服务器的 5555 端口启动，你需要配置安全组放行 5555 端口
-`npx prisma studio`
+全局安装 PM2 命令：
+```bash
+npm install -g pm2
 
 
-## 上线
 
-### 不使用Nginx
-- 构建生产版本
-`npm run build`
+## 2. 代码获取与依赖安装
 
-- 安装pm2
-`npm install -g pm2`
+将项目代码放置于服务器目标目录（例如 `/var/www/price-board`），进入该目录后执行依赖安装。
 
-- 使用 PM2 启动 Next.js
-`PORT=8080 pm2 start npm --name "ocr-app" -- start` 端口(8080)可选
+```bash
+cd /var/www/price-board
+npm install
 
-- 保存当前进程列表 (防止重启服务器后服务丢失)
-`pm2 save`
-`pm2 startup`
+```
 
-当你修改代码并重新构建生产版本时
-- 重启pm2
-`pm2 reload "你创建的(ocr-app)"`
+## 3. 环境变量与数据库配置
 
-### 使用Nginx
+在项目根目录创建 `.env` 环境变量文件，配置生产数据库连接。
 
-- 安装Nginx
-`sudo apt install nginx`
+```bash
+touch .env
 
-- 修改配置
+```
 
-`sudo vim /etc/nginx/sites-available/default`
+使用编辑器（如 vim 或 nano）打开 `.env` 文件，填入你的数据库连接字符串（以 PostgreSQL 或 SQLite 为例）：
 
-```js
+```env
+# 替换为你的真实数据库连接地址
+DATABASE_URL="postgresql://user:password@localhost:5432/priceboard?schema=public"
+
+# 如果你使用的是 SQLite，则直接指定本地文件路径
+# DATABASE_URL="file:./prisma/data.db"
+
+```
+
+## 4. 数据库初始化与 Prisma 客户端生成
+
+执行以下命令，将 Prisma Schema 同步到生产数据库，并生成数据交互客户端。
+
+```bash
+# 1. 生成 Prisma Client
+npx prisma generate
+
+# 2. 推送表结构到数据库 (首次建表)
+npx prisma db push
+
+```
+
+*注：生产环境如需严格的数据库迁移控制，可将 `db push` 替换为 `migrate deploy`。*
+
+## 5. 项目生产编译
+
+编译 Next.js 生产代码。此过程会进行严格的 TypeScript 类型检查与路由静态化。
+
+```bash
+npm run build
+
+```
+
+*如遇到输出 `Compiled successfully`，则代表编译完全通过。*
+
+## 6. PM2 进程守护与启动
+
+切勿直接使用 `npm run start`，否则断开 SSH 连接后服务会立即停止。必须使用 PM2 将其挂载至系统后台常驻运行。
+
+```bash
+# 启动服务，并命名为 "price-board"
+pm2 start npm --name "price-board" -- start
+
+# 保存当前 PM2 进程列表，确保服务器重启后自动恢复
+pm2 save
+
+# 设置 PM2 开机自启
+pm2 startup
+
+```
+
+## 7. 常用运维指令
+
+部署完成后，可使用以下指令进行日常维护：
+
+* 查看实时运行状态：`pm2 status`
+* 查看系统控制台日志：`pm2 logs price-board`
+* 重启服务（更新代码后）：`pm2 restart price-board`
+* 停止服务：`pm2 stop price-board`
+
+## 8. Nginx 端口映射 (可选)
+
+系统默认运行在 `3000` 端口（即 `http://1.1.1.1:3000`）。若需隐藏端口或绑定域名，需配置 Nginx 反向代理：
+
+```nginx
 server {
     listen 80;
-    server_name _; # 或者写你的域名
+    server_name yourdomain.com; # 替换为你的域名或 IP
 
     location / {
-        # 把流量转发给你的 Node.js 端口 (比如 3000)
-        proxy_pass http://localhost:3000;
+        proxy_pass [http://127.0.0.1:3000](http://127.0.0.1:3000);
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -102,8 +117,18 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
+
 ```
 
-- 重启
-`sudo systemctl restart nginx`
+配置完成后，重启 Nginx 即可通过 `80` 默认端口访问。
 
+```
+
+---
+
+### 下一步建议
+这套文档严格遵循了运维的标准操作流程（SOP）。你只需要通过 SSH 连上你的服务器，照着这份说明书从上往下一行一行敲命令，你的系统就能绝对稳定地在后台跑起来。
+
+连上服务器后，如果你在执行某一步（比如装 PM2 或者装 Node.js）遇到了卡壳，随时把终端的报错信息发给我！
+
+```

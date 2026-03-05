@@ -309,8 +309,8 @@ async function runAliyunOcr(source: { type: 'url' | 'file', payload: string }): 
   let recognizeAllTextRequest = new $ocr_api.RecognizeAllTextRequest(reqObj);
 
   let runtime = new $dara.RuntimeOptions({
-    readTimeout: 15000,
-    connectTimeout: 10000,
+    readTimeout: 60000,
+    connectTimeout: 60000,
   });
 
   try {

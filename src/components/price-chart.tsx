@@ -35,12 +35,18 @@ export function PriceChart({ data }: { data: any[] }) {
             tick={{ fontSize: 12, fill: '#64748b' }}
             tickFormatter={(val) => `¥${val}`}
           />
-          <Tooltip 
-            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-            labelStyle={{ fontWeight: 'bold', color: '#0f172a', marginBottom: '8px' }}
-            formatter={(value: number, name: string) => {
-              if (name === 'expressPrice') return [`¥${value}`, '🚀 快递价'];
-              if (name === 'guanghuoPrice') return [`¥${value}`, '📦 广货价'];
+<Tooltip 
+            contentStyle={{ borderRadius: '0px', border: '1px solid #e2e8f0', boxShadow: '4px 4px 0 0 rgba(15,23,42,0.1)' }}
+            labelStyle={{ fontWeight: '900', color: '#0f172a', marginBottom: '8px' }}
+            formatter={(value: any, name: any) => {
+              // 1. 处理可能出现的无报价 (undefined / null) 情况
+              if (value == null) {
+                return ['暂无数据', name === 'expressPrice' ? '快递价' : '广货价'];
+              }
+              // 2. 正常返回价格，并严格剔除 Emoji 符号
+              if (name === 'expressPrice') return [`¥${value}`, '快递价'];
+              if (name === 'guanghuoPrice') return [`¥${value}`, '广货价'];
+              
               return [value, name];
             }}
           />

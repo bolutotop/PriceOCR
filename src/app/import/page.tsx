@@ -6,13 +6,12 @@ import { scanImageLocal, ParsedItem } from '@/actions/ocr';
 import { savePriceSheet } from '@/actions/save-sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Save, UploadCloud, ImageIcon, X, AlertTriangle, Search, Link as LinkIcon, RefreshCw, ChevronLeft } from 'lucide-react';
+import { Loader2, Save, UploadCloud, X, Database, Search, Link as LinkIcon, RefreshCw, ChevronLeft, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -36,6 +35,9 @@ export default function ImportPage() {
   const [marketType, setMarketType] = useState('EXPRESS'); 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // 🚨 新增：用于记录当前准备删除的行索引
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -134,66 +136,108 @@ export default function ImportPage() {
     }
   };
 
-  const handlePriceChange = (index: number, val: string) => {
+  const updateItemName = (actualIndex: number, newName: string) => {
     const newItems = [...items];
-    newItems[index].price = val === '//' ? -1 : parseFloat(val) || 0;
+    newItems[actualIndex].name = newName;
+    setItems(newItems);
+  };
+
+  const handlePriceChange = (actualIndex: number, val: string) => {
+    const newItems = [...items];
+    newItems[actualIndex].price = val === '//' ? -1 : parseFloat(val) || 0;
     setItems(newItems);
   };
   
-  const handleDelete = (index: number) => setItems(items.filter((_, i) => i !== index));
+  const handleDelete = (actualIndex: number) => {
+    setItems(items.filter((_, i) => i !== actualIndex));
+  };
+
   const filteredItems = items.filter(i => i.name.includes(searchTerm));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200/50 pb-20">
-      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/60 sticky top-0 z-30 px-5 py-3 flex justify-between items-center shadow-sm">
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200/50 pb-20 font-sans">
+      
+      {/* 🚨 新增：全局删除确认弹窗控制台 */}
+      <Dialog open={itemToDelete !== null} onOpenChange={(open) => !open && setItemToDelete(null)}>
+        <DialogContent className="sm:max-w-md rounded-none border-slate-200 shadow-[8px_8px_0_0_rgba(15,23,42,0.1)] w-[90vw] sm:w-full">
+          <DialogHeader>
+            <DialogTitle className="font-black text-slate-800 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-red-600 stroke-[2.5]" />
+              移除数据确认
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-4 text-sm text-slate-600 font-bold bg-slate-50 border border-slate-100 p-4">
+            确定要从本次录入列表中移除该条数据吗？<br/>
+            <span className="text-red-500 text-xs mt-1 block tracking-wider uppercase">警告: 移除后将无法通过撤销恢复该切片。</span>
+          </div>
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button variant="outline" onClick={() => setItemToDelete(null)} className="rounded-none border-slate-200 font-bold shadow-none flex-1 sm:flex-none">
+              取消操作
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => {
+                if (itemToDelete !== null) handleDelete(itemToDelete);
+                setItemToDelete(null);
+              }} 
+              className="rounded-none font-bold shadow-none bg-red-600 hover:bg-red-700 flex-1 sm:flex-none"
+            >
+              确认移除
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 顶部主导航 - 完美锁定 60px 高度 */}
+      <div className="bg-white/95 backdrop-blur-md border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-5 flex justify-between items-center shadow-sm h-[60px]">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link href="/">
             <Button variant="ghost" size="icon" className="rounded-none -ml-2 text-slate-600 hover:bg-slate-100 transition-colors ease-out">
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
             </Button>
           </Link>
-          <h1 className="text-lg font-black text-slate-800 tracking-tight">录入新单</h1>
-          <p className="text-xs text-slate-500 font-medium hidden sm:block border-l border-slate-300 pl-3">结构化解析与入库</p>
+          <h1 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">录入新单</h1>
+          <p className="text-xs text-slate-500 font-medium hidden sm:block border-l border-slate-300 pl-3 uppercase tracking-widest">DATA IMPORT</p>
         </div>
         <div className="flex gap-2">
           {items.length > 0 && (
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="rounded-none bg-slate-800 hover:bg-slate-900 transition-all ease-out shadow-none font-bold">
-                  <Save className="w-4 h-4 mr-1.5" /> 确认入库
+                <Button size="sm" className="rounded-none bg-slate-800 hover:bg-slate-900 transition-all ease-out shadow-[2px_2px_0_0_rgba(15,23,42,0.1)] font-bold px-2 sm:px-3">
+                  <Save className="w-4 h-4 sm:mr-1.5" /> <span className="hidden sm:inline">确认入库</span>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md rounded-none border-slate-200">
-                <DialogHeader><DialogTitle className="font-black">入库参数配置</DialogTitle></DialogHeader>
+              <DialogContent className="sm:max-w-md rounded-none border-slate-200 shadow-[8px_8px_0_0_rgba(15,23,42,0.1)] w-[95vw] sm:w-full">
+                <DialogHeader><DialogTitle className="font-black text-slate-800">入库参数配置</DialogTitle></DialogHeader>
                 
                 <div className="grid gap-5 py-4">
                   <div className="grid gap-2">
-                    <Label className="text-slate-700 font-bold">行情归属</Label>
+                    <Label className="text-slate-700 font-bold uppercase text-[10px] sm:text-xs tracking-wider">行情归属</Label>
                     <Select value={marketType} onValueChange={setMarketType}>
-                      <SelectTrigger className="w-full h-11 border-slate-200 rounded-none focus:ring-0">
+                      <SelectTrigger className="w-full h-11 border-slate-200 rounded-none focus:ring-0 focus:border-slate-800 transition-colors ease-out font-bold">
                         <SelectValue placeholder="选择行情" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-none">
+                      <SelectContent className="rounded-none border-slate-200">
                         <SelectItem value="EXPRESS" className="font-bold text-slate-700 focus:bg-slate-100">快递行情 (EXPRESS)</SelectItem>
                         <SelectItem value="GUANGHUO" className="font-bold text-slate-700 focus:bg-slate-100">广货行情 (GUANGHUO)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     <div className="grid gap-2">
-                      <Label className="text-slate-700 font-bold">业务日期</Label>
-                      <Input type="date" className="h-10 rounded-none border-slate-200 focus-visible:ring-0" value={date} onChange={(e) => setDate(e.target.value)} />
+                      <Label className="text-slate-700 font-bold uppercase text-[10px] sm:text-xs tracking-wider">业务日期</Label>
+                      <Input type="date" className="h-11 rounded-none border-slate-200 focus-visible:ring-0 focus:border-slate-800 transition-colors ease-out font-mono font-bold text-xs sm:text-sm" value={date} onChange={(e) => setDate(e.target.value)} />
                     </div>
                     <div className="grid gap-2">
-                      <Label className="text-slate-700 font-bold">标识 / 备注</Label>
-                      <Input placeholder="可留空" className="h-10 rounded-none border-slate-200 focus-visible:ring-0" value={note} onChange={(e) => setNote(e.target.value)} />
+                      <Label className="text-slate-700 font-bold uppercase text-[10px] sm:text-xs tracking-wider">标识 / 备注</Label>
+                      <Input placeholder="可留空" className="h-11 rounded-none border-slate-200 focus-visible:ring-0 focus:border-slate-800 transition-colors ease-out text-xs sm:text-sm" value={note} onChange={(e) => setNote(e.target.value)} />
                     </div>
                   </div>
                 </div>
 
                 <DialogFooter>
-                  <Button onClick={handleSave} disabled={saving} className="bg-slate-800 hover:bg-slate-900 w-full h-11 text-base rounded-none shadow-none font-bold transition-colors ease-out">
+                  <Button onClick={handleSave} disabled={saving} className="bg-slate-800 hover:bg-slate-900 w-full h-11 text-sm sm:text-base rounded-none shadow-none font-bold transition-colors ease-out">
                     {saving ? <Loader2 className="animate-spin w-5 h-5 mr-2"/> : null} 提交至数据库
                   </Button>
                 </DialogFooter>
@@ -203,169 +247,183 @@ export default function ImportPage() {
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div className="max-w-[1600px] mx-auto p-2 sm:p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5">
         
         {/* 左侧控制区 */}
-        <div className="lg:col-span-4 space-y-5">
-          <Card className={cn("rounded-none border-slate-200 shadow-sm bg-white transition-opacity ease-out duration-200", status === 'processing' ? 'opacity-70 pointer-events-none' : '')}>
-            <CardContent className="p-5">
-              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-              
-              {!file && !activeUrl ? (
-                <div className="space-y-5">
-                  <div 
-                    onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 hover:border-slate-400 h-40 flex flex-col items-center justify-center text-slate-500 transition-colors ease-out cursor-pointer group"
-                  >
-                    <UploadCloud className="w-8 h-8 text-slate-400 group-hover:text-slate-600 mb-3 transition-colors ease-out" />
-                    <p className="text-sm font-bold text-slate-600">选取本地表格图像</p>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="h-px bg-slate-200 flex-1"></div>
-                    <span className="text-xs text-slate-400 font-bold tracking-widest uppercase">or</span>
-                    <div className="h-px bg-slate-200 flex-1"></div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <LinkIcon className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                      <Input 
-                        placeholder="输入外部 URL 链接" 
-                        value={urlInput}
-                        onChange={(e) => setUrlInput(e.target.value)}
-                        className="pl-9 bg-slate-50 rounded-none border-slate-200 focus-visible:ring-0 focus-visible:border-slate-400"
-                      />
-                    </div>
-                    <Button variant="secondary" className="rounded-none font-bold border border-slate-200 shadow-none hover:bg-slate-200 transition-colors ease-out" onClick={handleLoadUrl} disabled={!urlInput.trim()}>
-                      获取
-                    </Button>
-                  </div>
+        <div className="lg:col-span-4 space-y-3 sm:space-y-5 lg:sticky lg:top-[84px] h-fit z-10">
+          <div className={cn("bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] transition-opacity ease-out duration-200 p-4 sm:p-5", status === 'processing' ? 'opacity-70 pointer-events-none' : '')}>
+            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+            
+            {!file && !activeUrl ? (
+              <div className="space-y-4 sm:space-y-5">
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 hover:border-slate-400 h-28 sm:h-40 flex flex-col items-center justify-center text-slate-500 transition-colors ease-out cursor-pointer group"
+                >
+                  <UploadCloud className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400 group-hover:text-slate-600 mb-2 sm:mb-3 transition-colors ease-out stroke-[2]" />
+                  <p className="text-xs sm:text-sm font-bold text-slate-600 uppercase tracking-widest">选取本地表格图像</p>
                 </div>
-              ) : (
-                <div className="space-y-5">
-                  <div className="relative overflow-hidden bg-slate-100 border border-slate-200 group flex justify-center items-center">
-                    <img src={imagePreview!} className="max-h-[300px] w-auto object-contain" />
-                    <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity ease-out flex items-center justify-center">
-                       <Button variant="secondary" size="sm" className="rounded-none bg-white font-bold hover:bg-slate-100" onClick={handleClearSelection}>
-                         <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> 重置文件
-                       </Button>
-                    </div>
+
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="h-px bg-slate-200 flex-1"></div>
+                  <span className="text-[10px] sm:text-xs text-slate-400 font-bold tracking-widest uppercase">OR</span>
+                  <div className="h-px bg-slate-200 flex-1"></div>
+                </div>
+
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <LinkIcon className="absolute left-2 sm:left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Input 
+                      placeholder="输入外部 URL" 
+                      value={urlInput}
+                      onChange={(e) => setUrlInput(e.target.value)}
+                      className="pl-7 sm:pl-9 h-10 sm:h-11 bg-slate-50 rounded-none border-slate-200 focus-visible:ring-0 focus-visible:border-slate-800 transition-colors ease-out text-xs sm:text-sm"
+                    />
                   </div>
-                  
-                  <Button 
-                    className="w-full h-11 text-base font-bold shadow-none rounded-none bg-slate-800 hover:bg-slate-900 transition-colors ease-out" 
-                    onClick={handleStartOcr}
-                    disabled={status === 'processing' || status === 'success'}
-                  >
-                    {status === 'processing' ? <Loader2 className="animate-spin mr-2"/> : null}
-                    {status === 'success' ? '解析完毕' : status === 'processing' ? '云端节点处理中' : '执行解析程序'}
+                  <Button variant="secondary" className="h-10 sm:h-11 rounded-none font-bold border border-slate-200 shadow-none hover:bg-slate-200 transition-colors ease-out text-xs sm:text-sm px-3 sm:px-4" onClick={handleLoadUrl} disabled={!urlInput.trim()}>
+                    获取
                   </Button>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </div>
+            ) : (
+              <div className="space-y-4 sm:space-y-5">
+                <div className="relative overflow-hidden bg-slate-100 border border-slate-200 group flex justify-center items-center min-h-[120px] sm:min-h-[160px]">
+                  <img src={imagePreview!} className="max-h-[200px] sm:max-h-[300px] w-auto object-contain mix-blend-multiply" />
+                  <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity ease-out flex items-center justify-center">
+                     <Button variant="secondary" size="sm" className="rounded-none bg-white font-bold hover:bg-slate-100 border-none" onClick={handleClearSelection}>
+                       <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> 重置文件
+                     </Button>
+                  </div>
+                </div>
+                
+                <Button 
+                  className="w-full h-10 sm:h-11 text-sm sm:text-base font-bold shadow-none rounded-none bg-slate-800 hover:bg-slate-900 transition-colors ease-out tracking-widest" 
+                  onClick={handleStartOcr}
+                  disabled={status === 'processing' || status === 'success'}
+                >
+                  {status === 'processing' ? <Loader2 className="animate-spin mr-2 w-4 h-4 sm:w-5 sm:h-5"/> : null}
+                  {status === 'success' ? '解析完毕' : status === 'processing' ? '云端节点处理中' : '执行解析程序'}
+                </Button>
+              </div>
+            )}
+          </div>
 
           {(status === 'processing' || status === 'success') && (
-            <Card className="rounded-none border-slate-200 bg-white shadow-sm">
-              <CardContent className="p-5">
-                <div className="flex justify-between text-sm mb-2 font-bold text-slate-700">
-                  <span className="flex items-center gap-2">
-                    {status === 'processing' && <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-600"/>}
-                    {progressText}
-                  </span>
-                  <span className="text-slate-900">{progress}%</span>
-                </div>
-                <Progress value={progress} className="h-1.5 bg-slate-100 rounded-none" indicatorClassName="bg-slate-800" />
-              </CardContent>
-            </Card>
+            <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] p-4 sm:p-5">
+              <div className="flex justify-between text-xs sm:text-sm mb-2 font-bold text-slate-700">
+                <span className="flex items-center gap-2">
+                  {status === 'processing' && <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin text-slate-600"/>}
+                  {progressText}
+                </span>
+                <span className="text-slate-900 font-mono">{progress}%</span>
+              </div>
+              <Progress value={progress} className="h-1.5 sm:h-2 bg-slate-100 rounded-none border border-slate-200" indicatorClassName="bg-slate-800" />
+            </div>
           )}
         </div>
 
         {/* 右侧数据核对区 */}
-        <div className="lg:col-span-8 flex flex-col h-[calc(100vh-140px)]">
-          <Card className="rounded-none flex-1 flex flex-col border-slate-200 shadow-sm overflow-hidden bg-white">
-            <div className="py-3 px-4 border-b border-slate-100 bg-white flex flex-row justify-between items-center shrink-0 z-20">
-              <div className="text-base flex items-center gap-2 font-black text-slate-800 tracking-tight">
-                数据核对区
-                {items.length > 0 && <span className="bg-slate-100 text-slate-600 px-2 py-0.5 font-bold text-xs border border-slate-200">{items.length} ITEM</span>}
+        <div className="lg:col-span-8 flex flex-col min-w-0">
+          <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] w-full">
+            
+            {/* 搜索控制栏 */}
+            <div className="py-2.5 sm:py-3 px-3 sm:px-4 border-b border-slate-200 bg-slate-50/80 flex flex-row gap-3 justify-between items-center z-20">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-800 stroke-[2.5]" /> 
+                <h2 className="text-xs sm:text-sm font-black text-slate-800 tracking-tight uppercase hidden sm:block">数据核对控制台</h2>
+                <h2 className="text-xs font-black text-slate-800 tracking-tight uppercase sm:hidden">核对</h2>
+                <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 bg-slate-200 px-1.5 py-0.5 border border-slate-300">
+                  {items.length} R
+                </span>
               </div>
-              <div className="relative w-40 md:w-56">
-                <Search className="absolute left-2.5 top-2 h-4 w-4 text-slate-400" />
+              
+              <div className="relative flex-1 max-w-[180px] sm:max-w-56">
+                <Search className="absolute left-2 sm:left-2.5 top-1.5 sm:top-2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
                 <Input 
-                  placeholder="检索单元格..." 
-                  className="pl-9 h-8 text-sm bg-slate-50 border-slate-200 focus-visible:ring-0 rounded-none shadow-inner" 
+                  placeholder="检索..." 
+                  className="pl-7 sm:pl-9 h-7 sm:h-8 text-xs sm:text-sm bg-white border-slate-200 focus-visible:ring-0 focus-visible:border-slate-800 rounded-none shadow-none transition-colors ease-out font-bold text-slate-600 placeholder:font-normal" 
                   value={searchTerm} 
                   onChange={e => setSearchTerm(e.target.value)} 
                 />
               </div>
             </div>
 
-            <div className="flex-1 overflow-auto relative scrollbar-hide bg-white">
+            <div className="w-full bg-white">
               {items.length === 0 && status !== 'processing' && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 select-none">
-                  <div className="p-5 border border-slate-100 bg-slate-50 mb-4 rounded-none">
-                    <UploadCloud className="w-10 h-10 opacity-20" />
+                <div className="flex flex-col items-center justify-center text-slate-400 select-none bg-slate-50/50 py-20 sm:py-32 border-b border-slate-100">
+                  <div className="p-3 sm:p-4 border-2 border-dashed border-slate-200 mb-3 sm:mb-4 bg-white">
+                    <Database className="w-6 h-6 sm:w-8 sm:h-8 opacity-20 stroke-[2]" />
                   </div>
-                  <p className="text-sm font-bold tracking-wide">等待执行解析程序</p>
+                  <p className="text-[10px] sm:text-xs font-bold tracking-widest uppercase">等待源数据接入</p>
                 </div>
               )}
 
               {items.length > 0 && (
-                <Table>
-                  <TableHeader className="sticky top-0 z-30 bg-slate-50 border-b border-slate-200 shadow-sm">
-                    <TableRow className="h-12 hover:bg-slate-50 border-none">
-                      <TableHead className="pl-4 md:pl-6 w-auto font-bold text-slate-700">图像切片</TableHead>
-                      <TableHead className="pl-2 md:pl-4">
-                        <span className="font-bold text-slate-700">键 (名称)</span>
-                      </TableHead>
-                      <TableHead className="w-[100px] md:w-[140px] text-right pr-4 md:pr-6 font-bold text-slate-700">值 (价格)</TableHead>
-                      <TableHead className="w-[50px]"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredItems.map((item, idx) => (
-                      <TableRow key={idx} className="group text-sm hover:bg-slate-50 transition-colors ease-out border-b border-slate-100">
-                        <TableCell className="py-3 pl-4 md:pl-6 align-middle">
-                          {item.cropDataUri ? (
-                            <div className="h-10 md:h-12 w-auto inline-block border border-slate-200 bg-slate-50">
-                               <img src={item.cropDataUri} className="h-full w-auto object-contain" />
+                <table className="w-full table-fixed border-collapse">
+                  <thead className="sticky top-[60px] z-30 bg-slate-100 shadow-sm border-b border-slate-200">
+                    <tr>
+                      {/* ✅ 完全按照要求锁死你的自定义宽度配置 */}
+                      <th className="w-[180px] sm:w-[300px] py-2 px-1 text-center font-bold text-slate-500 uppercase text-[10px] sm:text-xs border-r border-slate-200">切片</th>
+                      <th className="w-auto py-2 px-2 sm:px-4 text-left font-bold text-slate-500 uppercase text-[10px] sm:text-xs">品名</th>
+                      <th className="w-[70px] sm:w-[140px] py-2 px-1 sm:px-4 text-right font-bold text-slate-500 uppercase text-[10px] sm:text-xs">价格</th>
+                      <th className="w-[36px] sm:w-[50px] py-2 border-l border-slate-200"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredItems.map((item, index) => {
+                      const actualIndex = items.indexOf(item);
+                      
+                      return (
+                        <tr key={actualIndex} className="group hover:bg-slate-50 transition-colors ease-out border-b border-slate-100">
+                          
+                          {/* ✅ 完全按照要求锁死你的自定义高度配置 */}
+                          <td className="p-1 sm:p-2 align-middle border-r border-slate-100">
+                            <div className="w-full h-11 sm:h-14 bg-slate-50 border border-slate-200 mx-auto flex items-center justify-center overflow-hidden">
+                              {item.cropDataUri ? (
+                                <img src={item.cropDataUri} alt="IMG" className="w-full h-full object-contain mix-blend-multiply grayscale contrast-125 p-0.5" />
+                              ) : (
+                                <span className="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase">NO IMG</span>
+                              )}
                             </div>
-                          ) : <ImageIcon className="w-5 h-5 text-slate-300"/>}
-                        </TableCell>
-                        <TableCell className="py-3 pl-2 md:pl-4 align-middle">
-                          <input 
-                            value={item.name} 
-                            onChange={(e) => {
-                              const newI = [...items]; newI[idx].name = e.target.value; setItems(newI);
-                            }}
-                            className="font-bold text-slate-800 bg-transparent border-b border-transparent focus:border-slate-400 focus:outline-none w-full transition-colors ease-out py-1 text-base truncate" 
-                          />
-                        </TableCell>
-                        <TableCell className="py-3 text-right pr-4 md:pr-6 align-middle">
-                          <input 
-                             value={item.price === -1 ? "//" : item.price}
-                             onChange={(e) => handlePriceChange(idx, e.target.value)}
-                             className={`text-right w-full bg-transparent border-b border-transparent focus:border-slate-400 focus:outline-none font-mono text-lg font-black py-1 ${item.price > 1000 ? 'text-slate-800' : 'text-slate-600'} ${item.price === -1 ? 'text-slate-300' : ''}`}
-                          />
-                        </TableCell>
-                        <TableCell className="py-3 align-middle text-right px-0 md:pr-4">
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="rounded-none h-8 w-8 text-slate-300 lg:opacity-0 group-hover:opacity-100 hover:text-red-600 hover:bg-red-50 transition-colors ease-out" 
-                            onClick={() => handleDelete(idx)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                          </td>
+                          
+                          <td className="p-1 sm:p-3 align-middle">
+                            <Input 
+                              value={item.name || ''}
+                              onChange={(e) => updateItemName(actualIndex, e.target.value)}
+                              className="rounded-none border-transparent hover:border-slate-200 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 focus-visible:border-slate-800 font-black text-slate-800 text-[11px] sm:text-sm h-10 px-1 sm:px-3 transition-colors ease-out w-full shadow-none truncate"
+                              placeholder="品名"
+                            />
+                          </td>
+                          
+                          <td className="p-1 sm:p-3 align-middle">
+                            <Input 
+                              type="text"
+                              value={item.price === -1 ? '' : item.price}
+                              onChange={(e) => handlePriceChange(actualIndex, e.target.value)}
+                              className={`rounded-none border border-transparent hover:border-slate-200 focus-visible:border-slate-800 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 font-mono font-black text-slate-800 text-xs sm:text-sm h-10 w-full px-1 sm:px-2 text-center sm:text-right shadow-none transition-colors ease-out ${item.price > 1000 ? 'text-slate-800' : 'text-slate-600'} ${item.price === -1 ? 'text-slate-300' : ''}`}
+                              placeholder="0.0"
+                            />
+                          </td>
+                          
+                          {/* 🚨 核心修改：点击不再直接删除，而是唤起顶部的弹窗 */}
+                          <td className="p-0 sm:p-2 align-middle text-center border-l border-slate-100">
+                            <button 
+                              onClick={() => setItemToDelete(actualIndex)}
+                              className="p-2 sm:p-2.5 text-slate-300 hover:text-white hover:bg-red-600 hover:border-red-600 border border-transparent transition-all ease-out mx-auto flex items-center justify-center"
+                            >
+                              <X className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+                            </button>
+                          </td>
+                          
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               )}
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>

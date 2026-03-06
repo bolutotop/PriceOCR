@@ -2,11 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProductDetails } from '@/actions/get-product-details';
 import { PriceChart } from '@/components/price-chart';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, TrendingUp, Calendar } from 'lucide-react';
+import { ChevronLeft, TrendingUp, History } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -18,118 +15,136 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const { product, chartData, latestExpressPrice, latestGuanghuoPrice } = data;
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-10">
-      {/* 顶部导航 */}
-      <div className="bg-white border-b px-4 py-3 sticky top-0 z-10 flex items-center gap-2">
-        <Link href="/">
-          <Button variant="ghost" size="icon" className="-ml-2 text-slate-600 hover:bg-slate-100">
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200/50 pb-12 flex flex-col font-sans">
+      
+      {/* 顶部导航：毛玻璃、无圆角、锐利分割线 */}
+      <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200/60 sticky top-0 z-20 px-4 md:px-6 py-3 flex items-center shrink-0">
+        <Link href="/" className="group flex items-center gap-2 outline-none">
+          <div className="p-1.5 border border-transparent group-hover:bg-slate-800 group-hover:text-white text-slate-600 transition-colors ease-out">
+            <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+          </div>
+          <span className="font-black text-slate-800 tracking-tight group-hover:text-slate-900 transition-colors ease-out">返回看板</span>
         </Link>
-        <h1 className="font-bold text-slate-800">{product.name}</h1>
-      </div>
+      </header>
 
-      <div className="max-w-4xl mx-auto p-4 space-y-6 mt-4">
+      <main className="flex-1 w-full max-w-5xl mx-auto p-3 sm:p-5 md:p-8 space-y-6">
         
-        {/* 顶部：极简卡片，突出两大行情最新报价 */}
-        <Card className="border-none shadow-sm overflow-hidden">
-          <CardContent className="p-6 md:p-8">
-            <h2 className="text-3xl font-black text-slate-900 mb-6">{product.name}</h2>
-            
-            <div className="grid grid-cols-2 gap-4 md:gap-8 divide-x divide-slate-100">
-              {/* 快递最新价 */}
-              <div className="pr-4">
-                <div className="flex items-center gap-2 mb-2">
-                   <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">🚀 快递行情</Badge>
-                </div>
-                <div className="text-4xl font-mono font-black text-slate-800 tracking-tight">
-                  {latestExpressPrice && latestExpressPrice > 0 ? `¥${latestExpressPrice}` : <span className="text-slate-300">无货</span>}
-                </div>
-              </div>
-              
-              {/* 广货最新价 */}
-              <div className="pl-4 md:pl-8">
-                <div className="flex items-center gap-2 mb-2">
-                   <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">📦 广货行情</Badge>
-                </div>
-                <div className="text-4xl font-mono font-black text-slate-800 tracking-tight">
-                  {latestGuanghuoPrice && latestGuanghuoPrice > 0 ? `¥${latestGuanghuoPrice}` : <span className="text-slate-300">无货</span>}
-                </div>
+        {/* 顶部行情面板：工业网格、硬阴影、无圆角 */}
+        <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] flex flex-col">
+          <div className="px-5 py-4 border-b border-slate-200 bg-slate-50/50">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight truncate">{product.name}</h1>
+          </div>
+          
+          <div className="grid grid-cols-2 divide-x divide-slate-200 bg-slate-50">
+            {/* 快递区 */}
+            <div className="p-4 sm:p-6 flex flex-col bg-white hover:bg-slate-50/50 transition-colors ease-out">
+              <span className="text-[10px] sm:text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-1 inline-block w-max mb-3 tracking-widest uppercase">
+                快递行情
+              </span>
+              <div className="text-3xl sm:text-5xl font-mono font-black tracking-tighter text-slate-800 mt-auto">
+                {latestExpressPrice && latestExpressPrice > 0 ? (
+                  <>
+                    <span className="text-xl sm:text-2xl text-slate-400 mr-1">¥</span>
+                    {latestExpressPrice}
+                  </>
+                ) : (
+                  <span className="text-xl text-slate-300">缺数</span>
+                )}
               </div>
             </div>
-          </CardContent>
-        </Card>
+            
+            {/* 广货区 */}
+            <div className="p-4 sm:p-6 flex flex-col bg-white hover:bg-slate-50/50 transition-colors ease-out">
+              <span className="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 inline-block w-max mb-3 tracking-widest uppercase">
+                广货行情
+              </span>
+              <div className="text-3xl sm:text-5xl font-mono font-black tracking-tighter text-slate-800 mt-auto">
+                {latestGuanghuoPrice && latestGuanghuoPrice > 0 ? (
+                  <>
+                    <span className="text-xl sm:text-2xl text-slate-400 mr-1">¥</span>
+                    {latestGuanghuoPrice}
+                  </>
+                ) : (
+                  <span className="text-xl text-slate-300">缺数</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* 价格走势图区域 (双折线) */}
-        <Card className="border-slate-200 shadow-sm">
-          <CardHeader className="pb-4 border-b border-slate-100">
-            <CardTitle className="text-base flex items-center gap-2 font-bold text-slate-800">
-              <TrendingUp className="w-4 h-4 text-blue-600" /> 
-              大盘走势对比
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
+        {/* 价格走势图 */}
+        <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)]">
+          <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/80 flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-slate-500 stroke-[2.5]" /> 
+            <h2 className="text-sm font-black text-slate-800 tracking-tight">大盘走势对比</h2>
+          </div>
+          <div className="p-2 sm:p-4 h-[300px]">
             {chartData.length > 0 ? (
               <PriceChart data={chartData} />
             ) : (
-              <div className="h-64 flex items-center justify-center text-slate-400 text-sm">暂无走势数据</div>
+              <div className="h-full flex items-center justify-center text-slate-400 text-sm font-bold bg-slate-50/50 border border-dashed border-slate-200 m-2">
+                无可用走势数据
+              </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* 历史记录明细表 */}
-        <Card className="border-slate-200 shadow-sm">
-          <CardHeader className="pb-4 border-b border-slate-100">
-            <CardTitle className="text-base flex items-center gap-2 font-bold text-slate-800">
-              <Calendar className="w-4 h-4 text-slate-500" /> 
-              历史报价流水
-            </CardTitle>
-          </CardHeader>
-          <div className="overflow-hidden rounded-b-lg">
+        {/* 历史流水 */}
+        <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)]">
+          <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/80 flex items-center gap-2">
+            <History className="w-4 h-4 text-slate-500 stroke-[2.5]" /> 
+            <h2 className="text-sm font-black text-slate-800 tracking-tight">历史报价明细</h2>
+            <span className="ml-auto text-[10px] font-bold text-slate-400 bg-slate-200 px-1.5 py-0.5">
+              {product.priceHistory.length} ROWS
+            </span>
+          </div>
+          
+          <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-slate-50/80">
-                <TableRow>
-                  <TableHead className="w-[100px] md:w-[140px] font-bold text-slate-600">日期</TableHead>
-                  <TableHead className="font-bold text-slate-600">行情 / 备注</TableHead>
-                  <TableHead className="text-right font-bold text-slate-600 pr-6">价格</TableHead>
+              <TableHeader className="bg-slate-50 border-b border-slate-200">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="font-bold text-slate-500 w-[90px] sm:w-[120px] uppercase text-[10px] sm:text-xs px-4">日期</TableHead>
+                  <TableHead className="font-bold text-slate-500 uppercase text-[10px] sm:text-xs px-4">单据来源</TableHead>
+                  <TableHead className="text-right font-bold text-slate-500 pr-4 sm:pr-6 uppercase text-[10px] sm:text-xs">录入价</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* 倒序显示，最近的在上面 */}
                 {[...product.priceHistory].reverse().map((history) => {
                   const isExpress = history.sheet.marketType === 'EXPRESS';
                   return (
-                    <TableRow key={history.id} className="hover:bg-slate-50 transition-colors">
-                      <TableCell className="font-mono text-sm text-slate-500 font-medium">
-                        {format(new Date(history.sheet.recordDate), 'MM-dd')}
+                    <TableRow key={history.id} className="hover:bg-slate-50/80 transition-colors ease-out border-b border-slate-100">
+                      <TableCell className="font-mono text-xs sm:text-sm text-slate-600 font-bold px-4 whitespace-nowrap">
+                        {format(new Date(history.sheet.recordDate), 'MM.dd')}
                       </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-1 items-start">
-                          <Badge variant="outline" className={`text-[10px] px-1.5 py-0 font-medium ${isExpress ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'}`}>
+                      <TableCell className="px-4 py-3">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-3">
+                          <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 whitespace-nowrap border ${isExpress ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}>
                             {isExpress ? '快递' : '广货'}
-                          </Badge>
+                          </span>
                           {history.sheet.title && (
-                            <span className="text-xs text-slate-400 mt-1">{history.sheet.title}</span>
+                            <span className="text-[11px] sm:text-xs text-slate-500 font-medium truncate max-w-[120px] sm:max-w-xs">{history.sheet.title}</span>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className={`text-right font-mono font-bold text-base pr-6 ${history.price > 1000 ? 'text-red-600' : 'text-slate-800'}`}>
-                        {history.price <= 0 ? <span className="text-slate-300 font-normal">无货</span> : `¥${history.price}`}
+                      <TableCell className={`text-right font-mono font-black text-sm sm:text-base pr-4 sm:pr-6 ${history.price <= 0 ? 'text-slate-300' : 'text-slate-800'}`}>
+                        {history.price <= 0 ? '//' : history.price}
                       </TableCell>
                     </TableRow>
                   );
                 })}
                 {product.priceHistory.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center py-10 text-slate-400">暂无任何流水记录</TableCell>
+                    <TableCell colSpan={3} className="text-center py-12 text-slate-400 text-sm font-bold bg-slate-50/50">
+                      暂无关联数据
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
           </div>
-        </Card>
+        </div>
 
-      </div>
+      </main>
     </div>
   );
 }

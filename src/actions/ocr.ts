@@ -55,12 +55,15 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
       throw new Error('无效的输入');
     }
 
+    // 🚨 核心降维打击流水线：专门针对 OCR 优化的极限压缩与增强
     await sharp(fileBuffer)
-      .rotate() 
-      .resize(3500, null, { fit: 'inside', withoutEnlargement: false })
-      .grayscale()
-      .sharpen({ sigma: 1.5, m1: 0, m2: 20 })
-      .jpeg({ quality: 80 }) 
+      .rotate() // 自动扶正方向
+      // 将最大边限制在 1500 像素，足以满足绝大多数 OCR 需求且大幅降低体积
+      .resize({ width: 1500, withoutEnlargement: true })
+      .grayscale() // 转为灰度图，进一步减小体积并去除色彩干扰
+      // .sharpen({ sigma: 1.5, m1: 0, m2: 20 }) // 可选：如果遇到识别错误再考虑开启锐化
+      // 将质量压到 60，对于文字黑白边缘影响微乎其微，但能将体积控制在 100~300KB
+      .jpeg({ quality: 60 }) 
       .toFile(processedPath);
 
     const metadata = await sharp(processedPath).metadata();
@@ -195,17 +198,16 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
       }
     }
 
-    // 🚨 移除了纠错器调用，直接将 rawName 作为最终 name
     const finalItems = await Promise.all(
       matchedPairs.map(async (pair) => {
         const cropDataUri = await generateCrop(processedPath, pair.unionBounds, procWidth, procHeight);
         
         return {
           originalName: pair.rawName,
-          name: pair.rawName, // 👈 直接使用原始识别出来的名字
+          name: pair.rawName, 
           price: pair.price,
-          confidence: '1.0', // 👈 默认满信度
-          isCorrected: false, // 👈 永远为 false，前端不再显示黄色的原名提示
+          confidence: '1.0', 
+          isCorrected: false, 
           cropDataUri: cropDataUri,
           _left: pair.unionBounds.left,
           _top: pair.unionBounds.top

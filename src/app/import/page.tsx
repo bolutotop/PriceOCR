@@ -6,12 +6,11 @@ import { scanImageLocal, ParsedItem } from '@/actions/ocr';
 import { savePriceSheet } from '@/actions/save-sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Save, UploadCloud, X, Database, Search, Link as LinkIcon, RefreshCw, ChevronLeft, AlertTriangle } from 'lucide-react';
+import { Loader2, Save, UploadCloud, X, Database, Search, Link as LinkIcon, RefreshCw, ChevronLeft, AlertTriangle, Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -36,7 +35,9 @@ export default function ImportPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // 🚨 新增：用于记录当前准备删除的行索引
+  // 🚨 修改：将默认 OCR 引擎改为腾讯云 (tencent)
+  const [ocrEngine, setOcrEngine] = useState('tencent');
+  
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -94,6 +95,10 @@ export default function ImportPage() {
     setStatus('processing');
     
     const formData = new FormData();
+    
+    // 注入用户选择的 OCR 引擎参数，供后端识别
+    formData.append('engine', ocrEngine);
+
     if (file) {
       formData.append('file', file);
     } else if (activeUrl) {
@@ -157,7 +162,7 @@ export default function ImportPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200/50 pb-20 font-sans">
       
-      {/* 🚨 新增：全局删除确认弹窗控制台 */}
+      {/* 全局删除确认弹窗控制台 */}
       <Dialog open={itemToDelete !== null} onOpenChange={(open) => !open && setItemToDelete(null)}>
         <DialogContent className="sm:max-w-md rounded-none border-slate-200 shadow-[8px_8px_0_0_rgba(15,23,42,0.1)] w-[90vw] sm:w-full">
           <DialogHeader>
@@ -251,6 +256,29 @@ export default function ImportPage() {
         
         {/* 左侧控制区 */}
         <div className="lg:col-span-4 space-y-3 sm:space-y-5 lg:sticky lg:top-[84px] h-fit z-10">
+          
+          {/* 引擎选择面板 */}
+          <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Cpu className="w-4 h-4 text-slate-800 stroke-[2.5]" />
+              <Label className="text-slate-800 font-black uppercase text-xs tracking-wider">解析引擎 (OCR Engine)</Label>
+            </div>
+            <Select value={ocrEngine} onValueChange={setOcrEngine} disabled={status === 'processing' || status === 'success'}>
+              <SelectTrigger className="w-full h-10 border-slate-200 rounded-none focus:ring-0 focus:border-slate-800 transition-colors ease-out font-bold text-xs sm:text-sm bg-slate-50">
+                <SelectValue placeholder="选择计算节点" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none border-slate-200">
+                {/* 🚨 修改：将腾讯云设为默认推荐，阿里云降级为备用 */}
+                <SelectItem value="tencent" className="font-bold text-slate-700 focus:bg-slate-100">
+                  腾讯云 (Tencent Cloud) - 默认
+                </SelectItem>
+                <SelectItem value="aliyun" className="font-bold text-slate-700 focus:bg-slate-100">
+                  阿里云 (Aliyun Vision) - 备用
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className={cn("bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] transition-opacity ease-out duration-200 p-4 sm:p-5", status === 'processing' ? 'opacity-70 pointer-events-none' : '')}>
             <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
             
@@ -362,7 +390,6 @@ export default function ImportPage() {
                 <table className="w-full table-fixed border-collapse">
                   <thead className="sticky top-[60px] z-30 bg-slate-100 shadow-sm border-b border-slate-200">
                     <tr>
-                      {/* ✅ 完全按照要求锁死你的自定义宽度配置 */}
                       <th className="w-[180px] sm:w-[300px] py-2 px-1 text-center font-bold text-slate-500 uppercase text-[10px] sm:text-xs border-r border-slate-200">切片</th>
                       <th className="w-auto py-2 px-2 sm:px-4 text-left font-bold text-slate-500 uppercase text-[10px] sm:text-xs">品名</th>
                       <th className="w-[70px] sm:w-[140px] py-2 px-1 sm:px-4 text-right font-bold text-slate-500 uppercase text-[10px] sm:text-xs">价格</th>
@@ -376,7 +403,6 @@ export default function ImportPage() {
                       return (
                         <tr key={actualIndex} className="group hover:bg-slate-50 transition-colors ease-out border-b border-slate-100">
                           
-                          {/* ✅ 完全按照要求锁死你的自定义高度配置 */}
                           <td className="p-1 sm:p-2 align-middle border-r border-slate-100">
                             <div className="w-full h-11 sm:h-14 bg-slate-50 border border-slate-200 mx-auto flex items-center justify-center overflow-hidden">
                               {item.cropDataUri ? (
@@ -406,7 +432,6 @@ export default function ImportPage() {
                             />
                           </td>
                           
-                          {/* 🚨 核心修改：点击不再直接删除，而是唤起顶部的弹窗 */}
                           <td className="p-0 sm:p-2 align-middle text-center border-l border-slate-100">
                             <button 
                               onClick={() => setItemToDelete(actualIndex)}

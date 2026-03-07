@@ -35,7 +35,7 @@ export default function ImportPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // 🚨 修改：将默认 OCR 引擎改为腾讯云 (tencent)
+  // 默认 OCR 引擎设为腾讯云 (tencent)
   const [ocrEngine, setOcrEngine] = useState('tencent');
   
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
@@ -49,7 +49,8 @@ export default function ImportPage() {
       interval = setInterval(() => {
         setProgress((prev) => {
           if (prev < 30) { setProgressText('正在读取结构数据...'); return prev + 10; }
-          if (prev < 70) { setProgressText('云端结构解析中...'); return prev + 5; }
+          // 🚨 修改：更新进度条文案，展示底层正在使用的“水平顺序扫描”算法
+          if (prev < 70) { setProgressText('执行水平顺序扫描配对...'); return prev + 5; }
           if (prev < 90) { setProgressText('单元格提取与切片...'); return prev + 2; }
           return prev;
         });
@@ -193,7 +194,7 @@ export default function ImportPage() {
         </DialogContent>
       </Dialog>
 
-      {/* 顶部主导航 - 完美锁定 60px 高度 */}
+      {/* 顶部主导航 */}
       <div className="bg-white/95 backdrop-blur-md border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-5 flex justify-between items-center shadow-sm h-[60px]">
         <div className="flex items-center gap-2 sm:gap-3">
           <Link href="/">
@@ -268,12 +269,12 @@ export default function ImportPage() {
                 <SelectValue placeholder="选择计算节点" />
               </SelectTrigger>
               <SelectContent className="rounded-none border-slate-200">
-                {/* 🚨 修改：将腾讯云设为默认推荐，阿里云降级为备用 */}
+                {/* 🚨 修改：明确标识出腾讯云使用的是最新的水平顺序识别模式 */}
                 <SelectItem value="tencent" className="font-bold text-slate-700 focus:bg-slate-100">
-                  腾讯云 (Tencent Cloud) - 默认
+                  腾讯云 (Tencent Cloud) - 水平顺序模式
                 </SelectItem>
                 <SelectItem value="aliyun" className="font-bold text-slate-700 focus:bg-slate-100">
-                  阿里云 (Aliyun Vision) - 备用
+                  阿里云 (Aliyun Vision) - 备用节点
                 </SelectItem>
               </SelectContent>
             </Select>

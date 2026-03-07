@@ -8,7 +8,7 @@ export async function runTencentOcr(source: { type: 'url' | 'file', payload: str
     throw new Error("配置缺失: 未读取到腾讯云密钥，请检查 .env 文件");
   }
 
-  // 实例化腾讯云客户端，强制走香港内网节点
+  // 走香港同城节点，保证速度
   const clientConfig = {
     credential: {
       secretId: process.env.TENCENT_SECRET_ID,
@@ -34,8 +34,7 @@ export async function runTencentOcr(source: { type: 'url' | 'file', payload: str
   }
 
   try {
-    // 🚨 核心战术转移：放弃表格引擎，改用“通用高精度文本识别”
-    // 这样引擎只会按“纯物理行”吐出坐标，绝不会擅自合并所谓的“单元格”！
+    // 调用最新的通用文字识别（高精度版）
     const response = await client.GeneralAccurateOCR(params);
     
     if (!response.TextDetections || response.TextDetections.length === 0) {
@@ -43,36 +42,62 @@ export async function runTencentOcr(source: { type: 'url' | 'file', payload: str
     }
 
     // ==========================================
-    // 🚨 将“纯物理行”数据无缝适配到阿里云 blockInfo 格式
+    // 🚨 坐标探针日志：打印前 10 条原始数据
     // ==========================================
+    console.log("\n\n👀👀👀 [腾讯云原始坐标探测 - 前10条] 👀👀👀");
+    const sampleLogs = response.TextDetections.slice(20, 30).map((item: any) => ({
+        Text: item.DetectedText,
+        Polygon: item.Polygon
+    }));
+    console.log(JSON.stringify(sampleLogs, null, 2));
+    console.log("👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀\n\n");
+
+
+    // 物理坐标转换适配器
     const fakeBlocks: any[] = [];
 
-    // 遍历每一个独立的文本行
     for (const item of response.TextDetections) {
         if (!item.DetectedText) continue;
 
-        // 提取精确的多边形物理坐标
-        const points = item.Polygon?.map((p: any) => ({ x: p.X, y: p.Y })) || [];
+        const rawText = item.DetectedText.trim();
+        const lines = rawText.split(/\r?\n/).map((l: string) => l.trim()).filter((l: string) => l);
+        const pts = item.Polygon?.map((p: any) => ({ x: p.X, y: p.Y })) || [];
 
-        // 塞入物理坐标块数组
-        fakeBlocks.push({
-            blockContent: item.DetectedText,  // 比如单独的一行 "软兰楼"
-            blockPoints: points
-        });
+        if (lines.length <= 1 || pts.length < 4) {
+            fakeBlocks.push({ blockContent: rawText, blockPoints: pts });
+        } else {
+            const minX = Math.min(...pts.map((p: any) => p.x));
+            const maxX = Math.max(...pts.map((p: any) => p.x));
+            const minY = Math.min(...pts.map((p: any) => p.y));
+            const maxY = Math.max(...pts.map((p: any) => p.y));
+
+            const totalHeight = maxY - minY;
+            const lineHeight = totalHeight / lines.length;
+
+            lines.forEach((line, idx) => {
+                const curTop = minY + idx * lineHeight;
+                const curBottom = curTop + lineHeight;
+                
+                fakeBlocks.push({
+                    blockContent: line,
+                    blockPoints: [
+                        { x: minX, y: Math.round(curTop) },
+                        { x: maxX, y: Math.round(curTop) },
+                        { x: maxX, y: Math.round(curBottom) },
+                        { x: minX, y: Math.round(curBottom) }
+                    ]
+                });
+            });
+        }
     }
 
-    // 伪装成阿里云的散落文本块（blockInfo）数据结构
-    const fakeAliyunSubImage = {
-        tableInfo: null, // 彻底关闭脆弱的表格网格逻辑
-        blockInfo: {
-            blockDetails: fakeBlocks // 强制主算法使用无敌的物理坐标匹配
-        }
+    return {
+        tableInfo: null,
+        blockInfo: { blockDetails: fakeBlocks }
     };
 
-    return fakeAliyunSubImage;
-
   } catch (err: any) {
-    console.error("[Tencent OCR Error]", err);
+    console.error("[Tencent GeneralAccurateOCR Error]", err);
     throw new Error(`腾讯云节点处理失败: ${err.message}`);
   }
 }

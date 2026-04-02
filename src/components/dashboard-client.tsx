@@ -29,7 +29,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
   const [activeCategory, setActiveCategory] = useState<string>('出货比价');
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'list'>('list'); // 废弃 grid 强切为 list
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'name', direction: null });
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'compareDiff', direction: 'desc' });
   const [menuOpen, setMenuOpen] = useState(false);
 
   // 本地接管比价板数组，以便允许乐观修改更新
@@ -116,7 +116,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
             return (
               <button
                 key={nav.id}
-                onClick={() => { setActiveCategory(nav.id); setSortConfig({ key: 'name', direction: null }); }}
+                onClick={() => { setActiveCategory(nav.id); setSortConfig({ key: (nav.id === '出货比价' || nav.id === '全库明细') ? 'compareDiff' : 'historyDiff', direction: 'desc' }); }}
                 className={cn(
                   "w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-bold transition-all ease-out duration-200",
                   isActive ? "bg-slate-800 text-white translate-x-1 shadow-md rounded-md" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-md"

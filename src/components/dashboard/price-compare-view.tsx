@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DashboardItem } from '@/actions/get-dashboard-data';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ChevronUp, ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dispatch, SetStateAction } from 'react';
@@ -28,7 +27,6 @@ function PriceInputCell({
 }) {
   const [val, setVal] = useState(value !== null && value > 0 ? String(value) : '');
   
-  // 当外部 value 变化时，同步内部状态（例如其它端修改或刷新）
   useEffect(() => {
     setVal(value !== null && value > 0 ? String(value) : '');
   }, [value]);
@@ -38,7 +36,6 @@ function PriceInputCell({
     if (!isNaN(num) && num > 0 && num !== value) {
       onSave(num);
     } else if (val === '' && value !== null && value !== 0) {
-      // 允许清零或者不处理，目前设计：不清零，恢复原状
       setVal(String(value));
     }
   };
@@ -50,8 +47,8 @@ function PriceInputCell({
       onChange={e => setVal(e.target.value)}
       onBlur={handleBlur}
       className={cn(
-        "w-full h-full min-h-[40px] px-2 bg-transparent outline-none focus:bg-white focus:ring-1 focus:ring-blue-400 rounded-sm text-right font-mono font-black transition-all", 
-        val === '' ? 'text-slate-300 font-sans font-normal text-xs' : 'text-slate-800',
+        "w-full h-11 px-1 sm:px-2 bg-transparent outline-none text-center font-mono font-black transition-all", 
+        val === '' ? 'text-slate-300 font-sans font-normal text-[12px]' : 'text-slate-800 text-[14px] sm:text-[16px]',
         className
       )}
       placeholder="点此输入"
@@ -64,11 +61,13 @@ function PriceInputCell({
 // ==========================================
 function PriceCompareRow({ 
   item, 
+  index,
   activeCategory, 
   onUpdateProductPrice,
   router 
 }: { 
   item: DashboardItem, 
+  index: number,
   activeCategory: string,
   onUpdateProductPrice: (id: string, fieldType: 'expressPrice' | 'guanghuoPrice', newPrice: number) => Promise<void>,
   router: any
@@ -87,81 +86,93 @@ function PriceCompareRow({
     if (diff === null) return <span className="text-slate-300">-</span>;
     const safeDiff = formatFloat(diff);
     if (safeDiff > 0) return (
-      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-0.5 sm:gap-1.5 justify-end">
-        <span className="text-blue-600 font-bold tracking-tight text-[13px] sm:text-base leading-none">+{safeDiff}</span>
-        <span className="text-[9px] sm:text-[11px] border border-blue-200 bg-blue-50 text-blue-700 px-1 py-0.5 font-bold whitespace-nowrap leading-none">卖快递</span>
+      <div className="flex flex-col items-center justify-center">
+        <span className="text-blue-600 font-bold tracking-tight text-[14px] sm:text-[16px] leading-none">+{safeDiff}</span>
+        <span className="text-[9px] sm:text-[10px] text-blue-500 mt-0.5 whitespace-nowrap leading-none">(卖快递)</span>
       </div>
     );
     if (safeDiff < 0) return (
-      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-0.5 sm:gap-1.5 justify-end">
-        <span className="text-emerald-600 font-bold tracking-tight text-[13px] sm:text-base leading-none">+{Math.abs(safeDiff)}</span>
-        <span className="text-[9px] sm:text-[11px] border border-emerald-200 bg-emerald-50 text-emerald-700 px-1 py-0.5 font-bold whitespace-nowrap leading-none">卖广货</span>
+      <div className="flex flex-col items-center justify-center">
+        <span className="text-emerald-600 font-bold tracking-tight text-[14px] sm:text-[16px] leading-none">+{Math.abs(safeDiff)}</span>
+        <span className="text-[9px] sm:text-[10px] text-emerald-500 mt-0.5 whitespace-nowrap leading-none">(卖广货)</span>
       </div>
     );
     return <span className="text-slate-400 font-bold text-xs sm:text-base">0</span>;
   };
 
   return (
-    <TableRow className="hover:bg-slate-50 group border-b border-slate-100/60 transition-colors ease-out">
-      <TableCell className="font-black text-slate-800 text-[13px] sm:text-base group-hover:text-blue-600 transition-colors ease-out px-2 sm:px-4 py-1 sm:py-2 truncate max-w-[90px] sm:max-w-full">
-        { /* 点击文字依然可以跳转详情 */ }
-        <span className="cursor-pointer" onClick={() => router.push(`/product/${item.id}`)}>{item.name}</span>
-      </TableCell>
+    <tr className={cn("hover:bg-blue-50/50 group border-b border-blue-50/50 transition-colors", index % 2 !== 0 && "bg-slate-50/40")}>
+      <td className="text-center font-bold text-slate-400 w-10 sm:w-12 border-r border-blue-50/50 p-0 text-xs">
+        {index + 1}
+      </td>
+      <td className="p-0 border-r border-blue-50/50 relative px-2 sm:px-3 text-[13px] sm:text-[14px] text-slate-800 font-bold max-w-[120px] truncate">
+        <span className="cursor-pointer hover:text-blue-600 transition-colors" onClick={() => router.push(`/product/${item.id}`)}>{item.name}</span>
+      </td>
 
       {activeCategory === '快递报价' && (
         <>
-          <TableCell className="p-0 border-x border-slate-100 w-24 sm:w-32">
+          <td className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center bg-blue-50/20">
             <PriceInputCell 
               value={item.expressPrice} 
               onSave={(val) => onUpdateProductPrice(item.id, 'expressPrice', val)} 
               className="text-blue-700" 
             />
-          </TableCell>
-          <TableCell className={`text-right font-mono font-bold text-xs sm:text-[15px] px-1 sm:px-4 hidden sm:table-cell ${!item.expressPrev || item.expressPrev <= 0 ? 'text-slate-300 font-sans font-normal' : 'text-slate-500'}`}>{!item.expressPrev || item.expressPrev <= 0 ? '无记录' : item.expressPrev}</TableCell>
-          <TableCell className="text-right pr-2 sm:pr-6 font-mono align-middle">{renderHistoryDiff(item.expressPrice, item.expressPrev)}</TableCell>
+          </td>
+          <td className={`p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center font-mono font-bold text-[13px] sm:text-[15px] hidden sm:table-cell ${!item.expressPrev || item.expressPrev <= 0 ? 'text-slate-300 font-sans font-normal text-xs' : 'text-slate-500'}`}>
+            <div className="w-full h-11 flex items-center justify-center">{!item.expressPrev || item.expressPrev <= 0 ? '无记录' : item.expressPrev}</div>
+          </td>
+          <td className="p-0 text-center font-mono align-middle">
+            <div className="w-full h-11 flex items-center justify-center">{renderHistoryDiff(item.expressPrice, item.expressPrev)}</div>
+          </td>
         </>
       )}
 
       {activeCategory === '广货报价' && (
         <>
-          <TableCell className="p-0 border-x border-slate-100 w-24 sm:w-32">
+          <td className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center bg-emerald-50/20">
              <PriceInputCell 
                value={item.guanghuoPrice} 
                onSave={(val) => onUpdateProductPrice(item.id, 'guanghuoPrice', val)} 
                className="text-emerald-700" 
              />
-          </TableCell>
-          <TableCell className={`text-right font-mono font-bold text-xs sm:text-[15px] px-1 sm:px-4 hidden sm:table-cell ${!item.guanghuoPrev || item.guanghuoPrev <= 0 ? 'text-slate-300 font-sans font-normal' : 'text-slate-500'}`}>{!item.guanghuoPrev || item.guanghuoPrev <= 0 ? '无记录' : item.guanghuoPrev}</TableCell>
-          <TableCell className="text-right pr-2 sm:pr-6 font-mono align-middle">{renderHistoryDiff(item.guanghuoPrice, item.guanghuoPrev)}</TableCell>
+          </td>
+          <td className={`p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center font-mono font-bold text-[13px] sm:text-[15px] hidden sm:table-cell ${!item.guanghuoPrev || item.guanghuoPrev <= 0 ? 'text-slate-300 font-sans font-normal text-xs' : 'text-slate-500'}`}>
+             <div className="w-full h-11 flex items-center justify-center">{!item.guanghuoPrev || item.guanghuoPrev <= 0 ? '无记录' : item.guanghuoPrev}</div>
+          </td>
+          <td className="p-0 text-center font-mono align-middle">
+             <div className="w-full h-11 flex items-center justify-center">{renderHistoryDiff(item.guanghuoPrice, item.guanghuoPrev)}</div>
+          </td>
         </>
       )}
 
       {(activeCategory === '出货比价' || activeCategory === '全库明细') && (
         <>
-          <TableCell className="p-0 border-r border-slate-100 w-20 sm:w-28 relative">
+          <td className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center bg-blue-50/20">
              <PriceInputCell 
                value={item.expressPrice} 
                onSave={(val) => onUpdateProductPrice(item.id, 'expressPrice', val)} 
                className="text-blue-700" 
              />
-          </TableCell>
-          <TableCell className="p-0 border-r border-slate-100 w-20 sm:w-28">
+          </td>
+          <td className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center bg-emerald-50/20">
              <PriceInputCell 
                value={item.guanghuoPrice} 
                onSave={(val) => onUpdateProductPrice(item.id, 'guanghuoPrice', val)} 
                className="text-emerald-700" 
              />
-          </TableCell>
-          <TableCell className="text-right pr-2 sm:pr-6 font-mono bg-slate-50/50 align-middle">
-            {renderCompareDiff(item.compareDiff)}
-          </TableCell>
+          </td>
+          <td className="p-0 text-center font-mono bg-slate-50/80 align-middle">
+             <div className="w-full h-11 flex items-center justify-center">{renderCompareDiff(item.compareDiff)}</div>
+          </td>
         </>
       )}
-    </TableRow>
+    </tr>
   );
 }
 
-
+// ==========================================
+// 主视图组件
+// ==========================================
 export default function PriceCompareView({
   activeCategory,
   sortedAndFilteredData,
@@ -186,80 +197,88 @@ export default function PriceCompareView({
 
   const renderSortIcon = (key: SortConfig['key']) => {
     if (sortConfig.key !== key || !sortConfig.direction) return <div className="w-3 h-3 md:w-4 md:h-4 ml-0.5 md:ml-1 opacity-20"><ChevronUp className="w-3 h-3" /></div>;
-    return sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3 md:w-4 md:h-4 ml-0.5 md:ml-1 text-slate-900" /> : <ChevronDown className="w-3 h-3 md:w-4 md:h-4 ml-0.5 md:ml-1 text-slate-900" />;
+    return sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3 md:w-4 md:h-4 ml-0.5 md:ml-1 text-white" /> : <ChevronDown className="w-3 h-3 md:w-4 md:h-4 ml-0.5 md:ml-1 text-white" />;
   };
 
   return (
-    <div className="p-2 sm:p-0 h-full flex flex-col max-w-5xl mx-auto pb-[120px]">
-      <div className="flex justify-between items-end mb-3 sm:mb-4 border-b border-slate-200/60 pb-2 sm:pb-3 px-2 sm:px-0 shrink-0">
-        <div className="flex flex-col">
-          <h2 className="text-xl font-black text-slate-800 tracking-tight hidden sm:block">{activeCategory}</h2>
-          <span className="text-slate-500 text-xs font-bold mt-1">共 {sortedAndFilteredData.length} 条记录支持即时编辑</span>
-        </div>
+    <div className="max-w-5xl mx-auto h-full flex flex-col pb-[120px]">
+      {/* 统一样式的黑底白字 Header */}
+      <div className="bg-slate-800 text-white p-4 sm:rounded-t-xl shrink-0">
+         <div className="flex justify-between items-start">
+           <div>
+             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">{activeCategory} / 记录数</p>
+             <div className="flex items-baseline gap-2">
+               <span className="text-xl font-mono text-white font-black tracking-tight">{sortedAndFilteredData.length}</span>
+               <span className="text-sm border-l border-slate-600 pl-2 text-slate-300">支持点击即时编辑</span>
+             </div>
+           </div>
+         </div>
       </div>
 
-      <div className="bg-white border sm:rounded-xl border-slate-200 shadow-sm flex-1 sm:overflow-hidden flex flex-col">
+      <div className="bg-white border-l border-r border-b border-slate-200 sm:rounded-b-xl shadow-sm flex-1 flex flex-col -mt-[1px]">
         <div className="w-full">
-          <Table>
-            <TableHeader className="bg-slate-50/80 border-b border-slate-200 sticky top-0 z-10 backdrop-blur-md">
-              <TableRow className="hover:bg-transparent border-none">
-                <TableHead className="font-bold text-slate-700 w-[90px] sm:w-[120px] md:w-1/4 uppercase text-[10px] sm:text-xs cursor-pointer select-none px-2 sm:px-4" onClick={() => handleSort('name')}>
+          <table className="w-full text-left border-collapse min-w-[320px]">
+            <thead className="sticky top-[52px] lg:top-[60px] z-40 shadow-sm">
+              <tr className="bg-[#4a8ebf] text-white select-none">
+                <th className="w-10 sm:w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black">⊕</th>
+                <th className="py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('name')}>
                   <div className="flex items-center">品种 {renderSortIcon('name')}</div>
-                </TableHead>
+                </th>
                 
                 {activeCategory === '快递报价' && (
                   <>
-                    <TableHead className="text-right font-bold text-blue-700 bg-blue-50/50 cursor-pointer select-none px-1 sm:px-4" onClick={() => handleSort('expressPrice')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">最新 ✍️ {renderSortIcon('expressPrice')}</div>
-                    </TableHead>
-                    <TableHead className="text-right font-bold text-slate-500 cursor-pointer select-none px-1 sm:px-4 hidden sm:table-cell" onClick={() => handleSort('expressPrev')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">昨日</div>
-                    </TableHead>
-                    <TableHead className="text-right font-bold text-slate-700 pr-2 sm:pr-6 cursor-pointer select-none" onClick={() => handleSort('historyDiff')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">变动 {renderSortIcon('historyDiff')}</div>
-                    </TableHead>
+                    <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('expressPrice')}>
+                      <div className="flex items-center justify-center">最新 ✍️ {renderSortIcon('expressPrice')}</div>
+                    </th>
+                    <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer hidden sm:table-cell" onClick={() => handleSort('expressPrev')}>
+                      昨日
+                    </th>
+                    <th className="py-2.5 px-1 text-center text-xs sm:text-sm font-bold cursor-pointer" onClick={() => handleSort('historyDiff')}>
+                      <div className="flex items-center justify-center">变动 {renderSortIcon('historyDiff')}</div>
+                    </th>
                   </>
                 )}
                 {activeCategory === '广货报价' && (
                   <>
-                    <TableHead className="text-right font-bold text-emerald-700 bg-emerald-50/50 cursor-pointer select-none px-1 sm:px-4" onClick={() => handleSort('guanghuoPrice')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">最新 ✍️ {renderSortIcon('guanghuoPrice')}</div>
-                    </TableHead>
-                    <TableHead className="text-right font-bold text-slate-500 cursor-pointer select-none px-1 sm:px-4 hidden sm:table-cell" onClick={() => handleSort('guanghuoPrev')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">昨日</div>
-                    </TableHead>
-                    <TableHead className="text-right font-bold text-slate-700 pr-2 sm:pr-6 cursor-pointer select-none" onClick={() => handleSort('historyDiff')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">变动 {renderSortIcon('historyDiff')}</div>
-                    </TableHead>
+                    <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('guanghuoPrice')}>
+                      <div className="flex items-center justify-center">最新 ✍️ {renderSortIcon('guanghuoPrice')}</div>
+                    </th>
+                    <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer hidden sm:table-cell" onClick={() => handleSort('guanghuoPrev')}>
+                      昨日
+                    </th>
+                    <th className="py-2.5 px-1 text-center text-xs sm:text-sm font-bold cursor-pointer" onClick={() => handleSort('historyDiff')}>
+                      <div className="flex items-center justify-center">变动 {renderSortIcon('historyDiff')}</div>
+                    </th>
                   </>
                 )}
                 {(activeCategory === '出货比价' || activeCategory === '全库明细') && (
                   <>
-                    <TableHead className="text-right font-bold text-blue-700 bg-blue-50/50 cursor-pointer select-none px-1 sm:px-4" onClick={() => handleSort('expressPrice')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">快递价 ✍️ {renderSortIcon('expressPrice')}</div>
-                    </TableHead>
-                    <TableHead className="text-right font-bold text-emerald-700 bg-emerald-50/50 cursor-pointer select-none px-1 sm:px-4" onClick={() => handleSort('guanghuoPrice')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">广货价 ✍️ {renderSortIcon('guanghuoPrice')}</div>
-                    </TableHead>
-                    <TableHead className="text-right font-bold text-slate-800 pr-2 sm:pr-6 cursor-pointer select-none bg-slate-50" onClick={() => handleSort('compareDiff')}>
-                      <div className="flex items-center justify-end text-[10px] sm:text-xs">差价利润 {renderSortIcon('compareDiff')}</div>
-                    </TableHead>
+                    <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('expressPrice')}>
+                      <div className="flex items-center justify-center">快递价✍️ {renderSortIcon('expressPrice')}</div>
+                    </th>
+                    <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('guanghuoPrice')}>
+                      <div className="flex items-center justify-center">广货价✍️ {renderSortIcon('guanghuoPrice')}</div>
+                    </th>
+                    <th className="py-2.5 px-1 text-center text-xs sm:text-sm font-bold cursor-pointer" onClick={() => handleSort('compareDiff')}>
+                      <div className="flex items-center justify-center">差价利润 {renderSortIcon('compareDiff')}</div>
+                    </th>
                   </>
                 )}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedAndFilteredData.map(item => (
+              </tr>
+            </thead>
+            <tbody>
+              {sortedAndFilteredData.map((item, i) => (
                 <PriceCompareRow 
                   key={item.id} 
                   item={item} 
+                  index={i}
                   activeCategory={activeCategory} 
                   onUpdateProductPrice={onUpdateProductPrice}
                   router={router}
                 />
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </div>
 

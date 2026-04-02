@@ -280,7 +280,7 @@ export default function InventoryView({
       <div className="bg-white border-l border-r border-b border-slate-200 sm:rounded-b-xl shadow-sm flex-1 flex flex-col -mt-[1px]">
           <div className="w-full">
             <table className="w-full text-left border-collapse min-w-[320px]">
-              <thead>
+              <thead className="sticky top-[52px] lg:top-[60px] z-40 shadow-sm">
                 <tr className="bg-[#4a8ebf] text-white select-none">
                   <th className="w-10 sm:w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black">⊕</th>
                   <th className="py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold border-r border-[#3c78a3]">名称 👆</th>

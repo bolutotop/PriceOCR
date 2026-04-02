@@ -193,7 +193,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
           )}
         </header>
 
-        <div className="flex-1 overflow-auto p-0 sm:p-4 lg:p-6 bg-slate-50/50 scroll-smooth pb-8">
+        <div className="flex-1 p-0 sm:p-4 lg:p-6 bg-slate-50/50 pb-8">
           {activeCategory === '当前库存' ? (
             <InventoryView
               inventory={inventory}

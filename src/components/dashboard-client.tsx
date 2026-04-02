@@ -7,7 +7,7 @@ import { createInventoryItem, updateInventoryItem, deleteInventoryItem } from '@
 import { updateProductPrice } from '@/actions/price';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, ArrowRightLeft, FileText, Box, Database, History, Archive, MoreHorizontal, Link as LinkIcon } from 'lucide-react';
+import { Plus, Search, ArrowRightLeft, FileText, Box, Database, History, Archive, Menu, Link as LinkIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import InventoryView from './dashboard/inventory-view';
 import PriceCompareView from './dashboard/price-compare-view';
@@ -171,8 +171,8 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
                  <Input className="pl-8 h-8 text-xs bg-slate-100/80 border-none rounded-full" placeholder="简搜..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
                
-               <Button variant="ghost" size="icon" className="h-8 w-8 lg:hidden rounded-full font-bold bg-slate-100/80 hover:bg-slate-200" onClick={() => setMenuOpen(!menuOpen)}>
-                 <MoreHorizontal className="w-5 h-5 text-slate-700" />
+               <Button variant="ghost" size="icon" className="h-8 w-8 lg:hidden rounded-full font-bold bg-slate-100/80 hover:bg-slate-200 focus:bg-slate-200 transition-colors" onClick={() => setMenuOpen(!menuOpen)}>
+                 <Menu className="w-4 h-4 text-slate-700" />
                </Button>
                
                <div className="hidden lg:flex gap-2">
@@ -182,16 +182,24 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
                </div>
             </div>
           </div>
-
-          {menuOpen && (
-            <div className="absolute right-4 top-14 bg-white border border-slate-200 shadow-xl rounded-xl p-2 z-[100] w-48 flex flex-col gap-1 origin-top-right animate-in fade-in zoom-in-95 duration-200 lg:hidden text-sm">
-              <Link href="/mapping" className="flex items-center gap-3 px-3 py-2.5 text-slate-700 font-bold hover:bg-slate-100 rounded-lg"><LinkIcon className="w-4 h-4 text-slate-400" /> 名称同步映射</Link>
-              <Link href="/history" className="flex items-center gap-3 px-3 py-2.5 text-slate-700 font-bold hover:bg-slate-100 rounded-lg"><History className="w-4 h-4 text-slate-400" /> 报表历史查询</Link>
-              <div className="h-[1px] bg-slate-100 my-1"></div>
-              <Link href="/import" className="flex items-center gap-3 px-3 py-2.5 text-blue-600 bg-blue-50/50 font-bold hover:bg-blue-100 rounded-lg"><Plus className="w-4 h-4" /> 录入最新图片</Link>
-            </div>
-          )}
         </header>
+
+        {menuOpen && (
+          <>
+            {/* 沉浸式背景点击收起 */}
+            <div 
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[90] lg:hidden animate-in fade-in duration-200" 
+              onClick={() => setMenuOpen(false)} 
+            />
+            {/* 右上角菜单 */}
+            <div className="fixed right-4 top-[60px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-2xl p-2 z-[100] w-52 flex flex-col gap-1 origin-top-right animate-in fade-in zoom-in-95 duration-200 lg:hidden text-sm">
+              <Link href="/mapping" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><LinkIcon className="w-4 h-4 text-slate-400" /> 名称同步映射</Link>
+              <Link href="/history" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><History className="w-4 h-4 text-slate-400" /> 报表历史查询</Link>
+              <div className="h-[1px] bg-slate-100 my-1"></div>
+              <Link href="/import" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-blue-600 bg-blue-50/80 font-bold hover:bg-blue-100 rounded-xl transition-colors"><Plus className="w-4 h-4" /> 录入最新图片</Link>
+            </div>
+          </>
+        )}
 
         <div className="flex-1 p-0 sm:p-4 lg:p-6 bg-slate-50/50 pb-8">
           {activeCategory === '当前库存' ? (

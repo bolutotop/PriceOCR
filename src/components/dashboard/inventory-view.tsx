@@ -282,11 +282,11 @@ export default function InventoryView({
             <table className="w-full text-left border-collapse min-w-[320px]">
               <thead className="sticky top-[52px] lg:top-[60px] z-40 shadow-sm">
                 <tr className="bg-[#4a8ebf] text-white select-none">
-                  <th className="w-10 sm:w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black">⊕</th>
-                  <th className="py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold border-r border-[#3c78a3]">名称 👆</th>
+                  <th className="w-10 sm:w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black"></th>
+                  <th className="py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold border-r border-[#3c78a3]">名称</th>
                   <th className="w-16 sm:w-20 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">数量</th>
                   <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">单价</th>
-                  <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">总金额</th>
+                  <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">金额</th>
                   <th className="w-10 sm:w-12 py-2.5 px-0 text-center border-r border-[#3c78a3]"></th>
                 </tr>
               </thead>

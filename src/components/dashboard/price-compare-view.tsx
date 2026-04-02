@@ -209,7 +209,6 @@ export default function PriceCompareView({
              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">{activeCategory} / 记录数</p>
              <div className="flex items-baseline gap-2">
                <span className="text-xl font-mono text-white font-black tracking-tight">{sortedAndFilteredData.length}</span>
-               <span className="text-sm border-l border-slate-600 pl-2 text-slate-300">支持点击即时编辑</span>
              </div>
            </div>
          </div>
@@ -228,7 +227,7 @@ export default function PriceCompareView({
                 {activeCategory === '快递报价' && (
                   <>
                     <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('expressPrice')}>
-                      <div className="flex items-center justify-center">最新 ✍️ {renderSortIcon('expressPrice')}</div>
+                      <div className="flex items-center justify-center">最新 {renderSortIcon('expressPrice')}</div>
                     </th>
                     <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer hidden sm:table-cell" onClick={() => handleSort('expressPrev')}>
                       昨日
@@ -241,7 +240,7 @@ export default function PriceCompareView({
                 {activeCategory === '广货报价' && (
                   <>
                     <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('guanghuoPrice')}>
-                      <div className="flex items-center justify-center">最新 ✍️ {renderSortIcon('guanghuoPrice')}</div>
+                      <div className="flex items-center justify-center">最新 {renderSortIcon('guanghuoPrice')}</div>
                     </th>
                     <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer hidden sm:table-cell" onClick={() => handleSort('guanghuoPrev')}>
                       昨日
@@ -254,10 +253,10 @@ export default function PriceCompareView({
                 {(activeCategory === '出货比价' || activeCategory === '全库明细') && (
                   <>
                     <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('expressPrice')}>
-                      <div className="flex items-center justify-center">快递价✍️ {renderSortIcon('expressPrice')}</div>
+                      <div className="flex items-center justify-center">快递价 {renderSortIcon('expressPrice')}</div>
                     </th>
                     <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3] cursor-pointer" onClick={() => handleSort('guanghuoPrice')}>
-                      <div className="flex items-center justify-center">广货价✍️ {renderSortIcon('guanghuoPrice')}</div>
+                      <div className="flex items-center justify-center">广货价 {renderSortIcon('guanghuoPrice')}</div>
                     </th>
                     <th className="py-2.5 px-1 text-center text-xs sm:text-sm font-bold cursor-pointer" onClick={() => handleSort('compareDiff')}>
                       <div className="flex items-center justify-center">差价利润 {renderSortIcon('compareDiff')}</div>

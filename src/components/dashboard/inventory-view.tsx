@@ -60,25 +60,27 @@ export function InventoryRow({
     onUpdate(item.id, { name: p.name, price: finalPrice, quantity: parseInt(qty) || 0 });
   };
 
+  const total = (parseFloat(price) || 0) * (parseInt(qty, 10) || 0);
+
   return (
     <TableRow 
       ref={rowRef}
       onBlur={handleBlur}
       className={cn("hover:bg-blue-50/50 group border-b border-blue-50/50 relative", index % 2 !== 0 && "bg-slate-50/40")}
     >
-      <TableCell className="text-center font-bold text-slate-400 w-12 border-r border-blue-50/50 p-0 text-xs">
+      <TableCell className="text-center font-bold text-slate-400 w-10 sm:w-12 border-r border-blue-50/50 p-0 text-xs">
         {index + 1}
       </TableCell>
-      <TableCell className="p-0 border-r border-blue-50/50 relative group/name focus-within:z-50">
+      <TableCell className="p-0 border-r border-blue-50/50 relative group/name focus-within:z-[60]">
         <input 
           value={name}
           onChange={e => setName(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
-          className="w-full h-11 px-3 bg-transparent outline-none font-bold text-[14px] text-slate-800 placeholder:text-slate-300"
+          className="w-full h-11 px-2 sm:px-3 bg-transparent outline-none font-bold text-[13px] sm:text-[14px] text-slate-800 placeholder:text-slate-300"
           placeholder="输入名称"
         />
         {showSuggestions && filteredProducts.length > 0 && (
-          <div className="absolute top-11 left-0 w-full min-w-[200px] bg-white border border-slate-200 shadow-xl z-50 max-h-48 overflow-y-auto rounded-b-md">
+          <div className="absolute top-[105%] left-0 w-full min-w-[200px] bg-white border border-slate-200 shadow-xl max-h-48 overflow-y-auto rounded-md custom-scrollbar">
             {filteredProducts.map(fp => (
               <div 
                 key={fp.id} 
@@ -92,23 +94,28 @@ export function InventoryRow({
           </div>
         )}
       </TableCell>
-      <TableCell className="p-0 border-r border-blue-50/50 w-20 sm:w-28 text-center">
+      <TableCell className="p-0 border-r border-blue-50/50 w-16 sm:w-20 text-center">
         <input 
           type="number"
           value={qty}
           onChange={e => setQty(e.target.value)}
-          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-bold text-[15px] sm:text-[17px] text-center text-blue-700"
+          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-bold text-[14px] sm:text-[16px] text-center text-blue-700"
           placeholder="0"
         />
       </TableCell>
-      <TableCell className="p-0 border-r border-blue-50/50 w-20 sm:w-28 text-center">
+      <TableCell className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center">
         <input 
           type="number"
           value={price}
           onChange={e => setPrice(e.target.value)}
-          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-black text-[15px] sm:text-[17px] text-center text-rose-600"
-          placeholder="0"
+          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-black text-[14px] sm:text-[16px] text-center text-rose-600"
+          placeholder="0.0"
         />
+      </TableCell>
+      <TableCell className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center bg-slate-50/80">
+        <div className="w-full h-11 flex items-center justify-center font-mono font-black text-[14px] sm:text-[16px] text-slate-700 select-all">
+          {total > 0 ? total.toLocaleString() : '-'}
+        </div>
       </TableCell>
       <TableCell className="w-10 sm:w-12 p-0 text-center align-middle">
         <div className="flex h-full w-full justify-center items-center opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
@@ -174,25 +181,27 @@ export function InventoryNewRow({
     setShowSuggestions(false);
   };
 
+  const total = (parseFloat(price) || 0) * (parseInt(qty, 10) || 0);
+
   return (
     <TableRow 
       ref={rowRef}
       onBlur={handleBlur}
-      className="bg-emerald-50/30 hover:bg-emerald-50/60 transition-colors border-b-2 border-emerald-100"
+      className="bg-emerald-50/30 hover:bg-emerald-50/60 transition-colors border-b-2 border-emerald-100 relative"
     >
-      <TableCell className="text-center text-emerald-500 w-12 border-r border-emerald-100/50 p-0 text-sm">
+      <TableCell className="text-center text-emerald-500 w-10 sm:w-12 border-r border-emerald-100/50 p-0 text-sm">
         <Plus className="w-4 h-4 mx-auto" />
       </TableCell>
-      <TableCell className="p-0 border-r border-emerald-100/50 relative focus-within:z-50">
+      <TableCell className="p-0 border-r border-emerald-100/50 relative focus-within:z-[60]">
         <input 
           value={name}
           onChange={e => setName(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
-          className="w-full h-11 px-3 bg-transparent outline-none font-bold text-[14px] text-emerald-900 placeholder:text-emerald-300"
-          placeholder="点击追加新品种..."
+          className="w-full h-11 px-2 sm:px-3 bg-transparent outline-none font-bold text-[13px] sm:text-[14px] text-emerald-900 placeholder:text-emerald-300"
+          placeholder="追加名字..."
         />
         {showSuggestions && filteredProducts.length > 0 && (
-          <div className="absolute top-11 left-0 w-full min-w-[200px] bg-white border border-emerald-200 shadow-xl z-[60] max-h-48 overflow-y-auto rounded-b-md">
+          <div className="absolute top-[105%] left-0 w-full min-w-[200px] bg-white border border-emerald-200 shadow-xl max-h-48 overflow-y-auto rounded-md custom-scrollbar">
             {filteredProducts.map(fp => (
               <div 
                 key={fp.id} 
@@ -206,23 +215,28 @@ export function InventoryNewRow({
           </div>
         )}
       </TableCell>
-      <TableCell className="p-0 border-r border-emerald-100/50 w-20 sm:w-28 text-center">
+      <TableCell className="p-0 border-r border-emerald-100/50 w-16 sm:w-20 text-center">
         <input 
           type="number"
           value={qty}
           onChange={e => setQty(e.target.value)}
-          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-bold text-[15px] sm:text-[17px] text-center text-emerald-700 placeholder:text-emerald-200/60"
-          placeholder="数量"
+          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-bold text-[14px] sm:text-[16px] text-center text-emerald-700 placeholder:text-emerald-200/60"
+          placeholder="数目"
         />
       </TableCell>
-      <TableCell className="p-0 border-r border-emerald-100/50 w-20 sm:w-28 text-center">
+      <TableCell className="p-0 border-r border-emerald-100/50 w-20 sm:w-24 text-center">
         <input 
           type="number"
           value={price}
           onChange={e => setPrice(e.target.value)}
-          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-black text-[15px] sm:text-[17px] text-center text-emerald-700 placeholder:text-emerald-200/60"
+          className="w-full h-11 px-1 bg-transparent outline-none font-mono font-black text-[14px] sm:text-[16px] text-center text-emerald-700 placeholder:text-emerald-200/60"
           placeholder="单价"
         />
+      </TableCell>
+      <TableCell className="p-0 border-r border-emerald-100/50 w-20 sm:w-24 text-center bg-emerald-100/30">
+        <div className="w-full h-11 flex items-center justify-center font-mono font-black text-[14px] sm:text-[16px] text-emerald-800/60">
+          {total > 0 ? total.toLocaleString() : '-'}
+        </div>
       </TableCell>
       <TableCell className="w-10 sm:w-12 p-0 text-center align-middle"></TableCell>
     </TableRow>
@@ -249,7 +263,7 @@ export default function InventoryView({
   const totalInvCount = inventory.reduce((sum: number, item: any) => sum + item.quantity, 0);
 
   return (
-    <div className="max-w-5xl mx-auto h-full flex flex-col">
+    <div className="max-w-5xl mx-auto h-full flex flex-col pb-[120px]">
       <div className="bg-slate-800 text-white p-4 sm:rounded-t-xl shrink-0">
          <div className="flex justify-between items-start">
            <div>
@@ -262,15 +276,17 @@ export default function InventoryView({
          </div>
       </div>
       
-      <div className="bg-white border-l border-r border-b border-slate-200 sm:rounded-b-xl shadow-sm flex-1 sm:overflow-hidden flex flex-col -mt-[1px]">
-          <div className="w-full overflow-x-auto custom-scrollbar">
+      {/* 移除导致截断的 overflow-hidden，让子元素的 absolute 菜单可以不受限地盖住下方 */}
+      <div className="bg-white border-l border-r border-b border-slate-200 sm:rounded-b-xl shadow-sm flex-1 flex flex-col -mt-[1px]">
+          <div className="w-full">
             <table className="w-full text-left border-collapse min-w-[320px]">
               <thead>
                 <tr className="bg-[#4a8ebf] text-white select-none">
-                  <th className="w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black">⊕</th>
-                  <th className="py-2.5 px-3 text-sm font-bold border-r border-[#3c78a3]">名称 👆</th>
-                  <th className="w-20 sm:w-28 py-2.5 px-2 text-center text-sm font-bold border-r border-[#3c78a3]">数量</th>
-                  <th className="w-20 sm:w-28 py-2.5 px-2 text-center text-sm font-bold border-r border-[#3c78a3]">价格</th>
+                  <th className="w-10 sm:w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black">⊕</th>
+                  <th className="py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold border-r border-[#3c78a3]">名称 👆</th>
+                  <th className="w-16 sm:w-20 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">数量</th>
+                  <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">单价</th>
+                  <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">总金额</th>
                   <th className="w-10 sm:w-12 py-2.5 px-0 text-center border-r border-[#3c78a3]"></th>
                 </tr>
               </thead>

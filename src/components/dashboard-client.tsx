@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { DashboardItem } from '@/actions/get-dashboard-data';
 import { createInventoryItem, updateInventoryItem, deleteInventoryItem } from '@/actions/inventory';
+import { updateProductPrice } from '@/actions/price';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Search, ArrowRightLeft, FileText, Box, Database, History, Archive, MoreHorizontal, Link as LinkIcon } from 'lucide-react';
@@ -27,16 +28,18 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
   
   const [activeCategory, setActiveCategory] = useState<string>('出货比价');
   const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [viewMode, setViewMode] = useState<'list'>('list'); // 废弃 grid 强切为 list
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'name', direction: null });
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // 本地接管比价板数组，以便允许乐观修改更新
+  const [productsList, setProductsList] = useState(initialData);
   const [inventory, setInventory] = useState(initialInventoryData);
 
   const sortedAndFilteredData = useMemo(() => {
     if (activeCategory === '当前库存') return [];
     
-    let result = initialData.filter(item => {
+    let result = productsList.filter(item => {
       let matchesCategory = true;
       if (activeCategory === '快递报价') matchesCategory = item.expressPrice !== null;
       if (activeCategory === '广货报价') matchesCategory = item.guanghuoPrice !== null;
@@ -60,7 +63,23 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
       });
     }
     return result;
-  }, [initialData, activeCategory, searchTerm, sortConfig]);
+  }, [productsList, activeCategory, searchTerm, sortConfig]);
+
+  const onUpdateProductPrice = async (id: string, fieldType: 'expressPrice' | 'guanghuoPrice', newPrice: number) => {
+    // 乐观快速更新UI
+    setProductsList(prev => prev.map(p => {
+       if (p.id === id) {
+          const updated = { ...p, [fieldType]: newPrice };
+          // 重新计算价差
+          if (updated.expressPrice !== null && updated.guanghuoPrice !== null) {
+             updated.compareDiff = updated.expressPrice - updated.guanghuoPrice;
+          }
+          return updated;
+       }
+       return p;
+    }));
+    await updateProductPrice(id, fieldType === 'expressPrice' ? 'EXPRESS' : 'GUANGHUO', newPrice);
+  };
 
   const onUpdateInventoryRow = async (id: string, data: any) => {
     setInventory(inventory.map((i: any) => i.id === id ? { ...i, ...data } : i));
@@ -187,10 +206,9 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
             <PriceCompareView
               activeCategory={activeCategory}
               sortedAndFilteredData={sortedAndFilteredData}
-              viewMode={viewMode}
-              setViewMode={setViewMode}
               sortConfig={sortConfig}
               setSortConfig={setSortConfig}
+              onUpdateProductPrice={onUpdateProductPrice}
             />
           )}
         </div>

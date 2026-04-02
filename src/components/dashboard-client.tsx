@@ -137,6 +137,7 @@ export default function DashboardClient({ initialData }: { initialData: Dashboar
             </div>
           </div>
           <div className="flex gap-2 sm:gap-3">
+            <Link href="/mapping"><Button variant="outline" size="sm" className="rounded-none border-slate-300 font-bold hover:bg-slate-100 text-slate-600 px-2 sm:px-4"><ArrowRightLeft className="w-4 h-4 sm:mr-1.5" /> <span className="hidden sm:inline">名称同步</span></Button></Link>
             <Link href="/history"><Button variant="outline" size="sm" className="rounded-none border-slate-300 font-bold hover:bg-slate-100 text-slate-600 px-2 sm:px-4"><History className="w-4 h-4 sm:mr-1.5" /> <span className="hidden sm:inline">历史单据</span></Button></Link>
             <Link href="/import"><Button size="sm" className="rounded-none bg-slate-800 hover:bg-slate-900 text-white font-bold shadow-none transition-all ease-out px-2 sm:px-4"><Plus className="w-4 h-4 sm:mr-1.5" /> <span className="hidden sm:inline">录入新单</span></Button></Link>
           </div>

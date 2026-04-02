@@ -9,12 +9,23 @@ datasource db {
 
 // 1. 香烟基础库 (彻底抛弃地区标签，回归极简)
 model Product {
-  id           String      @id @default(cuid())
-  name         String      @unique
-  alias        String?     // 别名，用于 OCR 容错匹配
+  id           String         @id @default(cuid())
+  name         String         @unique
+  alias        String?        // 别名，用于 OCR 容错匹配
   
+  // 别名映射关系表，挂载在这个商品下所有的异名
+  aliases      ProductAlias[]
+
   // 价格历史记录
   priceHistory PriceItem[] 
+}
+
+// 1.5 别名库 (用于自动识别快递名与广货名不同时)
+model ProductAlias {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 // 2. 报价单/批次 (一次上传对应一个批次)

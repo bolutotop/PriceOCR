@@ -59,3 +59,13 @@ model PriceItem {
   // 冗余存一个名字，方便直接查询显示
   rawName    String     
 }
+
+// 4. 手工库存表 (独立于比价系统，自己填写的库存)
+model InventoryItem {
+  id        String   @id @default(cuid())
+  name      String   // 名称
+  price     Float    // 单价
+  quantity  Int      // 数量
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}

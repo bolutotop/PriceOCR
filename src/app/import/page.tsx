@@ -28,6 +28,8 @@ export default function ImportPage() {
 
   const [items, setItems] = useState<ParsedItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  // 价格列表头的"只看未识别"勾选；勾选后仅展示 price === -1 的行
+  const [onlyUnrecognized, setOnlyUnrecognized] = useState(false);
   
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState(''); 
@@ -158,7 +160,22 @@ export default function ImportPage() {
     setItems(items.filter((_, i) => i !== actualIndex));
   };
 
-  const filteredItems = items.filter(i => i.name.includes(searchTerm));
+  // 1) 检索过滤；2) 若勾选"只看未识别"，再过滤 price === -1，并把未识别置顶；
+  // 3) 未勾选时完全保持原顺序（即 items 原始顺序），不做置顶。
+  // 注意：这里不改动 items 本身，渲染时通过 items.indexOf(item) 找回真实索引，
+  // 避免影响后续的 updateItemName / handlePriceChange / handleDelete 传入的 actualIndex。
+  const unrecognizedCount = items.filter((i) => i.price === -1).length;
+  let filteredItems = items
+    .filter((i) => i.name.includes(searchTerm))
+    .filter((i) => (onlyUnrecognized ? i.price === -1 : true));
+  if (onlyUnrecognized) {
+    // JS 的 sort 是稳定的，未识别之外的其它顺序保持不变
+    filteredItems = filteredItems.slice().sort((a, b) => {
+      const aMiss = a.price === -1 ? 0 : 1;
+      const bMiss = b.price === -1 ? 0 : 1;
+      return aMiss - bMiss;
+    });
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200/50 pb-20 font-sans">
@@ -393,7 +410,45 @@ export default function ImportPage() {
                     <tr>
                       <th className="w-[180px] sm:w-[300px] py-2 px-1 text-center font-bold text-slate-500 uppercase text-[10px] sm:text-xs border-r border-slate-200">切片</th>
                       <th className="w-auto py-2 px-2 sm:px-4 text-left font-bold text-slate-500 uppercase text-[10px] sm:text-xs">品名</th>
-                      <th className="w-[70px] sm:w-[140px] py-2 px-1 sm:px-4 text-right font-bold text-slate-500 uppercase text-[10px] sm:text-xs">价格</th>
+                      <th className="w-[90px] sm:w-[180px] py-2 px-1 sm:px-4 text-right font-bold text-slate-500 uppercase text-[10px] sm:text-xs">
+                        <div className="flex items-center justify-end gap-1 sm:gap-2">
+                          {/* 只看未识别 勾选：勾选后仅展示 price===-1 的行；
+                              未勾选时也会把未识别条目置顶（sort 由 filteredItems 统一处理）。 */}
+                          <label
+                            className={cn(
+                              'flex items-center gap-1 cursor-pointer select-none border px-1 sm:px-1.5 py-[2px] transition-colors ease-out',
+                              onlyUnrecognized
+                                ? 'border-red-400 bg-red-50 text-red-600'
+                                : 'border-slate-300 bg-white text-slate-500 hover:border-slate-400'
+                            )}
+                            title={unrecognizedCount > 0 ? `共 ${unrecognizedCount} 条未识别` : '暂无未识别条目'}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={onlyUnrecognized}
+                              onChange={(e) => setOnlyUnrecognized(e.target.checked)}
+                              disabled={unrecognizedCount === 0 && !onlyUnrecognized}
+                              className="w-3 h-3 sm:w-3.5 sm:h-3.5 accent-red-600 cursor-pointer disabled:cursor-not-allowed"
+                            />
+                            <span className="text-[9px] sm:text-[10px] font-black tracking-wider normal-case">
+                              未识别
+                            </span>
+                            {unrecognizedCount > 0 && (
+                              <span
+                                className={cn(
+                                  'font-mono font-black text-[9px] sm:text-[10px] px-1',
+                                  onlyUnrecognized
+                                    ? 'bg-red-600 text-white'
+                                    : 'bg-slate-200 text-slate-600'
+                                )}
+                              >
+                                {unrecognizedCount}
+                              </span>
+                            )}
+                          </label>
+                          <span className="hidden sm:inline">价格</span>
+                        </div>
+                      </th>
                       <th className="w-[36px] sm:w-[50px] py-2 border-l border-slate-200"></th>
                     </tr>
                   </thead>
@@ -415,22 +470,48 @@ export default function ImportPage() {
                           </td>
                           
                           <td className="p-1 sm:p-3 align-middle">
-                            <Input 
-                              value={item.name || ''}
-                              onChange={(e) => updateItemName(actualIndex, e.target.value)}
-                              className="rounded-none border-transparent hover:border-slate-200 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 focus-visible:border-slate-800 font-black text-slate-800 text-[11px] sm:text-sm h-10 px-1 sm:px-3 transition-colors ease-out w-full shadow-none truncate"
-                              placeholder="品名"
-                            />
+                            <div className="relative flex items-center gap-1">
+                              <Input 
+                                value={item.name || ''}
+                                onChange={(e) => updateItemName(actualIndex, e.target.value)}
+                                className="rounded-none border-transparent hover:border-slate-200 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 focus-visible:border-slate-800 font-black text-slate-800 text-[11px] sm:text-sm h-10 px-1 sm:px-3 transition-colors ease-out w-full shadow-none truncate"
+                                placeholder="品名"
+                              />
+                              {item.isCorrected && item.originalName && item.originalName !== item.name && (
+                                <span
+                                  title={`OCR 原文：${item.originalName}，已按字典自动纠正为：${item.name}`}
+                                  className="shrink-0 text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1 py-[2px] bg-amber-100 text-amber-700 border border-amber-300 cursor-help"
+                                >
+                                  纠错
+                                </span>
+                              )}
+                            </div>
                           </td>
                           
                           <td className="p-1 sm:p-3 align-middle">
-                            <Input 
-                              type="text"
-                              value={item.price === -1 ? '' : item.price}
-                              onChange={(e) => handlePriceChange(actualIndex, e.target.value)}
-                              className={`rounded-none border border-transparent hover:border-slate-200 focus-visible:border-slate-800 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 font-mono font-black text-slate-800 text-xs sm:text-sm h-10 w-full px-1 sm:px-2 text-center sm:text-right shadow-none transition-colors ease-out ${item.price > 1000 ? 'text-slate-800' : 'text-slate-600'} ${item.price === -1 ? 'text-slate-300' : ''}`}
-                              placeholder="0.0"
-                            />
+                            <div className="relative">
+                              <Input 
+                                type="text"
+                                value={item.price === -1 ? '' : item.price}
+                                onChange={(e) => handlePriceChange(actualIndex, e.target.value)}
+                                className={cn(
+                                  "rounded-none border focus-visible:border-slate-800 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 font-mono font-black text-xs sm:text-sm h-10 w-full px-1 sm:px-2 text-center sm:text-right shadow-none transition-colors ease-out",
+                                  item.price === -1
+                                    ? 'border-red-400 bg-red-50/60 text-red-500 placeholder:text-red-400 placeholder:font-bold'
+                                    : 'border-transparent hover:border-slate-200 text-slate-800',
+                                  item.price > 1000 ? 'text-slate-800' : ''
+                                )}
+                                placeholder={item.price === -1 ? '未识别 ?' : '0.0'}
+                              />
+                              {item.price === -1 && (
+                                <span
+                                  title="OCR 未配到价格，请核对原图"
+                                  className="pointer-events-none absolute left-0.5 sm:left-1 top-1/2 -translate-y-1/2 text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1 py-[1px] bg-red-600 text-white"
+                                >
+                                  !
+                                </span>
+                              )}
+                            </div>
                           </td>
                           
                           <td className="p-0 sm:p-2 align-middle text-center border-l border-slate-100">

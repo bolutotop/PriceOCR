@@ -13,9 +13,28 @@ export type CorrectionResult = {
 // 格式: { "OCR错误识别的词": "正确的字典词" }
 const CUSTOM_ALIASES: Record<string, string> = {
   "冰香": "冰雪",      // 你的案例
-"奥获大熊猫": "典藏大熊猫",
-  // 你可以在这里无限添加你发现的错误案例
-  "日期" : ""
+  "奥获大熊猫": "典藏大熊猫",
+  // ---- 实测日志中出现的漏网案例（2026-04）----
+  // OCR 把品名词序颠倒或去了地区前缀，编辑距离往往大于阈值
+  "锋芒七匹狼": "七匹狼锋芒",
+  "楼外楼利群": "楼外楼",
+  "细心悦泰山": "心悦",
+  "时代塔山": "新时代",
+  "合白云龙": "粗云龙",
+  "三代白沙": "三代",
+  // ---- doc 组实测漏网（2026-04 v6）----
+  "细支根蓝大能猫": "典藏大熊猫",
+  "细支根大天青": "细支恒大天青",
+  "细支国宝熊猫": "典藏大熊猫",
+  "新红铁金候": "新红喜贵",         // 形近词误识
+  "西湖恋(新)": "西湖恋(新)",      // 本身字典里有，这里只是防止被改
+  "翟长略": "粗长乐好猫",           // OCR 将 "粗长乐" 识别成 "翟长略"
+  "破长略": "粗长乐好猫",
+  "细支根": "三代",                 // 常见残片
+  "渝支印象": "印象黄山",           // 形近
+  // 兜底用的空映射（丢弃明显噪声）
+  "日期": "",
+  "烟": ""
 };
 
 export function correctCigaretteName(scannedName: string): CorrectionResult {
@@ -70,9 +89,11 @@ export function correctCigaretteName(scannedName: string): CorrectionResult {
   }
   // 规则 B: 中长词 (允许错 1-2 字，取决于长度)
   else {
-    // 比如 4-5 个字的词，允许错 1 个
-    // 6 个字以上允许错 2 个
-    const threshold = cleanName.length > 5 ? 2 : 1;
+    // 4-5 字允许错 1 个；6-7 字允许错 2 个；8+ 字允许错 3 个（cam 倾斜图误识更多）
+    let threshold: number;
+    if (cleanName.length > 7) threshold = 3;
+    else if (cleanName.length > 5) threshold = 2;
+    else threshold = 1;
     if (minDistance <= threshold) shouldCorrect = true;
   }
 

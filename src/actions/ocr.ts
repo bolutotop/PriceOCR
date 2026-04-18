@@ -909,7 +909,7 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
         // 两轮尝试：strict → loose
         let bestK = -1;
         let bestDx = Number.POSITIVE_INFINITY;
-        let phaseHit: 'strict' | 'loose' | null = null;
+        let phaseHit: 'strict' | 'loose' | 'aggressive' | null = null;
 
         // 记录每个 orphan 的判定过程，便于回看"为什么没命中"
         const attempts: any[] = [];

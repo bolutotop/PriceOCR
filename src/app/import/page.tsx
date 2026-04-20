@@ -106,32 +106,45 @@ export default function ImportPage() {
     }
   }, [priceWidth, isMobileView]);
 
-  // 3. 拖拽核心逻辑（针对设备区分最小极限宽度）
-  const startResize = (e: React.MouseEvent, col: 'crop' | 'price') => {
-    e.preventDefault();
-    const startX = e.clientX;
+  // 3. 拖拽核心逻辑（兼容 PC 鼠标与移动端触摸）
+  const startResize = (e: React.MouseEvent | React.TouchEvent, col: 'crop' | 'price') => {
+    // 仅在非触摸设备上阻止默认行为，避免触摸设备报 passive warning
+    if (!('touches' in e)) {
+      e.preventDefault();
+    }
+
+    // 动态获取起始 X 坐标（区分触摸点和鼠标点）
+    const startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const startWidth = col === 'crop' ? cropWidth! : priceWidth!;
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
-      const deltaX = moveEvent.clientX - startX;
+    const onMove = (moveEvent: MouseEvent | TouchEvent) => {
+      // 动态获取移动中的 X 坐标
+      const currentX = 'touches' in moveEvent ? moveEvent.touches[0].clientX : (moveEvent as MouseEvent).clientX;
+      const deltaX = currentX - startX;
+
       if (col === 'crop') {
-        // 手机端切片最小允许缩到 40px，电脑端最小 100px
         const minW = isMobileView ? 40 : 100;
         setCropWidth(Math.max(minW, startWidth + deltaX));
       } else {
-        // 手机端价格最小允许缩到 60px，电脑端最小 100px
         const minW = isMobileView ? 60 : 100;
         setPriceWidth(Math.max(minW, startWidth - deltaX));
       }
     };
 
-    const onMouseUp = () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+    const onUp = () => {
+      // 释放所有的鼠标和触摸监听
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onUp);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    // 同时注册鼠标和触摸的移动、抬起事件
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    // passive: false 确保在拖拽列宽时，页面不会跟着意外滑动
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onUp);
   };
   // ----------------------------------------
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -516,15 +529,17 @@ export default function ImportPage() {
                   <thead className="sticky top-[60px] z-30 bg-slate-100 shadow-sm border-b border-slate-200">
                     <tr>
                       {/* 🚨 修改：切片列增加 style 控制，并挂载右侧拖拽手柄 */}
+                      {/* 🚨 修改：切片列增加 style 控制，并挂载右侧拖拽手柄 */}
                       <th
                         style={{ width: cropWidth ? `${cropWidth}px` : 'auto' }}
                         className="relative py-2 px-1 text-center font-bold text-slate-500 uppercase text-[10px] sm:text-xs border-r border-slate-200"
                       >
                         切片
-                        {/* 拖拽触发区 */}
+                        {/* 拖拽触发区 - 增加了 onTouchStart 并放大了热区 */}
                         <div
                           onMouseDown={(e) => startResize(e, 'crop')}
-                          className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-slate-800/20 z-10 touch-none"
+                          onTouchStart={(e) => startResize(e, 'crop')}
+                          className="absolute -right-2 top-0 bottom-0 w-4 cursor-col-resize hover:bg-slate-800/20 z-10 touch-none"
                         />
                       </th>
 
@@ -535,10 +550,11 @@ export default function ImportPage() {
                         style={{ width: priceWidth ? `${priceWidth}px` : 'auto' }}
                         className="relative py-2 px-1 sm:px-4 text-right font-bold text-slate-500 uppercase text-[10px] sm:text-xs"
                       >
-                        {/* 拖拽触发区 */}
+                        {/* 拖拽触发区 - 增加了 onTouchStart 并放大了热区 */}
                         <div
                           onMouseDown={(e) => startResize(e, 'price')}
-                          className="absolute left-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-slate-800/20 z-10 touch-none"
+                          onTouchStart={(e) => startResize(e, 'price')}
+                          className="absolute -left-2 top-0 bottom-0 w-4 cursor-col-resize hover:bg-slate-800/20 z-10 touch-none"
                         />
                         <div className="flex items-center justify-end gap-1 sm:gap-2">
                           <label

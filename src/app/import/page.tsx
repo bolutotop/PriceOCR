@@ -14,14 +14,27 @@ import { Loader2, Save, UploadCloud, X, Database, Search, Link as LinkIcon, Refr
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
+
+// --- 🛠️ 新增：Debug 模式专用的极限测试数据 ---
+const DEBUG_MOCK_DATA: ParsedItem[] = [
+  { originalName: "湖南中烟芙蓉王(硬)", name: "芙蓉王(硬)", price: 240, confidence: "1.0", isCorrected: true, _left: 10, _top: 100 },
+  { originalName: "中华(软)", name: "中华(软)", price: 650, confidence: "1.0", isCorrected: false, _left: 10, _top: 150 },
+  { originalName: "测试超长名字能否完全换行显示合经典软经典短金01喜", name: "测试超长名字能否完全换行显示合经典软经典短金01喜", price: 150, confidence: "0.9", isCorrected: false, _left: 10, _top: 200 },
+  { originalName: "【未匹配数字】", name: "【未匹配数字】", price: 888, confidence: "1.0", isCorrected: false, _left: 10, _top: 250 },
+  { originalName: "天天向上草莓(断货版)", name: "天天向上草莓(断货版)", price: -1, confidence: "1.0", isCorrected: false, _left: 10, _top: 300 },
+  { originalName: "柔情", name: "柔情", price: 530, confidence: "1.0", isCorrected: false, _left: 10, _top: 350 },
+];
+// ---------------------------------------------
+
+
 export default function ImportPage() {
   const router = useRouter();
-  
+
   const [file, setFile] = useState<File | null>(null);
-  const [activeUrl, setActiveUrl] = useState<string | null>(null); 
-  const [urlInput, setUrlInput] = useState(''); 
+  const [activeUrl, setActiveUrl] = useState<string | null>(null);
+  const [urlInput, setUrlInput] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  
+
   const [status, setStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
   const [progress, setProgress] = useState(0);
   const [progressText, setProgressText] = useState('');
@@ -30,18 +43,97 @@ export default function ImportPage() {
   const [searchTerm, setSearchTerm] = useState('');
   // 价格列表头的"只看未识别"勾选；勾选后仅展示 price === -1 的行
   const [onlyUnrecognized, setOnlyUnrecognized] = useState(false);
-  
+
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [note, setNote] = useState(''); 
-  const [marketType, setMarketType] = useState('EXPRESS'); 
+  const [note, setNote] = useState('');
+  const [marketType, setMarketType] = useState('EXPRESS');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // 默认 OCR 引擎设为腾讯云 (tencent)
   const [ocrEngine, setOcrEngine] = useState('tencent');
-  
+
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
+  // 🛠️ 衍生状态：当引擎选择为 debug 时，开启调试模式
+  const isDebugMode = ocrEngine === 'debug';
+
+
+  // --- 🚨 新增：列宽控制状态与记忆逻辑 ---
+  // --- 🚨 新增：PC / 移动端 双轨记忆列宽控制 ---
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [cropWidth, setCropWidth] = useState<number | undefined>(undefined);
+  const [priceWidth, setPriceWidth] = useState<number | undefined>(undefined);
+  const isLoaded = useRef(false);
+
+  // 1. 初始化与屏幕监听：区分设备读取对应的记忆
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 640;
+      setIsMobileView(mobile);
+
+      // 核心：动态生成对应的 localStorage Key
+      const cropKey = mobile ? 'ocr_crop_width_mobile' : 'ocr_crop_width_pc';
+      const priceKey = mobile ? 'ocr_price_width_mobile' : 'ocr_price_width_pc';
+
+      const savedCrop = localStorage.getItem(cropKey);
+      const savedPrice = localStorage.getItem(priceKey);
+
+      // 如果没有记忆，分别赋予各自的完美初始值
+      setCropWidth(savedCrop ? Number(savedCrop) : (mobile ? 70 : 240));
+      setPriceWidth(savedPrice ? Number(savedPrice) : (mobile ? 85 : 140));
+    };
+
+    handleResize(); // 首次执行
+    window.addEventListener('resize', handleResize); // 监听屏幕旋转或缩放
+    isLoaded.current = true;
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 2. 宽度变化时：存入对应设备的 Key 中，互不干扰
+  useEffect(() => {
+    if (isLoaded.current && cropWidth !== undefined) {
+      const cropKey = isMobileView ? 'ocr_crop_width_mobile' : 'ocr_crop_width_pc';
+      localStorage.setItem(cropKey, cropWidth.toString());
+    }
+  }, [cropWidth, isMobileView]);
+
+  useEffect(() => {
+    if (isLoaded.current && priceWidth !== undefined) {
+      const priceKey = isMobileView ? 'ocr_price_width_mobile' : 'ocr_price_width_pc';
+      localStorage.setItem(priceKey, priceWidth.toString());
+    }
+  }, [priceWidth, isMobileView]);
+
+  // 3. 拖拽核心逻辑（针对设备区分最小极限宽度）
+  const startResize = (e: React.MouseEvent, col: 'crop' | 'price') => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = col === 'crop' ? cropWidth! : priceWidth!;
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      if (col === 'crop') {
+        // 手机端切片最小允许缩到 40px，电脑端最小 100px
+        const minW = isMobileView ? 40 : 100;
+        setCropWidth(Math.max(minW, startWidth + deltaX));
+      } else {
+        // 手机端价格最小允许缩到 60px，电脑端最小 100px
+        const minW = isMobileView ? 60 : 100;
+        setPriceWidth(Math.max(minW, startWidth - deltaX));
+      }
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+  // ----------------------------------------
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -68,7 +160,7 @@ export default function ImportPage() {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setActiveUrl(null); 
+      setActiveUrl(null);
       setImagePreview(URL.createObjectURL(selectedFile));
       setStatus('idle');
       setItems([]);
@@ -77,7 +169,7 @@ export default function ImportPage() {
 
   const handleLoadUrl = () => {
     if (!urlInput.trim()) return;
-    setFile(null); 
+    setFile(null);
     setActiveUrl(urlInput.trim());
     setImagePreview(urlInput.trim());
     setStatus('idle');
@@ -94,12 +186,24 @@ export default function ImportPage() {
   };
 
   const handleStartOcr = async () => {
-    if (!file && !activeUrl) return;
+    // Debug 模式下，允许不上传图片直接空跑
+    if (!file && !activeUrl && !isDebugMode) return;
     setStatus('processing');
-    
+
+    // 🛠️ 拦截：如果是 Debug 虚拟引擎，执行模拟流
+    if (isDebugMode) {
+      console.log("🛠️ [DEBUG MODE] 拦截 OCR 请求，生成本地测试数据...");
+      setProgress(10);
+
+      // 模拟云端处理延迟 (1.5秒)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      setItems(JSON.parse(JSON.stringify(DEBUG_MOCK_DATA)));
+      setStatus('success');
+      return;
+    }
+
     const formData = new FormData();
-    
-    // 注入用户选择的 OCR 引擎参数，供后端识别
     formData.append('engine', ocrEngine);
 
     if (file) {
@@ -130,9 +234,9 @@ export default function ImportPage() {
       if (res.success) {
         setIsDialogOpen(false);
         if (confirm('数据录入成功！返回看盘页面？')) {
-           router.push('/');
+          router.push('/');
         } else {
-           handleClearSelection();
+          handleClearSelection();
         }
       } else {
         alert('录入拦截: ' + res.message);
@@ -155,7 +259,7 @@ export default function ImportPage() {
     newItems[actualIndex].price = val === '//' ? -1 : parseFloat(val) || 0;
     setItems(newItems);
   };
-  
+
   const handleDelete = (actualIndex: number) => {
     setItems(items.filter((_, i) => i !== actualIndex));
   };
@@ -179,7 +283,7 @@ export default function ImportPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200/50 pb-20 font-sans">
-      
+
       {/* 全局删除确认弹窗控制台 */}
       <Dialog open={itemToDelete !== null} onOpenChange={(open) => !open && setItemToDelete(null)}>
         <DialogContent className="sm:max-w-md rounded-none border-slate-200 shadow-[8px_8px_0_0_rgba(15,23,42,0.1)] w-[90vw] sm:w-full">
@@ -190,19 +294,19 @@ export default function ImportPage() {
             </DialogTitle>
           </DialogHeader>
           <div className="py-4 text-sm text-slate-600 font-bold bg-slate-50 border border-slate-100 p-4">
-            确定要从本次录入列表中移除该条数据吗？<br/>
+            确定要从本次录入列表中移除该条数据吗？<br />
             <span className="text-red-500 text-xs mt-1 block tracking-wider uppercase">警告: 移除后将无法通过撤销恢复该切片。</span>
           </div>
           <DialogFooter className="flex gap-2 sm:justify-end">
             <Button variant="outline" onClick={() => setItemToDelete(null)} className="rounded-none border-slate-200 font-bold shadow-none flex-1 sm:flex-none">
               取消操作
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={() => {
                 if (itemToDelete !== null) handleDelete(itemToDelete);
                 setItemToDelete(null);
-              }} 
+              }}
               className="rounded-none font-bold shadow-none bg-red-600 hover:bg-red-700 flex-1 sm:flex-none"
             >
               确认移除
@@ -232,7 +336,7 @@ export default function ImportPage() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-md rounded-none border-slate-200 shadow-[8px_8px_0_0_rgba(15,23,42,0.1)] w-[95vw] sm:w-full">
                 <DialogHeader><DialogTitle className="font-black text-slate-800">入库参数配置</DialogTitle></DialogHeader>
-                
+
                 <div className="grid gap-5 py-4">
                   <div className="grid gap-2">
                     <Label className="text-slate-700 font-bold uppercase text-[10px] sm:text-xs tracking-wider">行情归属</Label>
@@ -261,7 +365,7 @@ export default function ImportPage() {
 
                 <DialogFooter>
                   <Button onClick={handleSave} disabled={saving} className="bg-slate-800 hover:bg-slate-900 w-full h-11 text-sm sm:text-base rounded-none shadow-none font-bold transition-colors ease-out">
-                    {saving ? <Loader2 className="animate-spin w-5 h-5 mr-2"/> : null} 提交至数据库
+                    {saving ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : null} 提交至数据库
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -271,10 +375,10 @@ export default function ImportPage() {
       </div>
 
       <div className="max-w-[1600px] mx-auto p-2 sm:p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5">
-        
+
         {/* 左侧控制区 */}
         <div className="lg:col-span-4 space-y-3 sm:space-y-5 lg:sticky lg:top-[84px] h-fit z-10">
-          
+
           {/* 引擎选择面板 */}
           <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] p-4">
             <div className="flex items-center gap-2 mb-3">
@@ -286,12 +390,15 @@ export default function ImportPage() {
                 <SelectValue placeholder="选择计算节点" />
               </SelectTrigger>
               <SelectContent className="rounded-none border-slate-200">
-                {/* 🚨 修改：明确标识出腾讯云使用的是最新的水平顺序识别模式 */}
                 <SelectItem value="tencent" className="font-bold text-slate-700 focus:bg-slate-100">
                   腾讯云 (Tencent Cloud) - 水平顺序模式
                 </SelectItem>
                 <SelectItem value="aliyun" className="font-bold text-slate-700 focus:bg-slate-100">
                   阿里云 (Aliyun Vision) - 备用节点
+                </SelectItem>
+                {/* 🚨 新增：把 Debug 模式作为一种虚拟的本地引擎 */}
+                <SelectItem value="debug" className="font-bold text-amber-700 focus:bg-amber-50">
+                  🛠️ 本地调试模式 (Debug Mock)
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -299,10 +406,10 @@ export default function ImportPage() {
 
           <div className={cn("bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] transition-opacity ease-out duration-200 p-4 sm:p-5", status === 'processing' ? 'opacity-70 pointer-events-none' : '')}>
             <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-            
+
             {!file && !activeUrl ? (
               <div className="space-y-4 sm:space-y-5">
-                <div 
+                <div
                   onClick={() => fileInputRef.current?.click()}
                   className="border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 hover:border-slate-400 h-28 sm:h-40 flex flex-col items-center justify-center text-slate-500 transition-colors ease-out cursor-pointer group"
                 >
@@ -319,8 +426,8 @@ export default function ImportPage() {
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <LinkIcon className="absolute left-2 sm:left-3 top-2.5 h-4 w-4 text-slate-400" />
-                    <Input 
-                      placeholder="输入外部 URL" 
+                    <Input
+                      placeholder="输入外部 URL"
                       value={urlInput}
                       onChange={(e) => setUrlInput(e.target.value)}
                       className="pl-7 sm:pl-9 h-10 sm:h-11 bg-slate-50 rounded-none border-slate-200 focus-visible:ring-0 focus-visible:border-slate-800 transition-colors ease-out text-xs sm:text-sm"
@@ -336,18 +443,18 @@ export default function ImportPage() {
                 <div className="relative overflow-hidden bg-slate-100 border border-slate-200 group flex justify-center items-center min-h-[120px] sm:min-h-[160px]">
                   <img src={imagePreview!} className="max-h-[200px] sm:max-h-[300px] w-auto object-contain mix-blend-multiply" />
                   <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity ease-out flex items-center justify-center">
-                     <Button variant="secondary" size="sm" className="rounded-none bg-white font-bold hover:bg-slate-100 border-none" onClick={handleClearSelection}>
-                       <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> 重置文件
-                     </Button>
+                    <Button variant="secondary" size="sm" className="rounded-none bg-white font-bold hover:bg-slate-100 border-none" onClick={handleClearSelection}>
+                      <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> 重置文件
+                    </Button>
                   </div>
                 </div>
-                
-                <Button 
-                  className="w-full h-10 sm:h-11 text-sm sm:text-base font-bold shadow-none rounded-none bg-slate-800 hover:bg-slate-900 transition-colors ease-out tracking-widest" 
+
+                <Button
+                  className="w-full h-10 sm:h-11 text-sm sm:text-base font-bold shadow-none rounded-none bg-slate-800 hover:bg-slate-900 transition-colors ease-out tracking-widest"
                   onClick={handleStartOcr}
                   disabled={status === 'processing' || status === 'success'}
                 >
-                  {status === 'processing' ? <Loader2 className="animate-spin mr-2 w-4 h-4 sm:w-5 sm:h-5"/> : null}
+                  {status === 'processing' ? <Loader2 className="animate-spin mr-2 w-4 h-4 sm:w-5 sm:h-5" /> : null}
                   {status === 'success' ? '解析完毕' : status === 'processing' ? '云端节点处理中' : '执行解析程序'}
                 </Button>
               </div>
@@ -358,7 +465,7 @@ export default function ImportPage() {
             <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] p-4 sm:p-5">
               <div className="flex justify-between text-xs sm:text-sm mb-2 font-bold text-slate-700">
                 <span className="flex items-center gap-2">
-                  {status === 'processing' && <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin text-slate-600"/>}
+                  {status === 'processing' && <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin text-slate-600" />}
                   {progressText}
                 </span>
                 <span className="text-slate-900 font-mono">{progress}%</span>
@@ -371,25 +478,25 @@ export default function ImportPage() {
         {/* 右侧数据核对区 */}
         <div className="lg:col-span-8 flex flex-col min-w-0">
           <div className="bg-white border border-slate-200 shadow-[4px_4px_0_0_rgba(15,23,42,0.1)] w-full">
-            
+
             {/* 搜索控制栏 */}
             <div className="py-2.5 sm:py-3 px-3 sm:px-4 border-b border-slate-200 bg-slate-50/80 flex flex-row gap-3 justify-between items-center z-20">
               <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-800 stroke-[2.5]" /> 
+                <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-800 stroke-[2.5]" />
                 <h2 className="text-xs sm:text-sm font-black text-slate-800 tracking-tight uppercase hidden sm:block">数据核对控制台</h2>
                 <h2 className="text-xs font-black text-slate-800 tracking-tight uppercase sm:hidden">核对</h2>
                 <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 bg-slate-200 px-1.5 py-0.5 border border-slate-300">
                   {items.length} R
                 </span>
               </div>
-              
+
               <div className="relative flex-1 max-w-[180px] sm:max-w-56">
                 <Search className="absolute left-2 sm:left-2.5 top-1.5 sm:top-2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
-                <Input 
-                  placeholder="检索..." 
-                  className="pl-7 sm:pl-9 h-7 sm:h-8 text-xs sm:text-sm bg-white border-slate-200 focus-visible:ring-0 focus-visible:border-slate-800 rounded-none shadow-none transition-colors ease-out font-bold text-slate-600 placeholder:font-normal" 
-                  value={searchTerm} 
-                  onChange={e => setSearchTerm(e.target.value)} 
+                <Input
+                  placeholder="检索..."
+                  className="pl-7 sm:pl-9 h-7 sm:h-8 text-xs sm:text-sm bg-white border-slate-200 focus-visible:ring-0 focus-visible:border-slate-800 rounded-none shadow-none transition-colors ease-out font-bold text-slate-600 placeholder:font-normal"
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
@@ -408,15 +515,35 @@ export default function ImportPage() {
                 <table className="w-full table-fixed border-collapse">
                   <thead className="sticky top-[60px] z-30 bg-slate-100 shadow-sm border-b border-slate-200">
                     <tr>
-                      <th className="w-[180px] sm:w-[300px] py-2 px-1 text-center font-bold text-slate-500 uppercase text-[10px] sm:text-xs border-r border-slate-200">切片</th>
-                      <th className="w-auto py-2 px-2 sm:px-4 text-left font-bold text-slate-500 uppercase text-[10px] sm:text-xs">品名</th>
-                      <th className="w-[90px] sm:w-[180px] py-2 px-1 sm:px-4 text-right font-bold text-slate-500 uppercase text-[10px] sm:text-xs">
+                      {/* 🚨 修改：切片列增加 style 控制，并挂载右侧拖拽手柄 */}
+                      <th
+                        style={{ width: cropWidth ? `${cropWidth}px` : 'auto' }}
+                        className="relative py-2 px-1 text-center font-bold text-slate-500 uppercase text-[10px] sm:text-xs border-r border-slate-200"
+                      >
+                        切片
+                        {/* 拖拽触发区 */}
+                        <div
+                          onMouseDown={(e) => startResize(e, 'crop')}
+                          className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-slate-800/20 z-10 touch-none"
+                        />
+                      </th>
+
+                      <th className="w-auto py-2 px-1 sm:px-4 text-left font-bold text-slate-500 uppercase text-[10px] sm:text-xs">品名</th>
+
+                      {/* 🚨 修改：价格列增加 style 控制，并挂载左侧拖拽手柄 */}
+                      <th
+                        style={{ width: priceWidth ? `${priceWidth}px` : 'auto' }}
+                        className="relative py-2 px-1 sm:px-4 text-right font-bold text-slate-500 uppercase text-[10px] sm:text-xs"
+                      >
+                        {/* 拖拽触发区 */}
+                        <div
+                          onMouseDown={(e) => startResize(e, 'price')}
+                          className="absolute left-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-slate-800/20 z-10 touch-none"
+                        />
                         <div className="flex items-center justify-end gap-1 sm:gap-2">
-                          {/* 只看未识别 勾选：勾选后仅展示 price===-1 的行；
-                              未勾选时也会把未识别条目置顶（sort 由 filteredItems 统一处理）。 */}
                           <label
                             className={cn(
-                              'flex items-center gap-1 cursor-pointer select-none border px-1 sm:px-1.5 py-[2px] transition-colors ease-out',
+                              'flex items-center gap-1 cursor-pointer select-none border px-1 sm:px-1.5 py-[2px] transition-colors ease-out relative z-20',
                               onlyUnrecognized
                                 ? 'border-red-400 bg-red-50 text-red-600'
                                 : 'border-slate-300 bg-white text-slate-500 hover:border-slate-400'
@@ -431,12 +558,13 @@ export default function ImportPage() {
                               className="w-3 h-3 sm:w-3.5 sm:h-3.5 accent-red-600 cursor-pointer disabled:cursor-not-allowed"
                             />
                             <span className="text-[9px] sm:text-[10px] font-black tracking-wider normal-case">
-                              未识别
+                              <span className="sm:hidden">空</span>
+                              <span className="hidden sm:inline">未识别</span>
                             </span>
                             {unrecognizedCount > 0 && (
                               <span
                                 className={cn(
-                                  'font-mono font-black text-[9px] sm:text-[10px] px-1',
+                                  'font-mono font-black text-[9px] sm:text-[10px] px-0.5 sm:px-1',
                                   onlyUnrecognized
                                     ? 'bg-red-600 text-white'
                                     : 'bg-slate-200 text-slate-600'
@@ -449,16 +577,17 @@ export default function ImportPage() {
                           <span className="hidden sm:inline">价格</span>
                         </div>
                       </th>
+
                       <th className="w-[36px] sm:w-[50px] py-2 border-l border-slate-200"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredItems.map((item, index) => {
                       const actualIndex = items.indexOf(item);
-                      
+
                       return (
                         <tr key={actualIndex} className="group hover:bg-slate-50 transition-colors ease-out border-b border-slate-100">
-                          
+
                           <td className="p-1 sm:p-2 align-middle border-r border-slate-100">
                             <div className="w-full h-11 sm:h-14 bg-slate-50 border border-slate-200 mx-auto flex items-center justify-center overflow-hidden">
                               {item.cropDataUri ? (
@@ -468,10 +597,10 @@ export default function ImportPage() {
                               )}
                             </div>
                           </td>
-                          
+
                           <td className="p-1 sm:p-3 align-middle">
                             <div className="relative flex items-center gap-1">
-                              <Input 
+                              <Input
                                 value={item.name || ''}
                                 onChange={(e) => updateItemName(actualIndex, e.target.value)}
                                 className="rounded-none border-transparent hover:border-slate-200 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 focus-visible:border-slate-800 font-black text-slate-800 text-[11px] sm:text-sm h-10 px-1 sm:px-3 transition-colors ease-out w-full shadow-none truncate"
@@ -487,10 +616,10 @@ export default function ImportPage() {
                               )}
                             </div>
                           </td>
-                          
+
                           <td className="p-1 sm:p-3 align-middle">
                             <div className="relative">
-                              <Input 
+                              <Input
                                 type="text"
                                 value={item.price === -1 ? '' : item.price}
                                 onChange={(e) => handlePriceChange(actualIndex, e.target.value)}
@@ -513,16 +642,16 @@ export default function ImportPage() {
                               )}
                             </div>
                           </td>
-                          
+
                           <td className="p-0 sm:p-2 align-middle text-center border-l border-slate-100">
-                            <button 
+                            <button
                               onClick={() => setItemToDelete(actualIndex)}
                               className="p-2 sm:p-2.5 text-slate-300 hover:text-white hover:bg-red-600 hover:border-red-600 border border-transparent transition-all ease-out mx-auto flex items-center justify-center"
                             >
                               <X className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
                             </button>
                           </td>
-                          
+
                         </tr>
                       );
                     })}

@@ -54,7 +54,7 @@ export function InventoryRow({
     setName(p.name);
     const bestPrice = p.expressPrice || p.guanghuoPrice;
     if (bestPrice) setPrice(String(bestPrice));
-    
+
     setShowSuggestions(false);
     const finalPrice = bestPrice || parseFloat(price) || 0;
     onUpdate(item.id, { name: p.name, price: finalPrice, quantity: parseInt(qty) || 0 });
@@ -63,7 +63,7 @@ export function InventoryRow({
   const total = (parseFloat(price) || 0) * (parseInt(qty, 10) || 0);
 
   return (
-    <TableRow 
+    <TableRow
       ref={rowRef}
       onBlur={handleBlur}
       className={cn("hover:bg-blue-50/50 group border-b border-blue-50/50 relative", index % 2 !== 0 && "bg-slate-50/40")}
@@ -72,7 +72,7 @@ export function InventoryRow({
         {index + 1}
       </TableCell>
       <TableCell className="p-0 border-r border-blue-50/50 relative group/name focus-within:z-[60]">
-        <input 
+        <input
           value={name}
           onChange={e => setName(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
@@ -82,8 +82,8 @@ export function InventoryRow({
         {showSuggestions && filteredProducts.length > 0 && (
           <div className="absolute top-[105%] left-0 w-full min-w-[200px] bg-white border border-slate-200 shadow-xl max-h-48 overflow-y-auto rounded-md custom-scrollbar">
             {filteredProducts.map(fp => (
-              <div 
-                key={fp.id} 
+              <div
+                key={fp.id}
                 onClick={() => handleSelectProduct(fp)}
                 className="px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer border-b border-slate-50 last:border-0 flex justify-between items-center"
               >
@@ -95,7 +95,7 @@ export function InventoryRow({
         )}
       </TableCell>
       <TableCell className="p-0 border-r border-blue-50/50 w-16 sm:w-20 text-center">
-        <input 
+        <input
           type="number"
           value={qty}
           onChange={e => setQty(e.target.value)}
@@ -104,7 +104,7 @@ export function InventoryRow({
         />
       </TableCell>
       <TableCell className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center">
-        <input 
+        <input
           type="number"
           value={price}
           onChange={e => setPrice(e.target.value)}
@@ -119,12 +119,12 @@ export function InventoryRow({
       </TableCell>
       <TableCell className="w-10 sm:w-12 p-0 text-center align-middle">
         <div className="flex h-full w-full justify-center items-center opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
-          <button 
+          <button
             type="button"
             className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full"
             onClick={() => onDelete(item.id)}
           >
-            <Trash2 className="w-4 h-4"/>
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       </TableCell>
@@ -184,7 +184,7 @@ export function InventoryNewRow({
   const total = (parseFloat(price) || 0) * (parseInt(qty, 10) || 0);
 
   return (
-    <TableRow 
+    <TableRow
       ref={rowRef}
       onBlur={handleBlur}
       className="bg-emerald-50/30 hover:bg-emerald-50/60 transition-colors border-b-2 border-emerald-100 relative"
@@ -193,7 +193,7 @@ export function InventoryNewRow({
         <Plus className="w-4 h-4 mx-auto" />
       </TableCell>
       <TableCell className="p-0 border-r border-emerald-100/50 relative focus-within:z-[60]">
-        <input 
+        <input
           value={name}
           onChange={e => setName(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
@@ -203,8 +203,8 @@ export function InventoryNewRow({
         {showSuggestions && filteredProducts.length > 0 && (
           <div className="absolute top-[105%] left-0 w-full min-w-[200px] bg-white border border-emerald-200 shadow-xl max-h-48 overflow-y-auto rounded-md custom-scrollbar">
             {filteredProducts.map(fp => (
-              <div 
-                key={fp.id} 
+              <div
+                key={fp.id}
                 onClick={() => handleSelectProduct(fp)}
                 className="px-3 py-2 text-sm hover:bg-emerald-50 cursor-pointer border-b border-slate-50 last:border-0 flex justify-between items-center"
               >
@@ -216,7 +216,7 @@ export function InventoryNewRow({
         )}
       </TableCell>
       <TableCell className="p-0 border-r border-emerald-100/50 w-16 sm:w-20 text-center">
-        <input 
+        <input
           type="number"
           value={qty}
           onChange={e => setQty(e.target.value)}
@@ -225,7 +225,7 @@ export function InventoryNewRow({
         />
       </TableCell>
       <TableCell className="p-0 border-r border-emerald-100/50 w-20 sm:w-24 text-center">
-        <input 
+        <input
           type="number"
           value={price}
           onChange={e => setPrice(e.target.value)}
@@ -265,50 +265,50 @@ export default function InventoryView({
   return (
     <div className="max-w-5xl mx-auto h-full flex flex-col pb-[120px]">
       <div className="bg-slate-800 text-white p-4 sm:rounded-t-xl shrink-0">
-         <div className="flex justify-between items-start">
-           <div>
-             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Total Amount / Count</p>
-             <div className="flex items-baseline gap-2">
-               <span className="text-sm border-r border-slate-600 pr-2">总数: <span className="font-mono text-base ml-1 text-emerald-400">{totalInvCount}</span></span>
-               <span className="text-xl font-mono text-white font-black tracking-tight">¥{totalInvValue.toLocaleString()}</span>
-             </div>
-           </div>
-         </div>
+        <div className="flex justify-between items-start">
+          <div>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Total Amount / Count</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm border-r border-slate-600 pr-2">总数: <span className="font-mono text-base ml-1 text-emerald-400">{totalInvCount}</span></span>
+              <span className="text-xl font-mono text-white font-black tracking-tight">¥{totalInvValue.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      
+
       {/* 移除导致截断的 overflow-hidden，让子元素的 absolute 菜单可以不受限地盖住下方 */}
       <div className="bg-white border-l border-r border-b border-slate-200 sm:rounded-b-xl shadow-sm flex-1 flex flex-col -mt-[1px]">
-          <div className="w-full">
-            <table className="w-full text-left border-collapse min-w-[320px]">
-              <thead className="sticky top-[52px] lg:top-[60px] z-40 shadow-sm">
-                <tr className="bg-[#4a8ebf] text-white select-none">
-                  <th className="w-10 sm:w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black"></th>
-                  <th className="py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold border-r border-[#3c78a3]">名称</th>
-                  <th className="w-16 sm:w-20 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">数量</th>
-                  <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">单价</th>
-                  <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">金额</th>
-                  <th className="w-10 sm:w-12 py-2.5 px-0 text-center border-r border-[#3c78a3]"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {inventory.map((item: any, i: number) => (
-                  <InventoryRow 
-                    key={item.id} 
-                    item={item} 
-                    index={i} 
-                    products={products} 
-                    onUpdate={onUpdateInventoryRow} 
-                    onDelete={onDeleteInventoryRow} 
-                  />
-                ))}
-                <InventoryNewRow 
-                  index={inventory.length} 
-                  products={products} 
-                  onAdd={onAddNewInventoryRow} 
+        <div className="w-full">
+          <table className="w-full text-left border-collapse min-w-[320px]">
+            <thead className="sticky top-[52px] lg:top-[60px] z-40 shadow-sm">
+              <tr className="bg-[#4a8ebf] text-white select-none">
+                <th className="w-10 sm:w-12 py-2.5 px-0 text-center text-xs border-r border-[#3c78a3] font-black"></th>
+                <th className="py-2.5 px-2 sm:px-3 text-xs sm:text-sm font-bold border-r border-[#3c78a3]">名称</th>
+                <th className="w-16 sm:w-20 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">数量</th>
+                <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">单价</th>
+                <th className="w-20 sm:w-24 py-2.5 px-1 text-center text-xs sm:text-sm font-bold border-r border-[#3c78a3]">金额</th>
+                <th className="w-10 sm:w-12 py-2.5 px-0 text-center border-r border-[#3c78a3]"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {inventory.map((item: any, i: number) => (
+                <InventoryRow
+                  key={item.id}
+                  item={item}
+                  index={i}
+                  products={products}
+                  onUpdate={onUpdateInventoryRow}
+                  onDelete={onDeleteInventoryRow}
                 />
-              </tbody>
-            </table>
-          </div>
+              ))}
+              <InventoryNewRow
+                index={inventory.length}
+                products={products}
+                onAdd={onAddNewInventoryRow}
+              />
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -7,10 +7,11 @@ import { createInventoryItem, updateInventoryItem, deleteInventoryItem } from '@
 import { updateProductPrice } from '@/actions/price';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, ArrowRightLeft, FileText, Box, Database, History, Archive, Menu, Link as LinkIcon } from 'lucide-react';
+import { Plus, Search, ArrowRightLeft, FileText, Box, Activity, History, Archive, Menu, Link as LinkIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import InventoryView from './dashboard/inventory-view';
 import PriceCompareView from './dashboard/price-compare-view';
+import MarketTrendView from './dashboard/market-trend-view'; // 🚨 引入新组件
 
 type SortConfig = {
   key: keyof DashboardItem | 'historyDiff';
@@ -18,25 +19,23 @@ type SortConfig = {
 };
 
 export default function DashboardClient({ initialData, initialInventoryData }: { initialData: DashboardItem[], initialInventoryData: any[] }) {
+  // 🚨 修改：将“全库明细”替换为“大盘行情”，图标改为波浪线 Activity
   const navItems = [
     { id: '出货比价', icon: ArrowRightLeft },
     { id: '当前库存', icon: Archive },
     { id: '快递报价', icon: FileText },
     { id: '广货报价', icon: Box },
-    { id: '全库明细', icon: Database },
+    { id: '大盘行情', icon: Activity },
   ];
 
   const [activeCategory, setActiveCategory] = useState<string>('出货比价');
   const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'list'>('list'); // 废弃 grid 强切为 list
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'compareDiff', direction: 'desc' });
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // 本地接管比价板数组，以便允许乐观修改更新
   const [productsList, setProductsList] = useState(initialData);
   const [inventory, setInventory] = useState(initialInventoryData);
 
-  // --- 提取差值的辅助函数---
   const getDiffValue = (item: DashboardItem, category: string, sortKey: string) => {
     if (sortKey === 'compareDiff') return item.compareDiff || 0;
 
@@ -53,9 +52,9 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
     return 0;
   };
 
-  // --- 🚨 修改：重写 sortedAndFilteredData 的记忆钩子 ---
   const sortedAndFilteredData = useMemo(() => {
-    if (activeCategory === '当前库存') return [];
+    // 🚨 大盘行情不需要在这里参与排序过滤，它吃全量数据
+    if (activeCategory === '当前库存' || activeCategory === '大盘行情') return [];
 
     let result = productsList.filter(item => {
       let matchesCategory = true;
@@ -67,41 +66,27 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
 
     if (sortConfig.direction) {
       result.sort((a, b) => {
-        // ==========================================
-        // 1. 变动/利润 特殊排序逻辑 (正负数切换分组)
-        // ==========================================
         if (sortConfig.key === 'historyDiff' || sortConfig.key === 'compareDiff') {
           const diffA = getDiffValue(a, activeCategory, sortConfig.key);
           const diffB = getDiffValue(b, activeCategory, sortConfig.key);
 
-          // 提取组别：1 (正数), -1 (负数), 0 (无变动)
           const groupA = diffA > 0 ? 1 : diffA < 0 ? -1 : 0;
           const groupB = diffB > 0 ? 1 : diffB < 0 ? -1 : 0;
 
-          // 如果两人不在同一个组
           if (groupA !== groupB) {
-            // 🚨 强制让 0 (无变动) 永远垫底吃灰
             if (groupA === 0) return 1;
             if (groupB === 0) return -1;
 
-            // 如果都不是 0，则判断是正数在前还是负数在前
             if (sortConfig.direction === 'desc') {
-              // desc (默认首击): 正数优先，负数其次
               return groupA === 1 ? -1 : 1;
             } else {
-              // asc (再次点击): 负数优先，正数其次
               return groupA === -1 ? -1 : 1;
             }
           }
 
-          // 🚨 如果在同一个组内（比如都是正数，或者都是负数）
-          // 统一按照绝对值从大到小排序（涨得越多的靠前，跌得越惨的也靠前）
           return Math.abs(diffB) - Math.abs(diffA);
         }
 
-        // ==========================================
-        // 2. 常规字段排序逻辑 (名称、单价等)
-        // ==========================================
         let aVal = a[sortConfig.key as keyof DashboardItem];
         let bVal = b[sortConfig.key as keyof DashboardItem];
 
@@ -114,11 +99,9 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
   }, [productsList, activeCategory, searchTerm, sortConfig]);
 
   const onUpdateProductPrice = async (id: string, fieldType: 'expressPrice' | 'guanghuoPrice', newPrice: number) => {
-    // 乐观快速更新UI
     setProductsList(prev => prev.map(p => {
       if (p.id === id) {
         const updated = { ...p, [fieldType]: newPrice };
-        // 重新计算价差
         if (updated.expressPrice !== null && updated.guanghuoPrice !== null) {
           updated.compareDiff = updated.expressPrice - updated.guanghuoPrice;
         }
@@ -151,7 +134,6 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-slate-50/50 pb-16 lg:pb-0">
-      {/* 侧边栏 */}
       <aside className="hidden lg:flex flex-col w-56 bg-white border-r border-slate-200/60 h-screen sticky top-0 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] z-10">
         <div className="pt-8 pb-6 px-5 border-b border-slate-100">
           <h1 className="text-xl font-black text-slate-800 tracking-tight">出货看板</h1>
@@ -164,7 +146,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
             return (
               <button
                 key={nav.id}
-                onClick={() => { setActiveCategory(nav.id); setSortConfig({ key: (nav.id === '出货比价' || nav.id === '全库明细') ? 'compareDiff' : 'historyDiff', direction: 'desc' }); }}
+                onClick={() => { setActiveCategory(nav.id); setSortConfig({ key: (nav.id === '出货比价' || nav.id === '大盘行情') ? 'compareDiff' : 'historyDiff', direction: 'desc' }); }}
                 className={cn(
                   "w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-bold transition-all ease-out duration-200",
                   isActive ? "bg-slate-800 text-white translate-x-1 shadow-md rounded-md" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-md"
@@ -178,7 +160,6 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
         </nav>
       </aside>
 
-      {/* 底部导航 */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-[99] flex justify-around items-center h-[60px] pb-safe shadow-[0_-4px_24px_-12px_rgba(0,0,0,0.1)]">
         {navItems.map(nav => {
           const Icon = nav.icon;
@@ -186,11 +167,10 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
           return (
             <button
               key={nav.id}
-              // 🚨 修复：手机端切换分类时，也强制赋予“变动/利润”的 desc 默认排序！
               onClick={() => {
                 setActiveCategory(nav.id);
                 setSortConfig({
-                  key: (nav.id === '出货比价' || nav.id === '全库明细') ? 'compareDiff' : 'historyDiff',
+                  key: (nav.id === '出货比价' || nav.id === '大盘行情') ? 'compareDiff' : 'historyDiff',
                   direction: 'desc'
                 });
               }}
@@ -207,9 +187,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
         })}
       </nav>
 
-      {/* 主体区 */}
       <main className="flex-1 flex flex-col min-h-[100dvh]">
-        {/* 顶栏 */}
         <header className="bg-white/90 backdrop-blur-md border-b border-slate-200/60 transition-all sticky top-0 z-50">
           <div className="flex items-center justify-between px-4 py-3">
             <h1 className="lg:hidden font-black text-slate-800 tracking-tight text-lg">{activeCategory}</h1>
@@ -241,12 +219,10 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
 
         {menuOpen && (
           <>
-            {/* 沉浸式背景点击收起 */}
             <div
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[90] lg:hidden animate-in fade-in duration-200"
               onClick={() => setMenuOpen(false)}
             />
-            {/* 右上角菜单 */}
             <div className="fixed right-4 top-[60px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-2xl p-2 z-[100] w-52 flex flex-col gap-1 origin-top-right animate-in fade-in zoom-in-95 duration-200 lg:hidden text-sm">
               <Link href="/mapping" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><LinkIcon className="w-4 h-4 text-slate-400" /> 名称同步映射</Link>
               <Link href="/history" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><History className="w-4 h-4 text-slate-400" /> 报表历史查询</Link>
@@ -257,6 +233,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
         )}
 
         <div className="flex-1 p-0 sm:p-4 lg:p-6 bg-slate-50/50 pb-8">
+          {/* 🚨 核心路由分发 */}
           {activeCategory === '当前库存' ? (
             <InventoryView
               inventory={inventory.filter(item => item.name.includes(searchTerm))}
@@ -265,6 +242,8 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
               onDeleteInventoryRow={onDeleteInventoryRow}
               onAddNewInventoryRow={onAddNewInventoryRow}
             />
+          ) : activeCategory === '大盘行情' ? (
+            <MarketTrendView data={productsList} />
           ) : (
             <PriceCompareView
               activeCategory={activeCategory}

@@ -237,15 +237,16 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
             />
             <div className="fixed right-4 top-[60px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-2xl p-2 z-[100] w-52 flex flex-col gap-1 origin-top-right animate-in fade-in zoom-in-95 duration-200 lg:hidden text-sm">
 
+
+              <div className="h-[1px] bg-slate-100 my-1"></div>
               {!isAppEnv && (
                 <>
-                  <a href="/app.apk" download onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-blue-700 bg-blue-50 font-bold hover:bg-blue-100 rounded-xl transition-colors">
+                  <a href="/app-release.apk" download onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-blue-700 bg-blue-50 font-bold hover:bg-blue-100 rounded-xl transition-colors">
                     <Download className="w-4 h-4 text-blue-500" /> 下载安卓 APP
                   </a>
                   <div className="h-[1px] bg-slate-100 my-1"></div>
                 </>
               )}
-              <div className="h-[1px] bg-slate-100 my-1"></div>
               <Link href="/mapping" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><LinkIcon className="w-4 h-4 text-slate-400" /> 名称同步映射</Link>
               <Link href="/history" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><History className="w-4 h-4 text-slate-400" /> 报表历史查询</Link>
               <div className="h-[1px] bg-slate-100 my-1"></div>

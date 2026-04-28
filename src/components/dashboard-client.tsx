@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { DashboardItem } from '@/actions/get-dashboard-data';
 import { createInventoryItem, updateInventoryItem, deleteInventoryItem } from '@/actions/inventory';
 import { updateProductPrice } from '@/actions/price';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, ArrowRightLeft, FileText, Box, Activity, History, Archive, Menu, Link as LinkIcon } from 'lucide-react';
+import { Plus, Search, ArrowRightLeft, FileText, Box, Activity, History, Archive, Menu, Link as LinkIcon, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import InventoryView from './dashboard/inventory-view';
 import PriceCompareView from './dashboard/price-compare-view';
@@ -35,7 +35,13 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
 
   const [productsList, setProductsList] = useState(initialData);
   const [inventory, setInventory] = useState(initialInventoryData);
+  const [isAppEnv, setIsAppEnv] = useState(false);
 
+  useEffect(() => {
+    if (typeof navigator !== 'undefined' && navigator.userAgent.includes('PriceOcrApp')) {
+      setIsAppEnv(true);
+    }
+  }, []);
   const getDiffValue = (item: DashboardItem, category: string, sortKey: string) => {
     if (sortKey === 'compareDiff') return item.compareDiff || 0;
 
@@ -209,6 +215,12 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
               </Button>
 
               <div className="hidden lg:flex gap-2">
+                {/* 🚨 新增：PC端专属下载按钮 (带 download 属性自动触发下载) */}
+                <a href="/app-release.apk" download>
+                  <Button variant="outline" size="sm" className="font-bold border-blue-200 text-blue-600 hover:bg-blue-50">
+                    <Download className="w-4 h-4 mr-1.5" />下载 APP
+                  </Button>
+                </a>
                 <Link href="/mapping"><Button variant="outline" size="sm" className="font-bold border-slate-200"><ArrowRightLeft className="w-4 h-4 mr-1.5" />名称同步</Button></Link>
                 <Link href="/history"><Button variant="outline" size="sm" className="font-bold border-slate-200"><History className="w-4 h-4 mr-1.5" />历史单据</Button></Link>
                 <Link href="/import"><Button size="sm" className="bg-slate-800 text-white font-bold hover:bg-slate-900"><Plus className="w-4 h-4 mr-1.5" />录入OCR</Button></Link>
@@ -224,6 +236,16 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
               onClick={() => setMenuOpen(false)}
             />
             <div className="fixed right-4 top-[60px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-2xl p-2 z-[100] w-52 flex flex-col gap-1 origin-top-right animate-in fade-in zoom-in-95 duration-200 lg:hidden text-sm">
+
+              {!isAppEnv && (
+                <>
+                  <a href="/app.apk" download onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-blue-700 bg-blue-50 font-bold hover:bg-blue-100 rounded-xl transition-colors">
+                    <Download className="w-4 h-4 text-blue-500" /> 下载安卓 APP
+                  </a>
+                  <div className="h-[1px] bg-slate-100 my-1"></div>
+                </>
+              )}
+              <div className="h-[1px] bg-slate-100 my-1"></div>
               <Link href="/mapping" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><LinkIcon className="w-4 h-4 text-slate-400" /> 名称同步映射</Link>
               <Link href="/history" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><History className="w-4 h-4 text-slate-400" /> 报表历史查询</Link>
               <div className="h-[1px] bg-slate-100 my-1"></div>

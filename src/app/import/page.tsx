@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { scanImageLocal, ParsedItem } from '@/actions/ocr';
+import { scanScreenshot } from '@/actions/ocr-screenshot';
 import { savePriceSheet } from '@/actions/save-sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -49,6 +50,9 @@ export default function ImportPage() {
   const [marketType, setMarketType] = useState('EXPRESS');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // 追踪当前激活的解析模式：'photo' | 'screenshot' | null
+  const [activeMode, setActiveMode] = useState<'photo' | 'screenshot' | null>(null);
 
   // 默认 OCR 引擎设为腾讯云 (tencent)
   const [ocrEngine, setOcrEngine] = useState('tencent');
@@ -195,12 +199,14 @@ export default function ImportPage() {
     setImagePreview(null);
     setUrlInput('');
     setStatus('idle');
+    setActiveMode(null);
     setItems([]);
   };
 
   const handleStartOcr = async () => {
     // Debug 模式下，允许不上传图片直接空跑
     if (!file && !activeUrl && !isDebugMode) return;
+    setActiveMode('photo');
     setStatus('processing');
 
     // 🛠️ 拦截：如果是 Debug 虚拟引擎，执行模拟流
@@ -236,6 +242,33 @@ export default function ImportPage() {
       }
     } catch (err) {
       alert('请求错误，请检查服务状态');
+      setStatus('error');
+    }
+  };
+
+  const handleStartScreenshotOcr = async () => {
+    if (!file && !activeUrl) return;
+    setActiveMode('screenshot');
+    setStatus('processing');
+
+    const formData = new FormData();
+    if (file) {
+      formData.append('file', file);
+    } else if (activeUrl) {
+      formData.append('imageUrl', activeUrl);
+    }
+
+    try {
+      const res = await scanScreenshot(formData);
+      if (res.success && res.parsedData) {
+        setItems(res.parsedData);
+        setStatus('success');
+      } else {
+        alert('截图解析失败: ' + res.error);
+        setStatus('error');
+      }
+    } catch (err) {
+      alert('截图解析请求错误，请检查服务状态');
       setStatus('error');
     }
   };
@@ -462,14 +495,34 @@ export default function ImportPage() {
                   </div>
                 </div>
 
-                <Button
-                  className="w-full h-10 sm:h-11 text-sm sm:text-base font-bold shadow-none rounded-none bg-slate-800 hover:bg-slate-900 transition-colors ease-out tracking-widest"
-                  onClick={handleStartOcr}
-                  disabled={status === 'processing' || status === 'success'}
-                >
-                  {status === 'processing' ? <Loader2 className="animate-spin mr-2 w-4 h-4 sm:w-5 sm:h-5" /> : null}
-                  {status === 'success' ? '解析完毕' : status === 'processing' ? '云端节点处理中' : '执行解析程序'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    className={cn(
+                      "flex-1 h-10 sm:h-11 text-sm sm:text-base font-bold shadow-none rounded-none transition-colors ease-out tracking-widest",
+                      activeMode === 'screenshot' && (status === 'processing' || status === 'success')
+                        ? 'bg-slate-400 hover:bg-slate-400'
+                        : 'bg-slate-800 hover:bg-slate-900'
+                    )}
+                    onClick={handleStartOcr}
+                    disabled={status === 'processing' || status === 'success'}
+                  >
+                    {activeMode === 'photo' && status === 'processing' ? <Loader2 className="animate-spin mr-2 w-4 h-4 sm:w-5 sm:h-5" /> : null}
+                    {activeMode === 'photo' && status === 'success' ? '解析完毕' : activeMode === 'photo' && status === 'processing' ? '处理中' : '解析拍照'}
+                  </Button>
+                  <Button
+                    className={cn(
+                      "flex-1 h-10 sm:h-11 text-sm sm:text-base font-bold shadow-none rounded-none transition-colors ease-out tracking-widest",
+                      activeMode === 'photo' && (status === 'processing' || status === 'success')
+                        ? 'bg-slate-400 hover:bg-slate-400'
+                        : 'bg-slate-600 hover:bg-slate-700'
+                    )}
+                    onClick={handleStartScreenshotOcr}
+                    disabled={status === 'processing' || status === 'success'}
+                  >
+                    {activeMode === 'screenshot' && status === 'processing' ? <Loader2 className="animate-spin mr-2 w-4 h-4 sm:w-5 sm:h-5" /> : null}
+                    {activeMode === 'screenshot' && status === 'success' ? '解析完毕' : activeMode === 'screenshot' && status === 'processing' ? '处理中' : '解析截图'}
+                  </Button>
+                </div>
               </div>
             )}
           </div>

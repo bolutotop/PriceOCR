@@ -261,8 +261,11 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
         if (currentRow.length === 0) {
           currentRow.push(block);
         } else {
-          const lastBlock = currentRow[currentRow.length - 1];
-          if (block.yCenter - lastBlock.yCenter <= DELTA_Y) {
+          // 用行首元素的 yCenter 做锚点，而非链式前一个元素
+          // 防止漂移：A(y=100) → B(y=108) → C(y=115) 链式会全部归入同行，
+          // 但 C 和 A 实际差了 15，可能已经是下一行了
+          const anchorBlock = currentRow[0];
+          if (block.yCenter - anchorBlock.yCenter <= DELTA_Y) {
             currentRow.push(block);
           } else {
             rows.push(currentRow);
@@ -419,7 +422,32 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
           if (nx.used) continue;
           if (!sameRow(nx, curr)) break;                          // 跨行，停止
           if (nx.xMin - curr.xMax > MAX_X_DISTANCE) break;        // 太远，停止
-          if (isPrice(nx.text)) { priceBlock = nx; break; }
+          if (isPrice(nx.text)) {
+            // 防错行抢价格：如果该价格和当前品名 y 差较大（>0.35字高），
+            // 检查价格左侧是否存在一个未使用的、y 方向更接近该价格的非价格块
+            // （即该价格本来应该属于另一行的品名，不应被当前品名抢走）
+            const yGap = Math.abs(nx.yCenter - curr.yCenter);
+            if (yGap > H_avg * 0.35) {
+              let hasCloserOwner = false;
+              for (let k = 0; k < extractedBlocks.length; k++) {
+                const cand = extractedBlocks[k];
+                if (cand === curr || cand.used || isPrice(cand.text)) continue;
+                // 候选必须在价格左侧且水平距离合理
+                if (cand.xMax > nx.xMin) continue;
+                if (nx.xMin - cand.xMax > MAX_X_DISTANCE) continue;
+                // 候选的 y 与价格更接近
+                if (Math.abs(cand.yCenter - nx.yCenter) < yGap * 0.7) {
+                  hasCloserOwner = true;
+                  break;
+                }
+              }
+              if (hasCloserOwner) {
+                // 跳过这个价格，不抢
+                continue;
+              }
+            }
+            priceBlock = nx; break;
+          }
           // 不再因"遇到字典锚点"主动 break，继续找
         }
 
@@ -534,6 +562,25 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
               const distanceX = next.xMin - mergedXMax;
               // 价格必须在名字右侧，且不能跨越半张图
               if (distanceX < MAX_X_DISTANCE && mergedXMin < next.xCenter) {
+                // 防错行抢价格：同 3.A 逻辑
+                const yGap3B = Math.abs(next.yCenter - curr.yCenter);
+                if (yGap3B > H_avg * 0.35) {
+                  let hasCloserOwner3B = false;
+                  for (let k = 0; k < extractedBlocks.length; k++) {
+                    const cand = extractedBlocks[k];
+                    if (cand === curr || cand.used || isPrice(cand.text)) continue;
+                    if (cand.xMax > next.xMin) continue;
+                    if (next.xMin - cand.xMax > MAX_X_DISTANCE) continue;
+                    if (Math.abs(cand.yCenter - next.yCenter) < yGap3B * 0.7) {
+                      hasCloserOwner3B = true;
+                      break;
+                    }
+                  }
+                  if (hasCloserOwner3B) {
+                    if (isDbgRow) console.log(`  [skip] 价格 "${next.text}" 有更近的品名owner，不抢`);
+                    continue;
+                  }
+                }
                 if (dbgHit(curr.text)) dbgTraceLog.push(`  -> MATCHED "${next.text}"`);
                 const parsedP = parsePrice(next.text);
                 if (parsedP === 971 || parsedP === 131.5 || parsedP === 163.2 || (curr.yCenter >= 180 && curr.yCenter <= 240) || (curr.yCenter >= 900 && curr.yCenter <= 930) || (curr.yCenter >= 300 && curr.yCenter <= 330)) {

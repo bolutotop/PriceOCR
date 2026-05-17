@@ -18,14 +18,18 @@ export async function getDashboardData(): Promise<DashboardItem[]> {
     include: {
       priceHistory: {
         include: { sheet: true },
-        // 🚨 拦截同日更新 Bug：按业务日期倒序，同日按系统保存绝对秒数倒序
-        orderBy: [
-          { sheet: { recordDate: 'desc' } },
-          { sheet: { createdAt: 'desc' } }
-        ]
       }
     }
   });
+
+  // 🚨 在应用层排序：按业务日期倒序，同日按系统保存绝对秒数倒序
+  for (const p of products) {
+    p.priceHistory.sort((a, b) => {
+      const dateDiff = new Date(b.sheet.recordDate).getTime() - new Date(a.sheet.recordDate).getTime();
+      if (dateDiff !== 0) return dateDiff;
+      return new Date(b.sheet.createdAt).getTime() - new Date(a.sheet.createdAt).getTime();
+    });
+  }
 
   const formatted: DashboardItem[] = products.map(p => {
     // 拆分出两条时间线

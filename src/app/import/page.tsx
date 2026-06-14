@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { scanImageLocal, ParsedItem } from '@/actions/ocr';
 import { scanScreenshot } from '@/actions/ocr-screenshot';
 import { savePriceSheet } from '@/actions/save-sheet';
+import { getLatestPrices } from '@/actions/get-latest-prices';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
@@ -44,6 +45,11 @@ export default function ImportPage() {
   const [searchTerm, setSearchTerm] = useState('');
   // 价格列表头的"只看未识别"勾选；勾选后仅展示 price === -1 的行
   const [onlyUnrecognized, setOnlyUnrecognized] = useState(false);
+  // 上一次录入价格（按品名归一化），用于校对当前 OCR 价格是否异常
+  // null 表示已查过但无历史；undefined 表示尚未查询
+  const [lastPriceMap, setLastPriceMap] = useState<Record<string, number | null>>({});
+  // 触发警告的差距阈值（绝对值）
+  const PRICE_DIFF_ALERT_THRESHOLD = 20;
 
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState('');
@@ -153,6 +159,13 @@ export default function ImportPage() {
   // ----------------------------------------
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // marketType 切换时，如果当前已经有解析结果，重新查上次价格作为对比
+  useEffect(() => {
+    if (items.length === 0) return;
+    fetchLastPricesFor(items);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [marketType]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (status === 'processing') {
@@ -201,6 +214,26 @@ export default function ImportPage() {
     setStatus('idle');
     setActiveMode(null);
     setItems([]);
+    setLastPriceMap({});
+  };
+
+  // 抽出"OCR 完成 -> 拉取该批品名上次价格"逻辑，两个入口共用
+  const fetchLastPricesFor = async (parsed: ParsedItem[]) => {
+    try {
+      const names = Array.from(new Set(parsed.map((p) => p.name).filter(Boolean)));
+      if (names.length === 0) {
+        setLastPriceMap({});
+        return;
+      }
+      const map = await getLatestPrices(
+        names,
+        marketType === 'GUANGHUO' ? 'GUANGHUO' : 'EXPRESS'
+      );
+      setLastPriceMap(map);
+    } catch (e) {
+      console.warn('[import] 获取上次价格失败：', e);
+      setLastPriceMap({});
+    }
   };
 
   const handleStartOcr = async () => {
@@ -236,6 +269,7 @@ export default function ImportPage() {
       if (res.success && res.parsedData) {
         setItems(res.parsedData);
         setStatus('success');
+        fetchLastPricesFor(res.parsedData);
       } else {
         alert('解析失败: ' + res.error);
         setStatus('error');
@@ -263,6 +297,7 @@ export default function ImportPage() {
       if (res.success && res.parsedData) {
         setItems(res.parsedData);
         setStatus('success');
+        fetchLastPricesFor(res.parsedData);
       } else {
         alert('截图解析失败: ' + res.error);
         setStatus('error');
@@ -556,6 +591,37 @@ export default function ImportPage() {
                 </span>
               </div>
 
+              {/* 行情归属快速切换：决定"上次价格"按哪条时间线对比，同时也是入库时的归属 */}
+              <div
+                className="flex items-center border border-slate-300 bg-white shadow-sm overflow-hidden"
+                title="切换后会按该行情重新比对上次价格"
+              >
+                <button
+                  type="button"
+                  onClick={() => setMarketType('EXPRESS')}
+                  className={cn(
+                    "px-2 sm:px-2.5 h-7 sm:h-8 text-[10px] sm:text-xs font-black tracking-tight transition-colors",
+                    marketType === 'EXPRESS'
+                      ? 'bg-slate-800 text-white'
+                      : 'bg-white text-slate-500 hover:bg-slate-100'
+                  )}
+                >
+                  快递
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMarketType('GUANGHUO')}
+                  className={cn(
+                    "px-2 sm:px-2.5 h-7 sm:h-8 text-[10px] sm:text-xs font-black tracking-tight transition-colors border-l border-slate-300",
+                    marketType === 'GUANGHUO'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-white text-slate-500 hover:bg-slate-100'
+                  )}
+                >
+                  广货
+                </button>
+              </div>
+
               <div className="relative flex-1 max-w-[180px] sm:max-w-56">
                 <Search className="absolute left-2 sm:left-2.5 top-1.5 sm:top-2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
                 <Input
@@ -687,29 +753,56 @@ export default function ImportPage() {
                           </td>
 
                           <td className="p-1 sm:p-3 align-middle">
-                            <div className="relative">
-                              <Input
-                                type="text"
-                                value={item.price === -1 ? '' : item.price}
-                                onChange={(e) => handlePriceChange(actualIndex, e.target.value)}
-                                className={cn(
-                                  "rounded-none border focus-visible:border-slate-800 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 font-mono font-black text-xs sm:text-sm h-10 w-full px-1 sm:px-2 text-center sm:text-right shadow-none transition-colors ease-out",
-                                  item.price === -1
-                                    ? 'border-red-400 bg-red-50/60 text-red-500 placeholder:text-red-400 placeholder:font-bold'
-                                    : 'border-transparent hover:border-slate-200 text-slate-800',
-                                  item.price > 1000 ? 'text-slate-800' : ''
-                                )}
-                                placeholder={item.price === -1 ? '未识别 ?' : '0.0'}
-                              />
-                              {item.price === -1 && (
-                                <span
-                                  title="OCR 未配到价格，请核对原图"
-                                  className="pointer-events-none absolute left-0.5 sm:left-1 top-1/2 -translate-y-1/2 text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1 py-[1px] bg-red-600 text-white"
-                                >
-                                  !
-                                </span>
-                              )}
-                            </div>
+                            {(() => {
+                              const cleanName = (item.name || '').replace(/\s+/g, '').trim();
+                              const lastPrice = cleanName ? lastPriceMap[cleanName] : undefined;
+                              const hasLast = typeof lastPrice === 'number';
+                              const diff = hasLast && item.price > 0 ? item.price - (lastPrice as number) : 0;
+                              const isAlert = hasLast && item.price > 0 && Math.abs(diff) > PRICE_DIFF_ALERT_THRESHOLD;
+                              return (
+                                <div className="relative">
+                                  <Input
+                                    type="text"
+                                    value={item.price === -1 ? '' : item.price}
+                                    onChange={(e) => handlePriceChange(actualIndex, e.target.value)}
+                                    className={cn(
+                                      "rounded-none border focus-visible:border-slate-800 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 font-mono font-black text-xs sm:text-sm h-10 w-full px-1 sm:px-2 text-center sm:text-right shadow-none transition-colors ease-out",
+                                      item.price === -1
+                                        ? 'border-red-400 bg-red-50/60 text-red-500 placeholder:text-red-400 placeholder:font-bold'
+                                        : isAlert
+                                          ? 'border-red-500 bg-red-50 text-red-600 ring-1 ring-red-300'
+                                          : 'border-transparent hover:border-slate-200 text-slate-800',
+                                      !isAlert && item.price > 1000 ? 'text-slate-800' : ''
+                                    )}
+                                    placeholder={item.price === -1 ? '未识别 ?' : '0.0'}
+                                  />
+                                  {item.price === -1 && (
+                                    <span
+                                      title="OCR 未配到价格，请核对原图"
+                                      className="pointer-events-none absolute left-0.5 sm:left-1 top-1/2 -translate-y-1/2 text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1 py-[1px] bg-red-600 text-white"
+                                    >
+                                      !
+                                    </span>
+                                  )}
+                                  {item.price !== -1 && isAlert && (
+                                    <span
+                                      title={`与上次价格 ${lastPrice} 相差 ${diff > 0 ? '+' : ''}${diff.toFixed(diff % 1 === 0 ? 0 : 1)}，请核对！`}
+                                      className="pointer-events-none absolute -bottom-1.5 right-0.5 sm:right-1 text-[8px] sm:text-[9px] font-black tracking-tight px-1 py-[1px] bg-red-600 text-white border border-red-700 rounded-sm shadow-sm"
+                                    >
+                                      上次{lastPrice}·{diff > 0 ? '+' : ''}{diff.toFixed(diff % 1 === 0 ? 0 : 1)}
+                                    </span>
+                                  )}
+                                  {item.price !== -1 && hasLast && !isAlert && (
+                                    <span
+                                      title={`上次价格：${lastPrice}`}
+                                      className="pointer-events-none absolute -bottom-1.5 right-0.5 sm:right-1 text-[8px] sm:text-[9px] font-bold text-slate-400"
+                                    >
+                                      上次{lastPrice}
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           </td>
 
                           <td className="p-0 sm:p-2 align-middle text-center border-l border-slate-100">

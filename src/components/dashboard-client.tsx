@@ -66,7 +66,13 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
       let matchesCategory = true;
       if (activeCategory === '快递报价') matchesCategory = item.expressPrice !== null;
       if (activeCategory === '广货报价') matchesCategory = item.guanghuoPrice !== null;
-      if (activeCategory === '出货比价') matchesCategory = item.expressPrice !== null && item.guanghuoPrice !== null;
+      if (activeCategory === '出货比价') {
+        // 出货比价：必须双边都有真实报价（不为 null 且 > 1，避免 OCR 占位价 0/1 把利润撑爆）
+        // 同时排除用户在"名称同步映射"中明确标记为"无需对比"的产品。
+        const expOk = item.expressPrice !== null && item.expressPrice > 1;
+        const ghOk = item.guanghuoPrice !== null && item.guanghuoPrice > 1;
+        matchesCategory = expOk && ghOk && !item.excludedFromCompare;
+      }
       return matchesCategory && item.name.includes(searchTerm);
     });
 
@@ -93,11 +99,11 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
           return Math.abs(diffB) - Math.abs(diffA);
         }
 
-        let aVal = a[sortConfig.key as keyof DashboardItem];
-        let bVal = b[sortConfig.key as keyof DashboardItem];
+        const aVal = a[sortConfig.key as keyof DashboardItem];
+        const bVal = b[sortConfig.key as keyof DashboardItem];
 
-        if (aVal === null) return 1;
-        if (bVal === null) return -1;
+        if (aVal === null || aVal === undefined) return 1;
+        if (bVal === null || bVal === undefined) return -1;
         return sortConfig.direction === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
       });
     }

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getMappingTasks, mergeProducts, getMappings, deleteMapping } from '@/actions/mapping';
+import { NO_COMPARE_TARGET_ID } from '@/lib/mapping-constants';
 import { Input } from '@/components/ui/input';
 import { ArrowRightLeft, Trash2, CheckCircle2, Search, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,12 +20,14 @@ function SearchableSelect({
   options,
   value,
   onChange,
-  placeholder
+  placeholder,
+  noCompareId,
 }: {
   options: { id: string, name: string }[],
   value: string,
   onChange: (val: string) => void,
-  placeholder: string
+  placeholder: string,
+  noCompareId?: string,
 }) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -79,21 +82,28 @@ function SearchableSelect({
             {filtered.length === 0 ? (
               <div className="p-3 text-center text-slate-400 text-xs">无匹配项</div>
             ) : (
-              filtered.map(opt => (
-                <div
-                  key={opt.id}
-                  className={cn(
-                    "cursor-pointer rounded-md px-2.5 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors mb-0.5",
-                    value === opt.id && "bg-blue-50 text-blue-700 font-bold"
-                  )}
-                  onClick={() => {
-                    onChange(opt.id);
-                    setOpen(false);
-                  }}
-                >
-                  {opt.name}
-                </div>
-              ))
+              filtered.map(opt => {
+                const isNoCompare = noCompareId !== undefined && opt.id === noCompareId;
+                return (
+                  <div
+                    key={opt.id}
+                    className={cn(
+                      "cursor-pointer rounded-md px-2.5 py-2 transition-colors mb-0.5",
+                      isNoCompare
+                        ? "text-amber-700 bg-amber-50/50 hover:bg-amber-100 font-bold border border-dashed border-amber-300"
+                        : "text-slate-700 hover:bg-blue-50 hover:text-blue-700",
+                      value === opt.id && !isNoCompare && "bg-blue-50 text-blue-700 font-bold",
+                      value === opt.id && isNoCompare && "bg-amber-100"
+                    )}
+                    onClick={() => {
+                      onChange(opt.id);
+                      setOpen(false);
+                    }}
+                  >
+                    {isNoCompare ? `🚫 ${opt.name}` : opt.name}
+                  </div>
+                );
+              })
             )}
           </div>
         </div>
@@ -289,6 +299,7 @@ export default function MappingPage() {
                               placeholder="选择广货标准名..."
                               value={selections[task.id] || ''}
                               onChange={(val) => setSelections(prev => ({ ...prev, [task.id]: val }))}
+                              noCompareId={NO_COMPARE_TARGET_ID}
                             />
                           </div>
 
@@ -328,18 +339,37 @@ export default function MappingPage() {
                 <div className="text-center text-sm py-8 text-slate-400 rounded-md border border-dashed border-slate-200 bg-white">暂无任何规则</div>
               ) : (
                 <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1 custom-scrollbar">
-                  {filteredMappings.map(m => (
-                    <div key={m.id} className="flex items-center justify-between bg-white border border-slate-200 rounded-md p-3 shadow-sm text-sm group hover:border-slate-300 transition-colors gap-2">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-1 min-w-0">
-                        <span className="font-bold text-rose-600 truncate sm:max-w-[40%] text-xs" title={m.name}>{m.name}</span>
-                        <ArrowRightLeft className="hidden sm:block w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
-                        <span className="font-bold text-emerald-600 truncate sm:max-w-[40%] text-xs" title={m.product?.name}>{m.product?.name}</span>
+                  {filteredMappings.map(m => {
+                    const isNoCompare = m.product?.id === m.productId && m.product?.name === m.name;
+                    return (
+                      <div key={m.id} className={cn(
+                        "flex items-center justify-between border rounded-md p-3 shadow-sm text-sm group transition-colors gap-2",
+                        isNoCompare
+                          ? "bg-amber-50/40 border-amber-200 hover:border-amber-300"
+                          : "bg-white border-slate-200 hover:border-slate-300"
+                      )}>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-1 min-w-0">
+                          {isNoCompare ? (
+                            <>
+                              <span className="font-bold text-amber-700 truncate text-xs" title={m.name}>{m.name}</span>
+                              <span className="font-black text-[10px] uppercase tracking-widest text-amber-600 bg-amber-100 px-1.5 py-0.5 border border-amber-200 shrink-0">
+                                🚫 无需对比
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="font-bold text-rose-600 truncate sm:max-w-[40%] text-xs" title={m.name}>{m.name}</span>
+                              <ArrowRightLeft className="hidden sm:block w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
+                              <span className="font-bold text-emerald-600 truncate sm:max-w-[40%] text-xs" title={m.product?.name}>{m.product?.name}</span>
+                            </>
+                          )}
+                        </div>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 group-hover:text-red-500 hover:bg-red-50 shrink-0" onClick={() => handleDeleteMapping(m.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 group-hover:text-red-500 hover:bg-red-50 shrink-0" onClick={() => handleDeleteMapping(m.id)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </CardContent>

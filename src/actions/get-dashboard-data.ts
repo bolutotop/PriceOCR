@@ -11,6 +11,7 @@ export type DashboardItem = {
   guanghuoPrev: number | null;
   compareDiff: number | null; // 快递价格 - 广货价格
   lastUpdate: Date | null;
+  excludedFromCompare?: boolean; // 是否在"出货比价"中被用户标记为不参与对比
 };
 
 export async function getDashboardData(): Promise<DashboardItem[]> {
@@ -21,6 +22,17 @@ export async function getDashboardData(): Promise<DashboardItem[]> {
       }
     }
   });
+
+  // 收集所有"自指别名" => 这些商品被用户标记为"无需对比"
+  const aliases = await prisma.productAlias.findMany({
+    include: { product: { select: { id: true, name: true } } }
+  });
+  const noCompareIds = new Set<string>();
+  for (const a of aliases) {
+    if (a.product && a.product.id === a.productId && a.name === a.product.name) {
+      noCompareIds.add(a.productId);
+    }
+  }
 
   // 🚨 在应用层排序：按业务日期倒序，同日按系统保存绝对秒数倒序
   for (const p of products) {
@@ -69,7 +81,8 @@ export async function getDashboardData(): Promise<DashboardItem[]> {
       guanghuoPrice: ghLatest,
       guanghuoPrev: ghPrev,
       compareDiff,
-      lastUpdate
+      lastUpdate,
+      excludedFromCompare: noCompareIds.has(p.id),
     };
   });
 

@@ -11,10 +11,18 @@ import prisma from '@/lib/prisma';
 // 用户提交问题（文字 + 图片）→ 开发者标记已修复 → 用户在看板确认完成 →
 // 删除条目并清理图片。
 //
-// 图片存到 public/issue-uploads/<issueId>/<filename>，数据库里只存相对 URL。
+// 【图片存储策略】
+// 旧实现：写到 public/issue-uploads/<id>/<file>，前端直接 <img src="/issue-uploads/...">
+//   问题：Next.js 在构建后（standalone/部署环境）对「运行时」新增到 public/ 的
+//   文件不会自动作为静态资源服务 → 浏览器看到破图。
+// 新实现：写到项目根 data/issue-uploads/<id>/<file>（脱离 public/），
+//   通过专用 API 路由 /api/issue-images/<id>/<file> 返回图片二进制流。
+//   数据库里只存这个相对 URL。
+//
+// 兼容：旧数据仍在 public/issue-uploads/...，API 路由会自动回退读取。
 // ====================================================================
 
-export type IssueImage = string; // 形如 "/issue-uploads/<id>/abc.jpg"
+export type IssueImage = string; // 形如 "/api/issue-images/<id>/abc.jpg"
 
 export type IssueDTO = {
   id: string;
@@ -27,8 +35,14 @@ export type IssueDTO = {
   resolvedAt: string | null;
 };
 
-const UPLOAD_ROOT = path.resolve(process.cwd(), 'public', 'issue-uploads');
-const PUBLIC_URL_PREFIX = '/issue-uploads';
+// 新存储位置（脱离 public/，避免 Next 静态托管问题）
+// 支持通过环境变量 ISSUE_UPLOAD_DIR 指定绝对路径，便于 Docker/standalone 挂载持久卷
+const UPLOAD_ROOT = process.env.ISSUE_UPLOAD_DIR
+  ? path.resolve(process.env.ISSUE_UPLOAD_DIR)
+  : path.resolve(process.cwd(), 'data', 'issue-uploads');
+// 旧存储位置（仅用于清理时一并删除）
+const LEGACY_UPLOAD_ROOT = path.resolve(process.cwd(), 'public', 'issue-uploads');
+const IMAGE_URL_PREFIX = '/api/issue-images';
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGE_COUNT = 5;
@@ -37,8 +51,11 @@ const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 function safeParseImages(json: string): IssueImage[] {
   try {
     const arr = JSON.parse(json);
-    if (Array.isArray(arr)) return arr.filter((s) => typeof s === 'string');
-    return [];
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .filter((s): s is string => typeof s === 'string')
+      // 兼容旧数据：把 "/issue-uploads/<id>/<file>" 重写到新 API 路径
+      .map((s) => (s.startsWith('/issue-uploads/') ? s.replace('/issue-uploads', IMAGE_URL_PREFIX) : s));
   } catch {
     return [];
   }
@@ -110,7 +127,7 @@ export async function createIssue(formData: FormData): Promise<{ success: boolea
       const filePath = path.join(dir, filename);
       const buf = Buffer.from(await f.arrayBuffer());
       await fs.writeFile(filePath, buf);
-      savedUrls.push(`${PUBLIC_URL_PREFIX}/${created.id}/${filename}`);
+      savedUrls.push(`${IMAGE_URL_PREFIX}/${created.id}/${filename}`);
     }
 
     if (savedUrls.length > 0) {
@@ -187,8 +204,13 @@ export async function confirmIssueDone(id: string): Promise<{ success: boolean; 
 
     await prisma.issue.delete({ where: { id } });
 
+    // 同时清理新位置 data/ 与旧位置 public/（兼容历史数据）
     const dir = path.join(UPLOAD_ROOT, id);
-    await fs.rm(dir, { recursive: true, force: true }).catch(() => {});
+    const legacyDir = path.join(LEGACY_UPLOAD_ROOT, id);
+    await Promise.all([
+      fs.rm(dir, { recursive: true, force: true }).catch(() => {}),
+      fs.rm(legacyDir, { recursive: true, force: true }).catch(() => {}),
+    ]);
 
     revalidatePath('/issues');
     return { success: true };

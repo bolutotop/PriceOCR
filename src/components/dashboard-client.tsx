@@ -7,7 +7,7 @@ import { createInventoryItem, updateInventoryItem, deleteInventoryItem } from '@
 import { updateProductPrice } from '@/actions/price';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, ArrowRightLeft, FileText, Box, Activity, History, Archive, Menu, Link as LinkIcon, Download } from 'lucide-react';
+import { Plus, Search, ArrowRightLeft, FileText, Box, Activity, History, Archive, Menu, Link as LinkIcon, Download, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import InventoryView from './dashboard/inventory-view';
 import PriceCompareView from './dashboard/price-compare-view';
@@ -229,6 +229,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
                 </a>
                 <Link href="/mapping"><Button variant="outline" size="sm" className="font-bold border-slate-200"><ArrowRightLeft className="w-4 h-4 mr-1.5" />名称同步</Button></Link>
                 <Link href="/history"><Button variant="outline" size="sm" className="font-bold border-slate-200"><History className="w-4 h-4 mr-1.5" />历史单据</Button></Link>
+                <Link href="/issues"><Button variant="outline" size="sm" className="font-bold border-slate-200"><MessageSquare className="w-4 h-4 mr-1.5" />问题看板</Button></Link>
                 <Link href="/import"><Button size="sm" className="bg-slate-800 text-white font-bold hover:bg-slate-900"><Plus className="w-4 h-4 mr-1.5" />录入OCR</Button></Link>
               </div>
             </div>
@@ -255,6 +256,7 @@ export default function DashboardClient({ initialData, initialInventoryData }: {
               )}
               <Link href="/mapping" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><LinkIcon className="w-4 h-4 text-slate-400" /> 名称同步映射</Link>
               <Link href="/history" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><History className="w-4 h-4 text-slate-400" /> 报表历史查询</Link>
+              <Link href="/issues" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-slate-700 font-bold hover:bg-slate-100 rounded-xl transition-colors"><MessageSquare className="w-4 h-4 text-slate-400" /> 问题看板</Link>
               <div className="h-[1px] bg-slate-100 my-1"></div>
               <Link href="/import" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-3 text-blue-600 bg-blue-50/80 font-bold hover:bg-blue-100 rounded-xl transition-colors"><Plus className="w-4 h-4" /> 录入最新图片</Link>
             </div>

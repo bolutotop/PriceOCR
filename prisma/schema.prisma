@@ -69,3 +69,22 @@ model InventoryItem {
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
+
+// 5. 用户问题反馈
+//    用户可以提交问题描述 + 截图，开发者把它标记为已修复，
+//    用户在问题看板上点"确认完成"后才真正删除并清理图片。
+model Issue {
+  id          String    @id @default(cuid())
+  description String    // 问题文字描述
+  // 图片相对路径列表，JSON 编码（SQLite 没有原生数组）。
+  // 例如：["/issue-uploads/<id>/abc.jpg", "/issue-uploads/<id>/def.png"]
+  imagesJson  String    @default("[]")
+  // OPEN / RESOLVED
+  status      String    @default("OPEN")
+  // 提交者标识（可选，浏览器临时 ID，用于"自己只能确认自己提的问题"等约束；当前不强制）
+  reporter    String?
+  // 开发者修复时的备注，用户能看到
+  resolution  String?
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+}

@@ -97,6 +97,7 @@ export function InventoryRow({
       <TableCell className="p-0 border-r border-blue-50/50 w-16 sm:w-20 text-center">
         <input
           type="number"
+          inputMode="numeric"
           value={qty}
           onChange={e => setQty(e.target.value)}
           className="w-full h-11 px-1 bg-transparent outline-none font-mono font-bold text-[14px] sm:text-[16px] text-center text-blue-700"
@@ -106,6 +107,8 @@ export function InventoryRow({
       <TableCell className="p-0 border-r border-blue-50/50 w-20 sm:w-24 text-center">
         <input
           type="number"
+          inputMode="decimal"
+          step="0.1"
           value={price}
           onChange={e => setPrice(e.target.value)}
           className="w-full h-11 px-1 bg-transparent outline-none font-mono font-black text-[14px] sm:text-[16px] text-center text-rose-600"
@@ -218,6 +221,7 @@ export function InventoryNewRow({
       <TableCell className="p-0 border-r border-emerald-100/50 w-16 sm:w-20 text-center">
         <input
           type="number"
+          inputMode="numeric"
           value={qty}
           onChange={e => setQty(e.target.value)}
           className="w-full h-11 px-1 bg-transparent outline-none font-mono font-bold text-[14px] sm:text-[16px] text-center text-emerald-700 placeholder:text-emerald-200/60"
@@ -227,6 +231,8 @@ export function InventoryNewRow({
       <TableCell className="p-0 border-r border-emerald-100/50 w-20 sm:w-24 text-center">
         <input
           type="number"
+          inputMode="decimal"
+          step="0.1"
           value={price}
           onChange={e => setPrice(e.target.value)}
           className="w-full h-11 px-1 bg-transparent outline-none font-mono font-black text-[14px] sm:text-[16px] text-center text-emerald-700 placeholder:text-emerald-200/60"

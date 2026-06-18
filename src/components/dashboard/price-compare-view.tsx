@@ -43,6 +43,8 @@ function PriceInputCell({
   return (
     <input
       type="number"
+      inputMode="decimal"
+      step="0.1"
       value={val}
       onChange={e => setVal(e.target.value)}
       onBlur={handleBlur}

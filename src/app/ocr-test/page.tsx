@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { scanImageLocal, ParsedItem } from '@/actions/ocr';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -52,20 +52,16 @@ export default function OcrTestPage() {
     );
   }, [items, searchTerm]);
 
-  // 修改价格的处理逻辑
-  const handlePriceChange = (index: number, value: string) => {
+  // 提交价格变更（PriceInput 子组件失焦/回车时回调）
+  const handlePriceCommit = (index: number, draft: string) => {
     const newItems = [...items];
-    let numVal = -1;
-    
-    // 如果用户输入 // 或者 /，存为 -1
-    if (value === '//' || value === '/') {
+    let numVal: number;
+    if (draft === '' || draft === '//' || draft === '/') {
       numVal = -1;
     } else {
-      // 否则尝试解析数字，如果解析失败(比如删空了)设为0
-      numVal = parseFloat(value);
-      if (isNaN(numVal)) numVal = 0;
+      const n = parseFloat(draft);
+      numVal = Number.isFinite(n) ? n : 0;
     }
-
     newItems[index] = { ...newItems[index], price: numVal };
     setItems(newItems);
   };
@@ -208,10 +204,10 @@ export default function OcrTestPage() {
 
                         <TableCell className="text-right font-mono">
                           {/* 价格输入框：将 -1 显示为 // */}
-                          <input 
-                            type="text" // 改为 text 类型以支持输入 //
-                            value={item.price === -1 ? "//" : item.price}
-                            onChange={(e) => handlePriceChange(index, e.target.value)}
+                          <PriceInputUncontrolled
+                            price={item.price}
+                            onCommit={(v) => handlePriceCommit(index, v)}
+                            unrecognizedDisplay="//"
                             className={`bg-transparent text-right border-b border-transparent hover:border-slate-300 focus:border-primary focus:outline-none px-0 py-0 w-24 leading-tight ${
                               item.price === -1 ? 'text-slate-400 font-bold' :
                               item.price > 2000 ? 'text-red-600 font-bold' : ''
@@ -248,5 +244,66 @@ export default function OcrTestPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// 同 import/page.tsx 中 PriceInput 的设计：用 ref 持有 input 真正的值，
+// 不在 onChange 中 setState，避免父组件重渲染干扰光标导致小数点输入异常。
+function PriceInputUncontrolled({
+  price,
+  onCommit,
+  unrecognizedDisplay = '',
+  className,
+}: {
+  price: number;
+  onCommit: (raw: string) => void;
+  unrecognizedDisplay?: string;
+  className?: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  const lastSyncedRef = useRef<number>(price);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (lastSyncedRef.current === price) return;
+    if (document.activeElement !== el) {
+      el.value = price === -1 ? unrecognizedDisplay : String(price);
+      lastSyncedRef.current = price;
+    }
+  }, [price, unrecognizedDisplay]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.value = price === -1 ? unrecognizedDisplay : String(price);
+    lastSyncedRef.current = price;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const commit = () => {
+    const el = ref.current;
+    if (!el) return;
+    const cleaned = el.value.replace(/[^0-9.\-/]/g, '');
+    if (cleaned !== el.value) el.value = cleaned;
+    onCommit(cleaned);
+  };
+
+  return (
+    <input
+      ref={ref}
+      type="text"
+      inputMode="decimal"
+      autoComplete="off"
+      defaultValue={price === -1 ? unrecognizedDisplay : String(price)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          commit();
+          (e.target as HTMLInputElement).blur();
+        }
+      }}
+      className={className}
+    />
   );
 }

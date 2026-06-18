@@ -335,9 +335,17 @@ export default function ImportPage() {
     setItems(newItems);
   };
 
-  const handlePriceChange = (actualIndex: number, val: string) => {
+  // 提交价格变更（由 PriceInput 子组件失焦/回车时调用）
+  const handlePriceCommit = (actualIndex: number, draft: string) => {
     const newItems = [...items];
-    newItems[actualIndex].price = val === '//' ? -1 : parseFloat(val) || 0;
+    let numVal: number;
+    if (draft === '' || draft === '//' || draft === '/') {
+      numVal = -1;
+    } else {
+      const n = parseFloat(draft);
+      numVal = Number.isFinite(n) ? n : 0;
+    }
+    newItems[actualIndex].price = numVal;
     setItems(newItems);
   };
 
@@ -761,12 +769,11 @@ export default function ImportPage() {
                               const isAlert = hasLast && item.price > 0 && Math.abs(diff) > PRICE_DIFF_ALERT_THRESHOLD;
                               return (
                                 <div className="relative">
-                                  <Input
-                                    type="text"
-                                    value={item.price === -1 ? '' : item.price}
-                                    onChange={(e) => handlePriceChange(actualIndex, e.target.value)}
+                                  <PriceInput
+                                    price={item.price}
+                                    onCommit={(v) => handlePriceCommit(actualIndex, v)}
                                     className={cn(
-                                      "rounded-none border focus-visible:border-slate-800 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 font-mono font-black text-xs sm:text-sm h-10 w-full px-1 sm:px-2 text-center sm:text-right shadow-none transition-colors ease-out",
+                                      "rounded-none border focus-visible:border-slate-800 bg-transparent hover:bg-white focus-visible:bg-white focus-visible:ring-0 font-mono font-black text-xs sm:text-sm h-10 w-full px-1 sm:px-2 text-center sm:text-right shadow-none transition-colors ease-out outline-none",
                                       item.price === -1
                                         ? 'border-red-400 bg-red-50/60 text-red-500 placeholder:text-red-400 placeholder:font-bold'
                                         : isAlert
@@ -825,5 +832,87 @@ export default function ImportPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// =============================================================================
+// PriceInput：独立的价格输入子组件
+//
+// 为什么独立？因为父组件每次输入都会触发整个 items 表格 re-render，
+// 受控 input 在 re-render 时如果 value 来自 React state（被 parseFloat 截断过），
+// 就会出现「输入 58. 立刻变 58」「中间插小数点吞后面位」「最后一位输不进」等怪现象。
+//
+// 这里：
+//   - 输入态完全交给 input 自己（用 ref 取值），不在 onChange 中 setState
+//   - 仅在 mount 时把 props.price 写进 input.value 作为初始显示
+//   - 当 props.price 从外部变化（例如 OCR 重新识别）时，刷新一次 input.value
+//   - 失焦或 Enter 时调用 onCommit 把字符串结果交给父组件去 parseFloat 入库
+// =============================================================================
+function PriceInput({
+  price,
+  onCommit,
+  className,
+  placeholder,
+}: {
+  price: number; // -1 表示未识别
+  onCommit: (raw: string) => void;
+  className?: string;
+  placeholder?: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  // 记录最近一次外部传入的 price，用于检测"外部变更 vs 用户自己 commit 引起的变更"
+  const lastSyncedRef = useRef<number>(price);
+
+  // 当 props.price 从外部变更（且当前 input 没在被用户编辑）时，同步进 input
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (lastSyncedRef.current === price) return; // 没变化，跳过
+    // 只有在 input 没获得焦点时才覆盖（避免打字途中被外部覆盖光标）
+    if (document.activeElement !== el) {
+      el.value = price === -1 ? '' : String(price);
+      lastSyncedRef.current = price;
+    }
+  }, [price]);
+
+  // 首次挂载：把初始值写进 input
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.value = price === -1 ? '' : String(price);
+    lastSyncedRef.current = price;
+    // 只在 mount 时执行
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const commit = () => {
+    const el = ref.current;
+    if (!el) return;
+    // 过滤掉非法字符（防止粘贴乱字符）；保留数字、点、负号、斜杠
+    const cleaned = el.value.replace(/[^0-9.\-/]/g, '');
+    if (cleaned !== el.value) el.value = cleaned;
+    onCommit(cleaned);
+    lastSyncedRef.current = cleaned === '' || cleaned === '//' || cleaned === '/'
+      ? -1
+      : (Number.isFinite(parseFloat(cleaned)) ? parseFloat(cleaned) : 0);
+  };
+
+  return (
+    <input
+      ref={ref}
+      type="text"
+      inputMode="decimal"
+      autoComplete="off"
+      defaultValue={price === -1 ? '' : String(price)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          commit();
+          (e.target as HTMLInputElement).blur();
+        }
+      }}
+      className={className}
+      placeholder={placeholder}
+    />
   );
 }

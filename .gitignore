@@ -51,3 +51,9 @@ prisma/*.db-journal
 
 # 问题反馈上传图片（运行时数据，不入库）
 /data/
+
+# 部署相关：本地化的 ecosystem 含 secret，不入库
+/deploy/ecosystem.local.cjs
+
+# webhook / pm2 运行时日志
+/.data/

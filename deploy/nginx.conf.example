@@ -1,62 +1,26 @@
-# Nginx 反代配置示例（PriceOCR）
+# Nginx 反代配置示例（PriceOCR · 轮询模式）
 #
-# 把 /webhook 单独反代到 127.0.0.1:9100（webhook 监听器）
-# 把其它流量反代到 127.0.0.1:3100（Next.js 主应用）
+# 仅需把 80（或 443）的流量反代到 127.0.0.1:3100（Next.js 主应用）。
+# 因为是轮询模式，**不需要 webhook 路径**。
 #
-# 用法：
-#   1. 把本文件复制为 /etc/nginx/sites-available/priceocr.conf
+# 用法（HTTP 简版，无域名也能用）：
+#   1. cp deploy/nginx.conf.example /etc/nginx/sites-available/priceocr.conf
 #   2. ln -s /etc/nginx/sites-available/priceocr.conf /etc/nginx/sites-enabled/
-#   3. 把 server_name 改成你的域名（两处）
-#   4. 用 certbot 自动配置 https：
-#      sudo certbot --nginx -d your-domain.com
-#   5. nginx -t && systemctl reload nginx
+#   3. 把 server_name 改为你的 IP 或域名
+#   4. nginx -t && systemctl reload nginx
 #
-# GitHub Webhook 的 Payload URL 填：
-#   https://your-domain.com/webhook
-# Content type 选 application/json
-# Secret 与 ecosystem 里的 WEBHOOK_SECRET 完全一致
+# 如有域名：
+#   sudo certbot --nginx -d your-domain.com   # 自动签发 HTTPS
+# =============================================================================
 
 server {
     listen 80;
-    server_name your-domain.com;
-
-    # 让 certbot 把这块自动改写为 443 + 证书；这里保留 80 用于 challenge
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-
-    location / {
-        return 301 https://$host$request_uri;
-    }
-}
-
-server {
-    listen 443 ssl http2;
-    server_name your-domain.com;
-
-    # ssl_certificate     /etc/letsencrypt/live/your-domain.com/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+    # 没有域名就写下划线（默认匹配所有未命中其它 server 的请求）
+    # 有域名：填 your-domain.com
+    server_name _;
 
     # 反馈图、价格表截图等上传：放宽 body 上限
     client_max_body_size 30M;
-
-    # ----- GitHub Webhook -----
-    location = /webhook {
-        proxy_pass http://127.0.0.1:9100/webhook;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 600s;
-    }
-
-    # ----- 部署日志（仅自己看；建议加 IP 白名单或 basic auth） -----
-    location = /deploy/log {
-        # allow 1.2.3.4;
-        # deny all;
-        proxy_pass http://127.0.0.1:9100/log;
-    }
 
     # ----- Next.js 主应用 -----
     location / {
@@ -82,6 +46,35 @@ server {
 }
 
 # =============================================================================
-# 多项目同机共存（参考）：如果同台服务器上还跑着 QuantTrade，建议给
-# PriceOCR 用独立子域名（如 ocr.your-domain.com），两个 conf 互不冲突。
+# 启用 HTTPS 时（有域名后），把上面那段替换为下面这段：
 # =============================================================================
+#
+# server {
+#     listen 80;
+#     server_name your-domain.com;
+#     location /.well-known/acme-challenge/ { root /var/www/certbot; }
+#     location / { return 301 https://$host$request_uri; }
+# }
+#
+# server {
+#     listen 443 ssl http2;
+#     server_name your-domain.com;
+#     # ssl_certificate     /etc/letsencrypt/live/your-domain.com/fullchain.pem;
+#     # ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+#     client_max_body_size 30M;
+#
+#     location / {
+#         proxy_pass http://127.0.0.1:3100;
+#         proxy_http_version 1.1;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#         proxy_read_timeout 300s;
+#     }
+#     location /_next/static/ {
+#         proxy_pass http://127.0.0.1:3100;
+#         proxy_cache_valid 200 30d;
+#         add_header Cache-Control "public, max-age=31536000, immutable";
+#     }
+# }

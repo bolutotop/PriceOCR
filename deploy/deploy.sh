@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
 # =============================================================================
-# PriceOCR 自动部署脚本
+# PriceOCR 自动部署脚本（轮询模式）
 #
-# 由 deploy/webhook.js 在收到 GitHub push 事件后调用：
-#   bash deploy/deploy.sh <commit_sha>
+# 由 deploy/poller.sh 在检测到远端有新 commit 后调用：
+#   bash deploy/deploy.sh <new_sha>
 #
 # 行为：
-#   1. 拉取最新代码 (git fetch + reset --hard origin/main)
-#   2. 智能依赖：package-lock 变了才 npm ci，否则跳过
-#   3. 智能 Prisma：schema/migrations 变了才 prisma generate / migrate deploy
-#   4. 智能构建：src/ 或 next.config 变了才 npm run build
-#   5. PM2 reload 实现零停机
-#   6. 失败时回滚代码 + 上一个可用 .next
+#   1. 智能依赖：package-lock 变了才 npm ci，否则跳过
+#   2. 智能 Prisma：schema/migrations 变了才 prisma generate / migrate deploy
+#   3. 智能构建：src/ 或 next.config 变了才 npm run build
+#   4. PM2 reload 实现零停机
+#   5. 失败时回滚到上一个 commit + 上一个可用 .next
+#
+# 注意：
+#   本脚本假设 poller.sh 已经做了 git fetch + reset --hard origin/main，
+#   即调用本脚本时 HEAD 已经是新 commit。$1 仅用于日志和回滚定位。
 #
 # 环境变量（可在 PM2 ecosystem 里覆盖）：
 #   APP_NAME           PM2 中 Next.js 进程名，默认 priceocr
-#   DEPLOY_BRANCH      默认 main
+#   PREV_SHA           回滚目标（poller 会传入）
 #   NPM_INSTALL        设 0 跳过 npm ci
 #   NPM_BUILD          设 0 跳过 npm run build
 #   PRISMA_DEPLOY      设 0 跳过 prisma 相关命令
@@ -25,8 +28,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 APP_NAME="${APP_NAME:-priceocr}"
-BRANCH="${DEPLOY_BRANCH:-main}"
-TARGET_SHA="${1:-}"
+NEW_SHA="${1:-$(git rev-parse HEAD)}"
+PREV_SHA="${PREV_SHA:-}"
 
 cd "$(dirname "$0")/.."     # 切到仓库根
 ROOT="$(pwd)"
@@ -34,7 +37,7 @@ ROOT="$(pwd)"
 log() { printf '[deploy %s] %s\n' "$(date '+%H:%M:%S')" "$*"; }
 
 log "=== START ==="
-log "repo=$ROOT branch=$BRANCH target=$TARGET_SHA"
+log "repo=$ROOT new=$NEW_SHA prev=$PREV_SHA"
 log "node=$(node -v 2>/dev/null || echo NOT_FOUND) npm=$(npm -v 2>/dev/null || echo NOT_FOUND)"
 
 # ---------- 1. 备份当前 .next，便于失败回滚 ----------
@@ -44,29 +47,23 @@ if [ -d ".next" ]; then
   log "backed up .next -> .next.bak"
 fi
 
-# ---------- 2. 拉取代码 ----------
-PREV_SHA="$(git rev-parse HEAD)"
-log "current HEAD=$PREV_SHA"
-
-git fetch origin "$BRANCH" --prune
-git reset --hard "origin/$BRANCH"
-NEW_SHA="$(git rev-parse HEAD)"
-log "fetched, new HEAD=$NEW_SHA"
-
-if [ "$PREV_SHA" = "$NEW_SHA" ]; then
-  log "no new commits, nothing to do"
-  rm -rf .next.bak 2>/dev/null || true
-  exit 0
+# ---------- 2. 列出变更文件 ----------
+if [ -n "$PREV_SHA" ]; then
+  CHANGED_FILES="$(git diff --name-only "$PREV_SHA" "$NEW_SHA" 2>/dev/null || echo '')"
+else
+  # 首次部署或 prev 不可用：当作所有内容都变了
+  CHANGED_FILES="$(git ls-files)"
 fi
-
-# 列出变更文件
-CHANGED_FILES="$(git diff --name-only "$PREV_SHA" "$NEW_SHA")"
 log "changed files:"
-echo "$CHANGED_FILES" | sed 's/^/    /'
+echo "$CHANGED_FILES" | head -50 | sed 's/^/    /'
 
 changed() { echo "$CHANGED_FILES" | grep -q -E "$1"; }
 
 rollback_code() {
+  if [ -z "$PREV_SHA" ]; then
+    log "no PREV_SHA, cannot rollback code"
+    return
+  fi
   log "ROLLBACK: code $NEW_SHA -> $PREV_SHA"
   git reset --hard "$PREV_SHA" || true
   if [ -d ".next.bak" ]; then
@@ -89,8 +86,6 @@ else
 fi
 
 # ---------- 4. Prisma ----------
-# 注意：prisma 目录变化（schema / migrations）需要重新生成客户端 + 部署迁移。
-#       package-lock 变了一般也需要 generate（@prisma/client 可能升级）。
 if [ "${PRISMA_DEPLOY:-1}" = "1" ]; then
   if changed '^(prisma/|package-lock\.json|package\.json)$'; then
     log "prisma artifact changed, running generate + migrate deploy"

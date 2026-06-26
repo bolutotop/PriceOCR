@@ -249,6 +249,8 @@ const NOISE_PATTERNS = [
   /800以/,
   /中高/,
   /新版/,
+  /点烫/,
+  /[点烫]麦/,
 ];
 
 function isNoiseText(text: string): boolean {
@@ -396,6 +398,10 @@ export async function scanScreenshot(formData: FormData): Promise<OcrResult> {
     for (const td of (filteredResp.TextDetections || [])) {
       const b = parseTd(td);
       if (!b) continue;
+      // 剥离装饰后缀 "点烫"（与拍照模式保持一致）
+      const cleaned = b.text.replace(/点烫/g, '').trim();
+      if (!cleaned) continue;
+      b.text = cleaned;
       fullOcrBlocks.push(b);
       if (isNameText(b.text) && !isNoiseText(b.text)) nameBlocks.push(b);
     }
@@ -526,7 +532,7 @@ export async function scanScreenshot(formData: FormData): Promise<OcrResult> {
       const w = right - left;
       if (w <= 0) continue;
 
-      const colBuf = await sharp(filteredPath)
+      const colBuf = await sharp(originalPath)
         .extract({ left, top: 0, width: w, height: imgH })
         .resize(w * SCALE, imgH * SCALE, { kernel: 'lanczos3' })
         .jpeg({ quality: 95 })
@@ -542,6 +548,10 @@ export async function scanScreenshot(formData: FormData): Promise<OcrResult> {
       for (const td of (resp.TextDetections || [])) {
         const b = parseTd(td);
         if (!b) continue;
+        // 剥离装饰后缀 "点烫"
+        const cleaned = b.text.replace(/点烫/g, '').trim();
+        if (!cleaned) continue;
+        b.text = cleaned;
         // 坐标换算回原图
         blocks.push({ ...b, xMin: b.xMin / SCALE + left, xMax: b.xMax / SCALE + left, yMin: b.yMin / SCALE, yMax: b.yMax / SCALE, yCenter: b.yCenter / SCALE, height: b.height / SCALE, width: b.width / SCALE });
       }

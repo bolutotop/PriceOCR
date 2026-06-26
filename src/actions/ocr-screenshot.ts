@@ -28,10 +28,108 @@ type OcrResult = {
 };
 
 // ============================================================
-// 核心：颜色过滤预处理
-// 策略：先用黑红阈值建立 mask → 膨胀扩展保护区域 → mask 内保留原始像素，mask 外抹白
-// 这样压缩导致的黑红文字边缘杂色不会被过滤掉，保留完整笔画
+// 核心：颜色过滤预处理（自适应版）
+// 策略：
+//   0. 采样全图非白像素，量化聚类找出 Top 2 主色（可能是黑+红、黑+蓝等任意组合）
+//   1. 用主色建立 mask → 膨胀扩展保护文字边缘
+//   2. mask 内保留原始像素，mask 外抹白
+// 不再使用硬编码的黑/红固定阈值，自动适配任意价目表配色
 // ============================================================
+
+/** 颜色量化桶大小：同一桶内颜色视为 JPEG 压缩误差，取平均值 */
+const COLOR_BIN = 22;
+
+/** 像素与主色的距离容差（近似色匹配） */
+const COLOR_RADIUS = 55;
+
+/** 采样步长：每 N 行采一次（大幅图加速） */
+const SAMPLE_STEP = 4;
+
+/** 白色阈值：三通道都高于此值为白背景 */
+const WHITE_THRESHOLD = 230;
+
+interface Cluster {
+  r: number;
+  g: number;
+  b: number;
+  count: number;
+}
+
+/**
+ * Step 0：自适应主体色检测
+ * 采样非白像素 → 量化去重 → 取 Top 2 → 返回两个主色中心
+ */
+function detectColors(
+  pixels: Buffer,
+  w: number,
+  h: number,
+): [Cluster, Cluster] {
+  const map = new Map<string, { sumR: number; sumG: number; sumB: number; count: number }>();
+
+  for (let y = 0; y < h; y += SAMPLE_STEP) {
+    for (let x = 0; x < w; x += SAMPLE_STEP) {
+      const offset = (y * w + x) * 4;
+      const r = pixels[offset];
+      const g = pixels[offset + 1];
+      const b = pixels[offset + 2];
+
+      // 跳过白色/浅灰背景
+      if (r > WHITE_THRESHOLD && g > WHITE_THRESHOLD && b > WHITE_THRESHOLD) continue;
+
+      // 量化：相近颜色合并到同一桶
+      const br = Math.round(r / COLOR_BIN);
+      const bg = Math.round(g / COLOR_BIN);
+      const bb = Math.round(b / COLOR_BIN);
+      const key = `${br},${bg},${bb}`;
+
+      const v = map.get(key);
+      if (v) {
+        v.sumR += r;
+        v.sumG += g;
+        v.sumB += b;
+        v.count++;
+      } else {
+        map.set(key, { sumR: r, sumG: g, sumB: b, count: 1 });
+      }
+    }
+  }
+
+
+  // 排序取 Top 2
+  const entries = Array.from(map.entries())
+    .map(([, v]) => ({
+      r: Math.round(v.sumR / v.count),
+      g: Math.round(v.sumG / v.count),
+      b: Math.round(v.sumB / v.count),
+      count: v.count,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  const c1 = entries[0] ?? { r: 0, g: 0, b: 0, count: 0 };
+  // Top 2 跳过与 Top 1 过于相近的（避免同一颜色的碎片）
+  let c2 = { r: 0, g: 0, b: 0, count: 0 };
+  for (const e of entries.slice(1)) {
+    if (colorDist(c1, e) > COLOR_RADIUS / 2) {
+      c2 = e;
+      break;
+    }
+  }
+
+  console.log(
+    `[filterColors] auto detected: #1 RGB(${c1.r},${c1.g},${c1.b}) count=${c1.count}  |  #2 RGB(${c2.r},${c2.g},${c2.b}) count=${c2.count}`,
+  );
+
+  return [c1, c2];
+}
+
+/** 3D RGB 欧氏距离 */
+function colorDist(a: { r: number; g: number; b: number }, b: { r: number; g: number; b: number }): number {
+  const dr = a.r - b.r;
+  const dg = a.g - b.g;
+  const db = a.b - b.b;
+  return Math.sqrt(dr * dr + dg * dg + db * db);
+}
+
 async function filterColors(inputPath: string, outputPath: string): Promise<void> {
   const image = sharp(inputPath);
   const { width, height } = await image.metadata();
@@ -47,12 +145,17 @@ async function filterColors(inputPath: string, outputPath: string): Promise<void
   const h = info.height;
   const totalPixels = w * h;
 
-  // 第一步：建立黑红 mask（1=黑红像素，0=其他）
+  // Step 0：自动检测主色
+  const [colorA, colorB] = detectColors(pixels, w, h);
+
+  // 第一步：用主色建立 mask
   const mask = new Uint8Array(totalPixels);
   for (let i = 0; i < totalPixels; i++) {
     const offset = i * 4;
     const r = pixels[offset], g = pixels[offset + 1], b = pixels[offset + 2];
-    if (isBlackPixel(r, g, b) || isRedPixel(r, g, b)) {
+    const distA = colorDist({ r, g, b }, colorA);
+    const distB = colorDist({ r, g, b }, colorB);
+    if (distA < COLOR_RADIUS || distB < COLOR_RADIUS) {
       mask[i] = 1;
     }
   }
@@ -63,7 +166,6 @@ async function filterColors(inputPath: string, outputPath: string): Promise<void
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       if (mask[y * w + x] === 1) {
-        // 将周围 DILATE_R 范围内的像素都标记为保护区域
         const yStart = Math.max(0, y - DILATE_R);
         const yEnd = Math.min(h - 1, y + DILATE_R);
         const xStart = Math.max(0, x - DILATE_R);
@@ -93,44 +195,6 @@ async function filterColors(inputPath: string, outputPath: string): Promise<void
   })
     .jpeg({ quality: 90 })
     .toFile(outputPath);
-}
-
-/**
- * 判断像素是否为"黑色系"
- * 考虑压缩导致的颜色偏移，阈值设为宽松
- * 黑色/深灰：R、G、B 都低于阈值
- */
-function isBlackPixel(r: number, g: number, b: number): boolean {
-  // 深灰 / 黑色：所有通道都较暗（放宽到 120，保留更多深灰色文字）
-  if (r < 120 && g < 120 && b < 120) return true;
-  // 中灰色：亮度较低且各通道差异不大（避免过滤掉灰色价格数字）
-  const avg = (r + g + b) / 3;
-  if (avg < 140 && Math.abs(r - g) < 30 && Math.abs(g - b) < 30 && Math.abs(r - b) < 30) return true;
-  return false;
-}
-
-/**
- * 判断像素是否为"红色系"
- * 红色特征：R 通道明显高于 G 和 B
- * 考虑 JPEG 压缩后的偏移，用比率+绝对值双重判定
- */
-function isRedPixel(r: number, g: number, b: number): boolean {
-  // 红色要求（放宽）：
-  // 1. R 通道足够高（> 100）
-  // 2. R 显著大于 G 和 B（至少多 35）
-  // 3. G 和 B 都不能太高（< 170），排除浅粉/白色
-  if (r > 100 && r - g > 35 && r - b > 35 && g < 170 && b < 170) {
-    return true;
-  }
-  // 补充：暗红色（压缩后可能变暗）
-  if (r > 60 && r > g * 1.5 && r > b * 1.5 && g < 120 && b < 120) {
-    return true;
-  }
-  // 补充：偏橙/棕红色（部分截图中价格数字是橙色系）
-  if (r > 140 && r - b > 50 && g < r * 0.8 && b < r * 0.5) {
-    return true;
-  }
-  return false;
 }
 
 // ============================================================

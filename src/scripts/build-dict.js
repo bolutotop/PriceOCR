@@ -25,20 +25,42 @@ const tencentcloud = require('tencentcloud-sdk-nodejs');
 const OcrClient = tencentcloud.ocr.v20181119.Client;
 
 // ============================================================
-// 颜色过滤：只保留黑色和红色像素，其余变白
+// 颜色过滤：自适应检测 Top 2 主色（排除白背景），动态建立 mask，其余抹白
 // ============================================================
-function isBlackPixel(r, g, b) {
-  if (r < 120 && g < 120 && b < 120) return true;
-  const avg = (r + g + b) / 3;
-  if (avg < 140 && Math.abs(r - g) < 30 && Math.abs(g - b) < 30 && Math.abs(r - b) < 30) return true;
-  return false;
+const COLOR_BIN = 22;
+const COLOR_RADIUS = 55;
+const SAMPLE_STEP = 4;
+const WHITE_THRESHOLD = 230;
+
+function colorDist(a, b) {
+  const dr = a.r - b.r, dg = a.g - b.g, db = a.b - b.b;
+  return Math.sqrt(dr * dr + dg * dg + db * db);
 }
 
-function isRedPixel(r, g, b) {
-  if (r > 100 && r - g > 35 && r - b > 35 && g < 170 && b < 170) return true;
-  if (r > 60 && r > g * 1.5 && r > b * 1.5 && g < 120 && b < 120) return true;
-  if (r > 140 && r - b > 50 && g < r * 0.8 && b < r * 0.5) return true;
-  return false;
+function detectColors(pixels, w, h) {
+  const map = new Map();
+  for (let y = 0; y < h; y += SAMPLE_STEP) {
+    for (let x = 0; x < w; x += SAMPLE_STEP) {
+      const offset = (y * w + x) * 4;
+      const r = pixels[offset], g = pixels[offset + 1], b = pixels[offset + 2];
+      if (r > WHITE_THRESHOLD && g > WHITE_THRESHOLD && b > WHITE_THRESHOLD) continue;
+      const br = Math.round(r / COLOR_BIN), bg = Math.round(g / COLOR_BIN), bb = Math.round(b / COLOR_BIN);
+      const key = `${br},${bg},${bb}`;
+      const v = map.get(key);
+      if (v) { v.sumR += r; v.sumG += g; v.sumB += b; v.count++; }
+      else { map.set(key, { sumR: r, sumG: g, sumB: b, count: 1 }); }
+    }
+  }
+  const entries = Array.from(map.entries())
+    .map(([, v]) => ({ r: Math.round(v.sumR / v.count), g: Math.round(v.sumG / v.count), b: Math.round(v.sumB / v.count), count: v.count }))
+    .sort((a, b) => b.count - a.count);
+  const c1 = entries[0] ?? { r: 0, g: 0, b: 0 };
+  let c2 = { r: 0, g: 0, b: 0 };
+  for (const e of entries.slice(1)) {
+    if (colorDist(c1, e) > COLOR_RADIUS / 2) { c2 = e; break; }
+  }
+  console.log(`[filterColors] auto detected: #1 RGB(${c1.r},${c1.g},${c1.b}) count=${c1.count}  |  #2 RGB(${c2.r},${c2.g},${c2.b}) count=${c2.count}`);
+  return [c1, c2];
 }
 
 async function filterColors(inputPath, outputPath) {
@@ -48,15 +70,17 @@ async function filterColors(inputPath, outputPath) {
   const w = info.width, h = info.height;
   const totalPixels = w * h;
 
-  // 第一步：建立黑红 mask
+  const [colorA, colorB] = detectColors(pixels, w, h);
+
   const mask = new Uint8Array(totalPixels);
   for (let i = 0; i < totalPixels; i++) {
     const offset = i * 4;
     const r = pixels[offset], g = pixels[offset + 1], b = pixels[offset + 2];
-    if (isBlackPixel(r, g, b) || isRedPixel(r, g, b)) mask[i] = 1;
+    const distA = colorDist({ r, g, b }, colorA);
+    const distB = colorDist({ r, g, b }, colorB);
+    if (distA < COLOR_RADIUS || distB < COLOR_RADIUS) mask[i] = 1;
   }
 
-  // 第二步：膨胀 mask（保护文字边缘压缩杂色）
   const DILATE_R = 2;
   const dilated = new Uint8Array(totalPixels);
   for (let y = 0; y < h; y++) {
@@ -71,7 +95,6 @@ async function filterColors(inputPath, outputPath) {
     }
   }
 
-  // 第三步：mask 外抹白，mask 内保留原始像素
   for (let i = 0; i < totalPixels; i++) {
     if (dilated[i] === 0) {
       const offset = i * 4;

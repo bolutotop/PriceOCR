@@ -1,106 +1,91 @@
 {
   "芙蓉王总裁": {
     "name": {
-      "x": 1,
-      "y": 65,
-      "width": 73,
-      "height": 17
-    },
-    "price": {
-      "x": 160,
+      "x": 2,
       "y": 66,
-      "width": 32,
+      "width": 71,
       "height": 15
     },
-    "value": 1230
+    "price": {
+      "x": 159,
+      "y": 67,
+      "width": 53,
+      "height": 14
+    },
+    "value": 850
   },
   "细支尊品": {
     "name": {
       "x": 2,
-      "y": 82,
-      "width": 56,
-      "height": 17
-    },
-    "price": {
-      "x": 161,
-      "y": 83,
-      "width": 31,
-      "height": 17
-    },
-    "value": 1100
-  },
-  "尊品和天下": {
-    "name": {
-      "x": 2,
-      "y": 101,
-      "width": 70,
-      "height": 16
-    },
-    "price": {
-      "x": 161,
-      "y": 101,
-      "width": 31,
-      "height": 17
-    },
-    "value": 1100
-  },
-  "粗和天下": {
-    "name": {
-      "x": 2,
-      "y": 119,
+      "y": 84,
       "width": 56,
       "height": 16
     },
     "price": {
       "x": 159,
-      "y": 118,
-      "width": 26,
-      "height": 20
+      "y": 86,
+      "width": 33,
+      "height": 13
     },
-    "value": 815
+    "value": 1180
+  },
+  "粗和天下": {
+    "name": {
+      "x": 2,
+      "y": 121,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 159,
+      "y": 121,
+      "width": 53,
+      "height": 14
+    },
+    "value": 825
   },
   "软和天下": {
     "name": {
       "x": 2,
-      "y": 137,
+      "y": 138,
       "width": 56,
       "height": 16
     },
     "price": {
-      "x": 160,
-      "y": 137,
-      "width": 24,
-      "height": 17
+      "x": 159,
+      "y": 140,
+      "width": 51,
+      "height": 14
     },
     "value": 717
   },
   "中支和天下": {
     "name": {
-      "x": 2,
+      "x": 3,
       "y": 156,
       "width": 70,
       "height": 16
     },
     "price": {
-      "x": 160,
-      "y": 156,
-      "width": 24,
-      "height": 17
+      "x": 159,
+      "y": 157,
+      "width": 53,
+      "height": 16
     },
-    "value": 744
+    "value": 740
   },
   "细支和天下": {
     "name": {
-      "x": 2,
-      "y": 173,
-      "width": 70,
-      "height": 17
+      "x": 3,
+      "y": 174,
+      "width": 69,
+      "height": 16
     },
     "price": {
-      "x": 160,
+      "x": 159,
       "y": 175,
-      "width": 24,
-      "height": 14
+      "width": 53,
+      "height": 16
     },
     "value": 712
   },
@@ -108,361 +93,376 @@
     "name": {
       "x": 2,
       "y": 191,
-      "width": 28,
-      "height": 16
+      "width": 29,
+      "height": 18
     },
     "price": {
-      "x": 160,
-      "y": 192,
-      "width": 24,
+      "x": 159,
+      "y": 193,
+      "width": 53,
       "height": 14
     },
-    "value": 732
+    "value": 723
   },
   "粗和气": {
     "name": {
       "x": 2,
-      "y": 210,
-      "width": 43,
-      "height": 15
+      "y": 208,
+      "width": 44,
+      "height": 19
     },
     "price": {
-      "x": 160,
+      "x": 159,
       "y": 212,
-      "width": 24,
+      "width": 25,
       "height": 13
     },
-    "value": 449
+    "value": 440
   },
   "细支和气": {
     "name": {
       "x": 2,
       "y": 228,
-      "width": 57,
-      "height": 14
+      "width": 58,
+      "height": 17
     },
     "price": {
-      "x": 161,
+      "x": 158,
       "y": 229,
-      "width": 23,
-      "height": 14
+      "width": 26,
+      "height": 15
     },
-    "value": 402
+    "value": 408
   },
   "细支锦绣王": {
     "name": {
       "x": 2,
-      "y": 246,
+      "y": 245,
       "width": 70,
-      "height": 14
+      "height": 17
     },
     "price": {
-      "x": 161,
-      "y": 246,
-      "width": 23,
+      "x": 158,
+      "y": 247,
+      "width": 26,
       "height": 14
     },
-    "value": 420
+    "value": 418
   },
   "粗绵绣芙蓉王": {
     "name": {
       "x": 2,
-      "y": 264,
+      "y": 263,
       "width": 84,
-      "height": 14
+      "height": 18
     },
     "price": {
-      "x": 160,
-      "y": 264,
-      "width": 24,
-      "height": 15
+      "x": 158,
+      "y": 266,
+      "width": 25,
+      "height": 14
     },
-    "value": 348
+    "value": 336
   },
   "细支绽放": {
     "name": {
       "x": 2,
-      "y": 281,
-      "width": 57,
-      "height": 16
+      "y": 283,
+      "width": 58,
+      "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 283,
-      "width": 24,
-      "height": 15
+      "x": 158,
+      "y": 285,
+      "width": 25,
+      "height": 14
     },
-    "value": 332
+    "value": 320
   },
   "绽放(加特林)": {
     "name": {
       "x": 2,
-      "y": 300,
-      "width": 92,
-      "height": 15
+      "y": 302,
+      "width": 93,
+      "height": 17
     },
     "price": {
-      "x": 161,
-      "y": 301,
-      "width": 23,
-      "height": 16
+      "x": 158,
+      "y": 304,
+      "width": 26,
+      "height": 13
     },
-    "value": 320
+    "value": 295
   },
   "细支沁爽": {
     "name": {
       "x": 2,
       "y": 320,
       "width": 57,
-      "height": 15
+      "height": 18
     },
     "price": {
-      "x": 160,
-      "y": 320,
-      "width": 24,
-      "height": 16
+      "x": 157,
+      "y": 323,
+      "width": 27,
+      "height": 13
     },
-    "value": 274
+    "value": 270
   },
   "芙蓉王": {
     "name": {
       "x": 2,
       "y": 337,
-      "width": 44,
-      "height": 18
+      "width": 43,
+      "height": 19
     },
     "price": {
-      "x": 158,
-      "y": 337,
-      "width": 9,
-      "height": 20
+      "x": 157,
+      "y": 340,
+      "width": 12,
+      "height": 15
     },
     "value": -1
   },
   "中支芙蓉王": {
     "name": {
       "x": 2,
-      "y": 356,
+      "y": 355,
       "width": 70,
-      "height": 15
+      "height": 18
     },
     "price": {
-      "x": 160,
-      "y": 355,
-      "width": 24,
-      "height": 17
+      "x": 158,
+      "y": 359,
+      "width": 25,
+      "height": 13
     },
-    "value": 247
+    "value": 239
   },
   "短支芙蓉王": {
     "name": {
-      "x": 2,
-      "y": 373,
-      "width": 70,
-      "height": 15
+      "x": 1,
+      "y": 374,
+      "width": 72,
+      "height": 18
     },
     "price": {
-      "x": 161,
-      "y": 374,
-      "width": 23,
+      "x": 159,
+      "y": 376,
+      "width": 26,
       "height": 14
     },
-    "value": 197
+    "value": 195
   },
   "红宝石芙蓉王": {
     "name": {
       "x": 2,
       "y": 411,
       "width": 84,
-      "height": 15
+      "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 411,
-      "width": 24,
+      "x": 158,
+      "y": 413,
+      "width": 25,
       "height": 14
     },
-    "value": 237
+    "value": 225
   },
   "老介极": {
     "name": {
       "x": 2,
-      "y": 429,
+      "y": 431,
       "width": 44,
       "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 431,
-      "width": 40,
+      "x": 158,
+      "y": 433,
+      "width": 25,
       "height": 14
     },
-    "value": 274.5
+    "value": 260
   },
   "爆珠介极": {
     "name": {
       "x": 2,
       "y": 449,
+      "width": 58,
+      "height": 17
+    },
+    "price": {
+      "x": 158,
+      "y": 451,
+      "width": 26,
+      "height": 13
+    },
+    "value": 257
+  },
+  "细支品悦": {
+    "name": {
+      "x": 2,
+      "y": 469,
       "width": 57,
       "height": 16
     },
     "price": {
       "x": 158,
-      "y": 450,
+      "y": 471,
       "width": 25,
-      "height": 14
+      "height": 13
     },
-    "value": 276
+    "value": 215
   },
-  "细支品悦": {
+  "王者荣耀白": {
     "name": {
       "x": 2,
-      "y": 467,
-      "width": 57,
-      "height": 16
+      "y": 488,
+      "width": 71,
+      "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 468,
-      "width": 24,
-      "height": 14
-    },
-    "value": 222
-  },
-  "瑞中支白沙": {
-    "name": {
-      "x": 3,
-      "y": 486,
-      "width": 69,
-      "height": 15
-    },
-    "price": {
-      "x": 160,
-      "y": 487,
+      "x": 158,
+      "y": 490,
       "width": 25,
-      "height": 15
+      "height": 13
     },
     "value": 405
   },
   "王者荣耀黄": {
     "name": {
-      "x": 2,
-      "y": 506,
-      "width": 71,
-      "height": 16
+      "x": 3,
+      "y": 508,
+      "width": 70,
+      "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 505,
-      "width": 24,
-      "height": 17
+      "x": 158,
+      "y": 510,
+      "width": 25,
+      "height": 13
     },
     "value": 310
   },
   "细支荣耀蓝": {
     "name": {
       "x": 2,
-      "y": 523,
+      "y": 526,
       "width": 71,
       "height": 16
     },
     "price": {
-      "x": 161,
-      "y": 522,
-      "width": 23,
-      "height": 18
+      "x": 158,
+      "y": 528,
+      "width": 25,
+      "height": 14
     },
     "value": 300
   },
   "纸盒软极": {
     "name": {
       "x": 2,
-      "y": 543,
-      "width": 56,
-      "height": 15
+      "y": 546,
+      "width": 57,
+      "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 542,
-      "width": 24,
-      "height": 18
+      "x": 158,
+      "y": 547,
+      "width": 26,
+      "height": 15
     },
-    "value": 395
+    "value": 370
+  },
+  "瑞中支白沙": {
+    "name": {
+      "x": 2,
+      "y": 564,
+      "width": 71,
+      "height": 16
+    },
+    "price": {
+      "x": 159,
+      "y": 567,
+      "width": 26,
+      "height": 13
+    },
+    "value": 182
   },
   "细蓝带": {
     "name": {
       "x": 2,
-      "y": 581,
-      "width": 42,
+      "y": 584,
+      "width": 43,
       "height": 16
     },
     "price": {
-      "x": 160,
-      "y": 579,
-      "width": 40,
-      "height": 20
+      "x": 158,
+      "y": 586,
+      "width": 25,
+      "height": 13
     },
-    "value": 278.5
+    "value": 266
   },
   "领航": {
     "name": {
       "x": 2,
-      "y": 603,
-      "width": 29,
-      "height": 15
+      "y": 604,
+      "width": 30,
+      "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 601,
+      "x": 159,
+      "y": 606,
       "width": 25,
-      "height": 18
+      "height": 13
     },
-    "value": 435
+    "value": 440
   },
   "天天向上": {
     "name": {
       "x": 2,
-      "y": 622,
-      "width": 56,
-      "height": 15
+      "y": 624,
+      "width": 57,
+      "height": 16
     },
     "price": {
-      "x": 161,
-      "y": 620,
-      "width": 24,
-      "height": 18
+      "x": 159,
+      "y": 625,
+      "width": 25,
+      "height": 14
     },
     "value": 175
   },
   "天天向上草莓": {
     "name": {
-      "x": 2,
-      "y": 640,
-      "width": 84,
+      "x": 1,
+      "y": 643,
+      "width": 85,
+      "height": 17
+    },
+    "price": {
+      "x": 158,
+      "y": 644,
+      "width": 26,
       "height": 15
     },
-    "price": {
-      "x": 161,
-      "y": 638,
-      "width": 39,
-      "height": 21
-    },
-    "value": 124.5
+    "value": 119
   },
-  "精白沙": {
+  "相思鸟": {
     "name": {
       "x": 2,
-      "y": 660,
+      "y": 661,
       "width": 43,
-      "height": 16
+      "height": 17
     },
     "price": {
-      "x": 161,
-      "y": 658,
-      "width": 24,
-      "height": 19
+      "x": 158,
+      "y": 662,
+      "width": 33,
+      "height": 15
     },
-    "value": 107
+    "value": 99.5
   },
   "软白沙": {
     "name": {
@@ -472,1437 +472,1272 @@
       "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 677,
-      "width": 32,
-      "height": 20
+      "x": 158,
+      "y": 681,
+      "width": 18,
+      "height": 13
     },
-    "value": 92.2
+    "value": 86
   },
   "合白沙": {
     "name": {
-      "x": 2,
-      "y": 697,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 160,
-      "y": 697,
-      "width": 32,
+      "x": 1,
+      "y": 696,
+      "width": 45,
       "height": 19
     },
-    "value": 84.5
+    "price": {
+      "x": 158,
+      "y": 699,
+      "width": 18,
+      "height": 13
+    },
+    "value": 73
   },
   "红芙蓉": {
     "name": {
-      "x": 2,
+      "x": 1,
       "y": 714,
-      "width": 44,
+      "width": 45,
       "height": 19
     },
     "price": {
-      "x": 160,
-      "y": 714,
-      "width": 17,
-      "height": 19
+      "x": 158,
+      "y": 717,
+      "width": 18,
+      "height": 13
     },
-    "value": 77
-  },
-  "相思鸟": {
-    "name": {
-      "x": 2,
-      "y": 733,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 160,
-      "y": 731,
-      "width": 32,
-      "height": 19
-    },
-    "value": 66.5
+    "value": 63
   },
   "珍品白沙": {
     "name": {
       "x": 2,
-      "y": 752,
-      "width": 57,
+      "y": 754,
+      "width": 58,
       "height": 16
     },
     "price": {
-      "x": 160,
-      "y": 751,
-      "width": 24,
-      "height": 19
+      "x": 158,
+      "y": 755,
+      "width": 25,
+      "height": 13
     },
-    "value": 251
+    "value": 246
   },
   "鸿运当头": {
     "name": {
       "x": 2,
-      "y": 771,
-      "width": 57,
+      "y": 772,
+      "width": 58,
       "height": 16
     },
     "price": {
-      "x": 161,
-      "y": 770,
-      "width": 24,
-      "height": 18
+      "x": 159,
+      "y": 774,
+      "width": 26,
+      "height": 13
     },
-    "value": 139
+    "value": 140
   },
   "尚品蓝": {
     "name": {
-      "x": 2,
-      "y": 789,
+      "x": 3,
+      "y": 790,
       "width": 42,
-      "height": 17
+      "height": 16
     },
     "price": {
-      "x": 161,
-      "y": 788,
-      "width": 23,
-      "height": 19
+      "x": 159,
+      "y": 790,
+      "width": 41,
+      "height": 15
     },
-    "value": 124
+    "value": 119.5
   },
   "开心就好": {
     "name": {
       "x": 2,
-      "y": 809,
+      "y": 808,
       "width": 56,
-      "height": 15
+      "height": 16
     },
     "price": {
-      "x": 161,
-      "y": 808,
-      "width": 23,
-      "height": 18
+      "x": 159,
+      "y": 809,
+      "width": 26,
+      "height": 14
     },
-    "value": 151
+    "value": 128
   },
   "三代": {
     "name": {
       "x": 2,
-      "y": 827,
+      "y": 825,
       "width": 29,
       "height": 18
     },
     "price": {
-      "x": 160,
-      "y": 825,
-      "width": 40,
-      "height": 20
+      "x": 159,
+      "y": 827,
+      "width": 42,
+      "height": 13
     },
-    "value": 124.5
+    "value": 124.2
   },
   "二代": {
     "name": {
       "x": 2,
-      "y": 845,
-      "width": 29,
-      "height": 16
+      "y": 843,
+      "width": 30,
+      "height": 17
     },
     "price": {
-      "x": 160,
-      "y": 844,
-      "width": 40,
-      "height": 16
+      "x": 158,
+      "y": 845,
+      "width": 18,
+      "height": 13
     },
-    "value": 102.5
+    "value": 98
   },
-  "金百合": {
+  "黑招财猫": {
     "name": {
       "x": 2,
-      "y": 884,
-      "width": 42,
+      "y": 882,
+      "width": 57,
       "height": 15
     },
     "price": {
-      "x": 160,
+      "x": 159,
       "y": 884,
-      "width": 16,
+      "width": 40,
       "height": 13
     },
-    "value": 99
+    "value": 130.5
   },
-  "跨越": {
+  "延安红韵": {
     "name": {
       "x": 2,
       "y": 901,
-      "width": 28,
+      "width": 57,
       "height": 16
     },
     "price": {
-      "x": 160,
-      "y": 902,
-      "width": 41,
-      "height": 14
+      "x": 159,
+      "y": 903,
+      "width": 25,
+      "height": 13
     },
-    "value": 197.7
+    "value": 180
   },
-  "长征果树": {
+  "中支延安": {
     "name": {
-      "x": 2,
-      "y": 920,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 160,
+      "x": 3,
       "y": 921,
-      "width": 15,
-      "height": 14
+      "width": 56,
+      "height": 17
     },
-    "value": 81
+    "price": {
+      "x": 159,
+      "y": 923,
+      "width": 25,
+      "height": 13
+    },
+    "value": 175
   },
-  "新贵烟": {
+  "长乐吉祥": {
     "name": {
-      "x": 2,
-      "y": 939,
-      "width": 43,
+      "x": 3,
+      "y": 940,
+      "width": 56,
       "height": 15
     },
     "price": {
-      "x": 161,
-      "y": 940,
-      "width": 39,
-      "height": 14
+      "x": 158,
+      "y": 941,
+      "width": 26,
+      "height": 15
     },
-    "value": 113.5
+    "value": 145
   },
-  "大国酒": {
+  "长乐好猫": {
     "name": {
-      "x": 2,
-      "y": 958,
-      "width": 42,
-      "height": 16
-    },
-    "price": {
-      "x": 160,
-      "y": 959,
-      "width": 24,
-      "height": 14
-    },
-    "value": 675
-  },
-  "细支国酒": {
-    "name": {
-      "x": 2,
-      "y": 974,
+      "x": 3,
+      "y": 957,
       "width": 56,
-      "height": 18
+      "height": 16
     },
     "price": {
-      "x": 160,
-      "y": 977,
-      "width": 24,
+      "x": 158,
+      "y": 959,
+      "width": 25,
       "height": 14
     },
-    "value": 635
+    "value": 133
   },
-  "福贵": {
+  "蓝金丝猴": {
     "name": {
-      "x": 3,
+      "x": 2,
+      "y": 976,
+      "width": 57,
+      "height": 17
+    },
+    "price": {
+      "x": 159,
+      "y": 978,
+      "width": 26,
+      "height": 13
+    },
+    "value": 122
+  },
+  "粗长乐好猫": {
+    "name": {
+      "x": 2,
       "y": 993,
-      "width": 28,
+      "width": 71,
       "height": 16
     },
     "price": {
-      "x": 161,
-      "y": 995,
-      "width": 23,
+      "x": 159,
+      "y": 996,
+      "width": 25,
       "height": 13
     },
-    "value": 388
+    "value": 112
   },
-  "贵烟福中支": {
+  "金猴王": {
     "name": {
-      "x": 3,
-      "y": 1011,
-      "width": 70,
-      "height": 16
+      "x": 1,
+      "y": 1012,
+      "width": 45,
+      "height": 17
     },
     "price": {
-      "x": 161,
-      "y": 1013,
-      "width": 23,
+      "x": 159,
+      "y": 1014,
+      "width": 33,
       "height": 13
     },
-    "value": 305
+    "value": 70.5
   },
-  "贵烟红中支": {
+  "软延安": {
     "name": {
       "x": 2,
       "y": 1030,
-      "width": 71,
-      "height": 15
+      "width": 44,
+      "height": 16
     },
     "price": {
-      "x": 160,
+      "x": 158,
       "y": 1032,
-      "width": 24,
-      "height": 12
+      "width": 18,
+      "height": 13
     },
-    "value": 247
+    "value": 66
   },
-  "贵烟山水": {
+  "中支长安印象": {
     "name": {
       "x": 2,
       "y": 1048,
-      "width": 57,
+      "width": 84,
       "height": 16
     },
     "price": {
-      "x": 160,
-      "y": 1049,
-      "width": 24,
+      "x": 158,
+      "y": 1050,
+      "width": 25,
       "height": 13
     },
-    "value": 212
-  },
-  "贵烟苹": {
-    "name": {
-      "x": 2,
-      "y": 1066,
-      "width": 42,
-      "height": 15
-    },
-    "price": {
-      "x": 161,
-      "y": 1067,
-      "width": 23,
-      "height": 13
-    },
-    "value": 155
-  },
-  "新红喜贵": {
-    "name": {
-      "x": 2,
-      "y": 1083,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 161,
-      "y": 1085,
-      "width": 23,
-      "height": 12
-    },
-    "value": 138
-  },
-  "磨砂贵烟": {
-    "name": {
-      "x": 2,
-      "y": 1102,
-      "width": 57,
-      "height": 16
-    },
-    "price": {
-      "x": 161,
-      "y": 1104,
-      "width": 23,
-      "height": 12
-    },
-    "value": 126
-  },
-  "贵烟魔力": {
-    "name": {
-      "x": 3,
-      "y": 1120,
-      "width": 55,
-      "height": 15
-    },
-    "price": {
-      "x": 160,
-      "y": 1122,
-      "width": 24,
-      "height": 11
-    },
-    "value": 420
+    "value": 205
   },
   "大峡谷情": {
     "name": {
       "x": 224,
       "y": 65,
       "width": 57,
-      "height": 16
+      "height": 17
     },
     "price": {
-      "x": 331,
+      "x": 332,
       "y": 67,
-      "width": 26,
-      "height": 13
+      "width": 25,
+      "height": 14
     },
-    "value": 342
+    "value": 327
   },
   "视窗": {
     "name": {
-      "x": 224,
-      "y": 82,
-      "width": 29,
-      "height": 18
+      "x": 223,
+      "y": 84,
+      "width": 31,
+      "height": 16
     },
     "price": {
       "x": 332,
       "y": 85,
-      "width": 25,
-      "height": 15
+      "width": 26,
+      "height": 14
     },
-    "value": 318
+    "value": 316
   },
   "柔情": {
     "name": {
       "x": 224,
       "y": 101,
-      "width": 29,
-      "height": 17
+      "width": 30,
+      "height": 18
     },
     "price": {
-      "x": 331,
-      "y": 102,
-      "width": 26,
-      "height": 16
+      "x": 332,
+      "y": 104,
+      "width": 25,
+      "height": 13
     },
-    "value": 267
+    "value": 264
   },
   "细支峡谷情": {
     "name": {
       "x": 224,
-      "y": 119,
+      "y": 120,
       "width": 71,
-      "height": 16
+      "height": 17
     },
     "price": {
       "x": 332,
-      "y": 120,
+      "y": 122,
       "width": 25,
-      "height": 16
+      "height": 14
     },
-    "value": 252
+    "value": 245
   },
   "奇景": {
     "name": {
       "x": 224,
-      "y": 136,
-      "width": 29,
+      "y": 138,
+      "width": 30,
       "height": 17
     },
     "price": {
       "x": 332,
-      "y": 137,
-      "width": 24,
-      "height": 17
+      "y": 140,
+      "width": 25,
+      "height": 14
     },
-    "value": 231
+    "value": 234
   },
   "软兰楼": {
     "name": {
       "x": 224,
       "y": 154,
       "width": 44,
-      "height": 18
+      "height": 19
     },
     "price": {
       "x": 333,
-      "y": 153,
-      "width": 40,
-      "height": 19
+      "y": 158,
+      "width": 24,
+      "height": 13
     },
-    "value": 161.5
+    "value": 164
   },
   "天下名楼": {
     "name": {
       "x": 224,
       "y": 173,
-      "width": 57,
-      "height": 17
+      "width": 58,
+      "height": 19
     },
     "price": {
       "x": 332,
-      "y": 174,
-      "width": 24,
-      "height": 16
+      "y": 176,
+      "width": 26,
+      "height": 15
     },
     "value": 142
   },
   "空心红楼": {
     "name": {
       "x": 224,
-      "y": 209,
+      "y": 210,
       "width": 57,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 208,
-      "width": 24,
       "height": 17
     },
-    "value": 189
+    "price": {
+      "x": 331,
+      "y": 211,
+      "width": 19,
+      "height": 15
+    },
+    "value": -1
   },
   "8度楼": {
     "name": {
-      "x": 224,
-      "y": 228,
-      "width": 38,
-      "height": 15
+      "x": 223,
+      "y": 229,
+      "width": 39,
+      "height": 16
     },
     "price": {
       "x": 333,
-      "y": 228,
-      "width": 39,
-      "height": 17
+      "y": 230,
+      "width": 40,
+      "height": 14
     },
-    "value": 163.5
+    "value": 160.5
   },
   "雅香金楼": {
     "name": {
       "x": 224,
-      "y": 245,
-      "width": 57,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
       "y": 246,
-      "width": 40,
-      "height": 15
-    },
-    "value": 142.5
-  },
-  "银紫楼": {
-    "name": {
-      "x": 225,
-      "y": 264,
-      "width": 42,
-      "height": 16
-    },
-    "price": {
-      "x": 333,
-      "y": 264,
-      "width": 23,
-      "height": 16
-    },
-    "value": 136
-  },
-  "新中支1916": {
-    "name": {
-      "x": 225,
-      "y": 280,
-      "width": 75,
+      "width": 58,
       "height": 17
     },
     "price": {
-      "x": 332,
-      "y": 280,
-      "width": 24,
-      "height": 19
+      "x": 333,
+      "y": 249,
+      "width": 25,
+      "height": 13
     },
-    "value": 955
+    "value": 142
+  },
+  "银紫楼": {
+    "name": {
+      "x": 223,
+      "y": 264,
+      "width": 45,
+      "height": 17
+    },
+    "price": {
+      "x": 333,
+      "y": 266,
+      "width": 24,
+      "height": 14
+    },
+    "value": 137
+  },
+  "新中支1916": {
+    "name": {
+      "x": 224,
+      "y": 284,
+      "width": 75,
+      "height": 15
+    },
+    "price": {
+      "x": 332,
+      "y": 285,
+      "width": 26,
+      "height": 14
+    },
+    "value": 920
   },
   "粗15年": {
     "name": {
       "x": 224,
-      "y": 300,
+      "y": 303,
       "width": 45,
-      "height": 16
+      "height": 17
     },
     "price": {
       "x": 332,
-      "y": 299,
-      "width": 24,
-      "height": 19
+      "y": 304,
+      "width": 27,
+      "height": 14
     },
-    "value": 870
+    "value": 860
   },
   "细15年": {
     "name": {
-      "x": 224,
-      "y": 319,
-      "width": 45,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 319,
-      "width": 24,
-      "height": 17
-    },
-    "value": 835
-  },
-  "软黄珠": {
-    "name": {
-      "x": 224,
-      "y": 337,
-      "width": 43,
-      "height": 17
-    },
-    "price": {
-      "x": 332,
-      "y": 338,
-      "width": 24,
-      "height": 16
-    },
-    "value": 793
-  },
-  "盖1916楼": {
-    "name": {
-      "x": 224,
-      "y": 355,
-      "width": 61,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 355,
-      "width": 24,
-      "height": 17
-    },
-    "value": 700
-  },
-  "三角楼": {
-    "name": {
-      "x": 224,
-      "y": 373,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 373,
-      "width": 25,
-      "height": 17
-    },
-    "value": 710
-  },
-  "盖红珠": {
-    "name": {
-      "x": 224,
-      "y": 390,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 390,
-      "width": 25,
-      "height": 18
-    },
-    "value": 715
-  },
-  "老版小蜜蜂": {
-    "name": {
-      "x": 224,
-      "y": 429,
-      "width": 71,
+      "x": 223,
+      "y": 321,
+      "width": 47,
       "height": 16
     },
     "price": {
       "x": 331,
-      "y": 428,
-      "width": 17,
-      "height": 19
+      "y": 322,
+      "width": 27,
+      "height": 15
     },
-    "value": -1
+    "value": 875
   },
-  "平安久久": {
+  "软黄珠老版不接": {
     "name": {
-      "x": 224,
-      "y": 448,
-      "width": 57,
-      "height": 17
-    },
-    "price": {
-      "x": 332,
-      "y": 447,
-      "width": 24,
-      "height": 19
-    },
-    "value": 683
-  },
-  "软珍楼": {
-    "name": {
-      "x": 224,
-      "y": 467,
-      "width": 43,
+      "x": 223,
+      "y": 339,
+      "width": 100,
       "height": 16
     },
     "price": {
       "x": 332,
-      "y": 467,
-      "width": 24,
+      "y": 341,
+      "width": 26,
+      "height": 13
+    },
+    "value": 757
+  },
+  "盖1916楼": {
+    "name": {
+      "x": 224,
+      "y": 357,
+      "width": 62,
+      "height": 16
+    },
+    "price": {
+      "x": 332,
+      "y": 359,
+      "width": 26,
+      "height": 13
+    },
+    "value": 650
+  },
+  "三角楼": {
+    "name": {
+      "x": 224,
+      "y": 375,
+      "width": 44,
       "height": 17
     },
-    "value": 495
+    "price": {
+      "x": 332,
+      "y": 375,
+      "width": 53,
+      "height": 16
+    },
+    "value": 660
+  },
+  "盖红珠": {
+    "name": {
+      "x": 224,
+      "y": 392,
+      "width": 44,
+      "height": 17
+    },
+    "price": {
+      "x": 332,
+      "y": 393,
+      "width": 53,
+      "height": 15
+    },
+    "value": 715
+  },
+  "平安久久": {
+    "name": {
+      "x": 224,
+      "y": 432,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 331,
+      "y": 432,
+      "width": 54,
+      "height": 15
+    },
+    "value": 640
+  },
+  "软珍楼": {
+    "name": {
+      "x": 223,
+      "y": 450,
+      "width": 45,
+      "height": 16
+    },
+    "price": {
+      "x": 331,
+      "y": 452,
+      "width": 26,
+      "height": 14
+    },
+    "value": 475
   },
   "3mg黄鹤楼": {
     "name": {
       "x": 224,
-      "y": 487,
+      "y": 470,
       "width": 68,
       "height": 15
     },
     "price": {
-      "x": 332,
-      "y": 485,
-      "width": 25,
-      "height": 19
+      "x": 331,
+      "y": 470,
+      "width": 55,
+      "height": 15
     },
-    "value": 520
+    "value": 440
   },
   "盖珍楼": {
     "name": {
-      "x": 223,
-      "y": 504,
+      "x": 224,
+      "y": 488,
       "width": 44,
+      "height": 16
+    },
+    "price": {
+      "x": 331,
+      "y": 488,
+      "width": 27,
+      "height": 16
+    },
+    "value": 325
+  },
+  "冰咖": {
+    "name": {
+      "x": 223,
+      "y": 508,
+      "width": 32,
+      "height": 17
+    },
+    "price": {
+      "x": 331,
+      "y": 508,
+      "width": 27,
+      "height": 16
+    },
+    "value": 305
+  },
+  "中支感恩": {
+    "name": {
+      "x": 224,
+      "y": 526,
+      "width": 57,
+      "height": 18
+    },
+    "price": {
+      "x": 331,
+      "y": 526,
+      "width": 20,
+      "height": 18
+    },
+    "value": -1
+  },
+  "细支爱尚": {
+    "name": {
+      "x": 223,
+      "y": 564,
+      "width": 58,
       "height": 18
     },
     "price": {
       "x": 332,
-      "y": 505,
-      "width": 24,
-      "height": 17
+      "y": 566,
+      "width": 42,
+      "height": 15
     },
-    "value": 332
+    "value": 137.5
   },
-  "冰咖": {
+  "乐途": {
     "name": {
       "x": 224,
-      "y": 523,
+      "y": 584,
       "width": 30,
       "height": 16
     },
     "price": {
       "x": 332,
-      "y": 523,
-      "width": 25,
-      "height": 17
-    },
-    "value": 315
-  },
-  "中支感恩": {
-    "name": {
-      "x": 225,
-      "y": 543,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 543,
-      "width": 24,
-      "height": 15
-    },
-    "value": 221
-  },
-  "三五双冰": {
-    "name": {
-      "x": 224,
-      "y": 583,
-      "width": 57,
-      "height": 16
-    },
-    "price": {
-      "x": 331,
-      "y": 584,
-      "width": 26,
+      "y": 586,
+      "width": 42,
       "height": 14
     },
-    "value": 265
+    "value": 123.5
   },
-  "经典三五": {
+  "喜满堂": {
     "name": {
       "x": 224,
-      "y": 603,
-      "width": 57,
-      "height": 15
-    },
-    "price": {
-      "x": 331,
       "y": 604,
-      "width": 26,
+      "width": 44,
       "height": 16
     },
-    "value": 220
+    "price": {
+      "x": 332,
+      "y": 605,
+      "width": 42,
+      "height": 15
+    },
+    "value": 106.8
   },
-  "细支紫冰": {
+  "中支天叶": {
     "name": {
       "x": 224,
-      "y": 621,
-      "width": 57,
+      "y": 624,
+      "width": 58,
       "height": 16
     },
     "price": {
       "x": 331,
-      "y": 621,
-      "width": 25,
+      "y": 624,
+      "width": 54,
       "height": 16
     },
-    "value": 240
+    "value": 900
   },
-  "爱喜幻变": {
+  "细支天叶": {
     "name": {
-      "x": 224,
-      "y": 640,
-      "width": 57,
-      "height": 15
+      "x": 223,
+      "y": 643,
+      "width": 58,
+      "height": 16
     },
     "price": {
       "x": 332,
-      "y": 641,
-      "width": 25,
+      "y": 643,
+      "width": 53,
       "height": 15
     },
-    "value": 210
+    "value": 756
   },
-  "三五冰炫": {
+  "大天叶": {
     "name": {
-      "x": 225,
+      "x": 224,
       "y": 660,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 661,
-      "width": 25,
-      "height": 16
-    },
-    "value": 220
-  },
-  "七星蓝天": {
-    "name": {
-      "x": 225,
-      "y": 679,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 679,
-      "width": 25,
-      "height": 17
-    },
-    "value": 205
-  },
-  "宝亨宝珠": {
-    "name": {
-      "x": 224,
-      "y": 698,
-      "width": 57,
-      "height": 15
-    },
-    "price": {
-      "x": 332,
-      "y": 697,
-      "width": 25,
+      "width": 43,
       "height": 18
     },
-    "value": 200
+    "price": {
+      "x": 332,
+      "y": 662,
+      "width": 25,
+      "height": 15
+    },
+    "value": 696
   },
-  "万宝路冰爵": {
+  "细支天香": {
     "name": {
       "x": 224,
-      "y": 715,
-      "width": 71,
+      "y": 679,
+      "width": 57,
       "height": 17
+    },
+    "price": {
+      "x": 332,
+      "y": 681,
+      "width": 25,
+      "height": 13
+    },
+    "value": 405
+  },
+  "中支天香": {
+    "name": {
+      "x": 224,
+      "y": 697,
+      "width": 57,
+      "height": 16
     },
     "price": {
       "x": 331,
-      "y": 715,
-      "width": 26,
-      "height": 18
+      "y": 699,
+      "width": 27,
+      "height": 14
     },
-    "value": 215
+    "value": 395
   },
-  "盖白万": {
+  "3mg天叶": {
     "name": {
       "x": 224,
-      "y": 733,
-      "width": 43,
+      "y": 716,
+      "width": 54,
       "height": 16
     },
     "price": {
-      "x": 332,
-      "y": 733,
-      "width": 24,
-      "height": 17
+      "x": 330,
+      "y": 716,
+      "width": 20,
+      "height": 16
     },
-    "value": 202
+    "value": -1
   },
-  "细支白建牌": {
+  "中支国色": {
     "name": {
       "x": 224,
-      "y": 752,
+      "y": 734,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 331,
+      "y": 736,
+      "width": 26,
+      "height": 13
+    },
+    "value": 285
+  },
+  "黄金叶大成": {
+    "name": {
+      "x": 224,
+      "y": 753,
       "width": 71,
       "height": 16
     },
     "price": {
       "x": 332,
-      "y": 752,
-      "width": 24,
-      "height": 18
+      "y": 755,
+      "width": 25,
+      "height": 13
     },
-    "value": 180
+    "value": 224
   },
-  "白三五": {
+  "中支乐途": {
     "name": {
       "x": 224,
       "y": 771,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 332,
-      "y": 770,
-      "width": 24,
-      "height": 19
-    },
-    "value": 200
-  },
-  "盖红万": {
-    "name": {
-      "x": 224,
-      "y": 789,
-      "width": 43,
+      "width": 57,
       "height": 17
     },
     "price": {
-      "x": 333,
-      "y": 789,
-      "width": 23,
-      "height": 18
+      "x": 332,
+      "y": 773,
+      "width": 25,
+      "height": 14
     },
-    "value": 178
+    "value": 181
   },
-  "软白万": {
+  "中支商鼎": {
     "name": {
       "x": 224,
-      "y": 809,
-      "width": 43,
+      "y": 789,
+      "width": 57,
+      "height": 17
+    },
+    "price": {
+      "x": 332,
+      "y": 790,
+      "width": 42,
       "height": 15
     },
-    "price": {
-      "x": 332,
-      "y": 808,
-      "width": 24,
+    "value": 163.5
+  },
+  "炫尚": {
+    "name": {
+      "x": 224,
+      "y": 807,
+      "width": 30,
       "height": 18
     },
-    "value": 175
+    "price": {
+      "x": 332,
+      "y": 809,
+      "width": 25,
+      "height": 15
+    },
+    "value": 145
   },
-  "爱喜薄荷": {
+  "盖乐途": {
     "name": {
       "x": 224,
-      "y": 827,
-      "width": 57,
-      "height": 16
+      "y": 824,
+      "width": 44,
+      "height": 17
     },
     "price": {
       "x": 332,
       "y": 827,
-      "width": 24,
-      "height": 17
+      "width": 26,
+      "height": 14
     },
-    "value": 195
+    "value": 140
   },
-  "蓝爱喜": {
+  "黄金眼": {
     "name": {
       "x": 224,
-      "y": 844,
-      "width": 43,
+      "y": 843,
+      "width": 44,
       "height": 17
     },
     "price": {
       "x": 332,
       "y": 845,
-      "width": 24,
-      "height": 16
+      "width": 26,
+      "height": 14
     },
-    "value": 125
+    "value": 122
   },
-  "国际三五": {
+  "小目标": {
     "name": {
       "x": 224,
-      "y": 865,
-      "width": 57,
-      "height": 15
+      "y": 863,
+      "width": 44,
+      "height": 17
     },
     "price": {
       "x": 332,
       "y": 865,
-      "width": 24,
-      "height": 15
+      "width": 41,
+      "height": 14
     },
-    "value": 235
+    "value": 123.5
   },
-  "细支老版三五": {
+  "芒果": {
     "name": {
       "x": 224,
-      "y": 883,
-      "width": 85,
-      "height": 16
+      "y": 881,
+      "width": 30,
+      "height": 17
     },
     "price": {
       "x": 332,
       "y": 884,
-      "width": 25,
-      "height": 16
+      "width": 18,
+      "height": 13
     },
-    "value": 206
+    "value": 68
   },
-  "软红万": {
+  "雪旗渠": {
     "name": {
       "x": 224,
-      "y": 901,
-      "width": 43,
-      "height": 16
+      "y": 900,
+      "width": 44,
+      "height": 17
     },
     "price": {
       "x": 332,
-      "y": 901,
-      "width": 26,
-      "height": 17
+      "y": 903,
+      "width": 34,
+      "height": 13
     },
-    "value": 175
+    "value": 68.5
   },
-  "三五天越": {
+  "中支黑兰州": {
     "name": {
       "x": 224,
-      "y": 918,
-      "width": 57,
-      "height": 17
+      "y": 940,
+      "width": 72,
+      "height": 16
     },
     "price": {
-      "x": 333,
-      "y": 918,
-      "width": 23,
-      "height": 17
+      "x": 331,
+      "y": 941,
+      "width": 27,
+      "height": 14
     },
-    "value": 152
+    "value": 256
   },
-  "起源真龙": {
+  "兰州青中支": {
     "name": {
       "x": 224,
       "y": 957,
-      "width": 57,
+      "width": 72,
       "height": 17
     },
     "price": {
-      "x": 331,
-      "y": 958,
-      "width": 41,
-      "height": 15
+      "x": 332,
+      "y": 960,
+      "width": 26,
+      "height": 14
     },
-    "value": 213.5
+    "value": 174
   },
-  "真龙轩云": {
+  "珍品黑兰州": {
     "name": {
       "x": 224,
       "y": 975,
-      "width": 57,
-      "height": 17
-    },
-    "price": {
-      "x": 332,
-      "y": 976,
-      "width": 24,
-      "height": 17
-    },
-    "value": 149
-  },
-  "真龙祥云": {
-    "name": {
-      "x": 224,
-      "y": 992,
-      "width": 57,
+      "width": 72,
       "height": 18
     },
     "price": {
       "x": 332,
-      "y": 993,
-      "width": 24,
-      "height": 17
+      "y": 978,
+      "width": 25,
+      "height": 14
     },
-    "value": 132
+    "value": 151
   },
-  "锦绣真龙": {
-    "name": {
-      "x": 225,
-      "y": 1010,
-      "width": 56,
-      "height": 17
-    },
-    "price": {
-      "x": 332,
-      "y": 1011,
-      "width": 24,
-      "height": 17
-    },
-    "value": 137
-  },
-  "畅行天下": {
+  "如意兰州": {
     "name": {
       "x": 224,
-      "y": 1028,
-      "width": 57,
-      "height": 17
+      "y": 995,
+      "width": 58,
+      "height": 16
     },
     "price": {
       "x": 331,
-      "y": 1028,
-      "width": 17,
-      "height": 18
+      "y": 996,
+      "width": 19,
+      "height": 14
     },
-    "value": -1
+    "value": 90
   },
-  "软红真龙": {
+  "蓝兰州": {
     "name": {
-      "x": 225,
-      "y": 1046,
-      "width": 56,
-      "height": 17
-    },
-    "price": {
-      "x": 332,
-      "y": 1046,
-      "width": 33,
-      "height": 20
-    },
-    "value": 79.5
-  },
-  "真龙海韵": {
-    "name": {
-      "x": 225,
-      "y": 1064,
-      "width": 56,
-      "height": 17
-    },
-    "price": {
-      "x": 332,
-      "y": 1065,
-      "width": 24,
-      "height": 18
-    },
-    "value": 425
-  },
-  "蓝刘三姐": {
-    "name": {
-      "x": 225,
-      "y": 1083,
-      "width": 56,
-      "height": 17
-    },
-    "price": {
-      "x": 333,
-      "y": 1083,
-      "width": 39,
-      "height": 18
-    },
-    "value": 164.5
-  },
-  "凌云真龙": {
-    "name": {
-      "x": 225,
-      "y": 1101,
-      "width": 56,
-      "height": 17
-    },
-    "price": {
-      "x": 332,
-      "y": 1101,
-      "width": 24,
-      "height": 18
-    },
-    "value": 145
-  },
-  "真龙炫净": {
-    "name": {
-      "x": 225,
-      "y": 1119,
-      "width": 56,
+      "x": 224,
+      "y": 1012,
+      "width": 44,
       "height": 16
     },
     "price": {
       "x": 332,
-      "y": 1119,
-      "width": 25,
-      "height": 15
+      "y": 1014,
+      "width": 34,
+      "height": 13
     },
-    "value": 235
+    "value": 63.5
   },
   "盖中华": {
     "name": {
-      "x": 413,
+      "x": 412,
       "y": 65,
-      "width": 43,
-      "height": 17
+      "width": 44,
+      "height": 16
     },
     "price": {
       "x": 552,
-      "y": 66,
-      "width": 25,
-      "height": 16
+      "y": 67,
+      "width": 24,
+      "height": 13
     },
-    "value": 355
+    "value": 338
   },
   "爆珠蓝莓海": {
     "name": {
-      "x": 413,
-      "y": 82,
-      "width": 71,
-      "height": 17
+      "x": 412,
+      "y": 84,
+      "width": 72,
+      "height": 16
     },
     "price": {
-      "x": 552,
-      "y": 82,
+      "x": 551,
+      "y": 86,
       "width": 26,
-      "height": 19
+      "height": 13
     },
-    "value": 208
+    "value": 202
   },
   "333牡丹": {
     "name": {
-      "x": 413,
-      "y": 101,
-      "width": 53,
-      "height": 17
+      "x": 412,
+      "y": 103,
+      "width": 55,
+      "height": 15
     },
     "price": {
-      "x": 553,
-      "y": 100,
-      "width": 40,
-      "height": 18
+      "x": 552,
+      "y": 103,
+      "width": 25,
+      "height": 14
     },
-    "value": 177.5
+    "value": 172
   },
   "软牡丹": {
     "name": {
-      "x": 413,
-      "y": 119,
-      "width": 43,
+      "x": 412,
+      "y": 120,
+      "width": 44,
       "height": 18
     },
     "price": {
-      "x": 553,
-      "y": 119,
-      "width": 40,
-      "height": 19
+      "x": 552,
+      "y": 122,
+      "width": 41,
+      "height": 13
     },
-    "value": 146.5
+    "value": 142.5
   },
   "细5mg中南海": {
     "name": {
       "x": 412,
-      "y": 135,
-      "width": 82,
-      "height": 20
+      "y": 139,
+      "width": 83,
+      "height": 16
     },
     "price": {
-      "x": 553,
-      "y": 136,
+      "x": 552,
+      "y": 140,
       "width": 24,
-      "height": 18
+      "height": 14
     },
-    "value": 110
+    "value": 105
   },
   "典5海": {
     "name": {
       "x": 412,
-      "y": 153,
-      "width": 38,
-      "height": 19
-    },
-    "price": {
-      "x": 553,
       "y": 155,
-      "width": 24,
+      "width": 38,
       "height": 18
     },
-    "value": 102
+    "price": {
+      "x": 550,
+      "y": 157,
+      "width": 19,
+      "height": 16
+    },
+    "value": -1
   },
   "典8海": {
     "name": {
-      "x": 413,
-      "y": 173,
+      "x": 412,
+      "y": 174,
       "width": 38,
-      "height": 18
-    },
-    "price": {
-      "x": 553,
-      "y": 172,
-      "width": 16,
       "height": 17
     },
-    "value": 99
+    "price": {
+      "x": 551,
+      "y": 176,
+      "width": 17,
+      "height": 14
+    },
+    "value": 91
   },
   "软中华": {
     "name": {
-      "x": 413,
+      "x": 412,
       "y": 245,
-      "width": 43,
-      "height": 16
+      "width": 44,
+      "height": 19
     },
     "price": {
       "x": 552,
-      "y": 244,
+      "y": 247,
       "width": 25,
-      "height": 18
+      "height": 14
     },
-    "value": 518
+    "value": 505
   },
   "7mg双中支": {
     "name": {
-      "x": 412,
-      "y": 263,
-      "width": 68,
+      "x": 413,
+      "y": 264,
+      "width": 67,
       "height": 18
     },
     "price": {
-      "x": 553,
-      "y": 262,
-      "width": 24,
-      "height": 17
+      "x": 552,
+      "y": 266,
+      "width": 25,
+      "height": 14
     },
-    "value": 490
+    "value": 470
   },
   "双中支": {
     "name": {
       "x": 413,
-      "y": 280,
+      "y": 283,
       "width": 43,
       "height": 17
     },
     "price": {
-      "x": 553,
-      "y": 280,
-      "width": 24,
-      "height": 19
+      "x": 552,
+      "y": 284,
+      "width": 53,
+      "height": 15
     },
-    "value": 439
+    "value": 437
   },
   "中支蓝牡丹": {
     "name": {
       "x": 413,
-      "y": 300,
+      "y": 302,
+      "width": 71,
+      "height": 17
+    },
+    "price": {
+      "x": 551,
+      "y": 304,
+      "width": 25,
+      "height": 13
+    },
+    "value": 276
+  },
+  "中支红牡丹": {
+    "name": {
+      "x": 413,
+      "y": 321,
       "width": 71,
       "height": 16
     },
     "price": {
       "x": 552,
-      "y": 298,
-      "width": 41,
-      "height": 20
+      "y": 323,
+      "width": 24,
+      "height": 13
     },
-    "value": 269.5
-  },
-  "中支红牡丹": {
-    "name": {
-      "x": 414,
-      "y": 319,
-      "width": 70,
-      "height": 16
-    },
-    "price": {
-      "x": 552,
-      "y": 318,
-      "width": 26,
-      "height": 18
-    },
-    "value": 214
+    "value": 203
   },
   "短支前门": {
     "name": {
       "x": 413,
-      "y": 336,
-      "width": 57,
-      "height": 18
+      "y": 337,
+      "width": 58,
+      "height": 19
     },
     "price": {
       "x": 553,
-      "y": 335,
-      "width": 40,
-      "height": 21
+      "y": 341,
+      "width": 23,
+      "height": 13
     },
-    "value": 174.5
+    "value": 162
   },
   "飞马牡丹": {
     "name": {
       "x": 413,
-      "y": 355,
-      "width": 57,
-      "height": 16
+      "y": 356,
+      "width": 56,
+      "height": 17
     },
     "price": {
       "x": 553,
-      "y": 355,
-      "width": 25,
-      "height": 17
+      "y": 359,
+      "width": 23,
+      "height": 13
     },
-    "value": 140
+    "value": 132
   },
   "3mg细支中华": {
     "name": {
       "x": 413,
-      "y": 373,
-      "width": 81,
-      "height": 16
+      "y": 375,
+      "width": 82,
+      "height": 17
     },
     "price": {
-      "x": 553,
-      "y": 371,
-      "width": 33,
-      "height": 19
+      "x": 552,
+      "y": 377,
+      "width": 32,
+      "height": 13
     },
-    "value": 1310
+    "value": 1050
   },
   "典藏大熊猫": {
     "name": {
       "x": 413,
-      "y": 390,
-      "width": 71,
+      "y": 392,
+      "width": 72,
       "height": 17
     },
     "price": {
-      "x": 553,
-      "y": 390,
-      "width": 31,
-      "height": 19
+      "x": 552,
+      "y": 395,
+      "width": 32,
+      "height": 13
     },
-    "value": 1300
+    "value": 1150
   },
   "细支典藏大熊猫": {
     "name": {
       "x": 413,
-      "y": 410,
+      "y": 411,
       "width": 99,
       "height": 17
     },
     "price": {
-      "x": 553,
-      "y": 408,
+      "x": 552,
+      "y": 414,
       "width": 24,
-      "height": 19
+      "height": 13
     },
-    "value": 985
+    "value": 940
   },
   "木盒大熊猫": {
     "name": {
-      "x": 413,
-      "y": 429,
-      "width": 71,
+      "x": 412,
+      "y": 431,
+      "width": 72,
       "height": 16
     },
     "price": {
-      "x": 553,
-      "y": 428,
+      "x": 552,
+      "y": 433,
       "width": 24,
-      "height": 18
+      "height": 13
     },
-    "value": 818
+    "value": 790
   },
   "金中支": {
     "name": {
@@ -1912,1150 +1747,1000 @@
       "height": 17
     },
     "price": {
-      "x": 553,
-      "y": 447,
-      "width": 24,
-      "height": 19
+      "x": 551,
+      "y": 451,
+      "width": 26,
+      "height": 14
     },
-    "value": 690
+    "value": 670
   },
   "金短支": {
     "name": {
       "x": 413,
-      "y": 466,
+      "y": 469,
       "width": 43,
-      "height": 17
-    },
-    "price": {
-      "x": 553,
-      "y": 467,
-      "width": 24,
-      "height": 17
-    },
-    "value": 680
-  },
-  "金细支": {
-    "name": {
-      "x": 413,
-      "y": 486,
-      "width": 43,
-      "height": 15
-    },
-    "price": {
-      "x": 553,
-      "y": 486,
-      "width": 24,
-      "height": 18
-    },
-    "value": 626
-  },
-  "6mg细支中华": {
-    "name": {
-      "x": 413,
-      "y": 506,
-      "width": 82,
-      "height": 15
-    },
-    "price": {
-      "x": 553,
-      "y": 505,
-      "width": 24,
-      "height": 17
-    },
-    "value": 490
-  },
-  "细支中华": {
-    "name": {
-      "x": 413,
-      "y": 523,
-      "width": 58,
-      "height": 16
-    },
-    "price": {
-      "x": 553,
-      "y": 523,
-      "width": 24,
-      "height": 17
-    },
-    "value": 415
-  },
-  "马年生肖中华": {
-    "name": {
-      "x": 413,
-      "y": 542,
-      "width": 85,
       "height": 16
     },
     "price": {
       "x": 552,
-      "y": 542,
-      "width": 25,
-      "height": 19
+      "y": 471,
+      "width": 24,
+      "height": 13
     },
-    "value": 528
+    "value": 695
+  },
+  "金细支": {
+    "name": {
+      "x": 413,
+      "y": 488,
+      "width": 43,
+      "height": 16
+    },
+    "price": {
+      "x": 552,
+      "y": 490,
+      "width": 24,
+      "height": 13
+    },
+    "value": 583
+  },
+  "6mg细支中华": {
+    "name": {
+      "x": 413,
+      "y": 508,
+      "width": 81,
+      "height": 16
+    },
+    "price": {
+      "x": 552,
+      "y": 510,
+      "width": 24,
+      "height": 13
+    },
+    "value": 473
+  },
+  "细支中华": {
+    "name": {
+      "x": 413,
+      "y": 527,
+      "width": 58,
+      "height": 15
+    },
+    "price": {
+      "x": 552,
+      "y": 529,
+      "width": 24,
+      "height": 12
+    },
+    "value": 404
   },
   "新中支恒大": {
     "name": {
       "x": 413,
-      "y": 562,
-      "width": 71,
+      "y": 546,
+      "width": 72,
       "height": 16
     },
     "price": {
-      "x": 553,
-      "y": 562,
+      "x": 552,
+      "y": 549,
       "width": 24,
-      "height": 16
+      "height": 12
     },
     "value": 180
   },
   "细支莓海": {
     "name": {
-      "x": 413,
-      "y": 603,
+      "x": 412,
+      "y": 584,
       "width": 57,
-      "height": 15
-    },
-    "price": {
-      "x": 553,
-      "y": 604,
-      "width": 24,
-      "height": 14
-    },
-    "value": 155
-  },
-  "软前门": {
-    "name": {
-      "x": 413,
-      "y": 621,
-      "width": 43,
       "height": 16
     },
     "price": {
       "x": 552,
-      "y": 622,
+      "y": 587,
+      "width": 24,
+      "height": 12
+    },
+    "value": 145
+  },
+  "软前门": {
+    "name": {
+      "x": 412,
+      "y": 604,
+      "width": 44,
+      "height": 16
+    },
+    "price": {
+      "x": 552,
+      "y": 606,
       "width": 17,
       "height": 14
     },
-    "value": 90
+    "value": 74
   },
   "大苏": {
     "name": {
+      "x": 412,
+      "y": 642,
+      "width": 30,
+      "height": 18
+    },
+    "price": {
+      "x": 552,
+      "y": 646,
+      "width": 25,
+      "height": 13
+    },
+    "value": 292
+  },
+  "绿大观园": {
+    "name": {
       "x": 413,
-      "y": 660,
+      "y": 661,
+      "width": 58,
+      "height": 17
+    },
+    "price": {
+      "x": 552,
+      "y": 664,
+      "width": 24,
+      "height": 13
+    },
+    "value": 235
+  },
+  "薄荷十二钗": {
+    "name": {
+      "x": 413,
+      "y": 680,
+      "width": 71,
+      "height": 16
+    },
+    "price": {
+      "x": 552,
+      "y": 680,
+      "width": 25,
+      "height": 15
+    },
+    "value": 174
+  },
+  "小苏": {
+    "name": {
+      "x": 412,
+      "y": 697,
       "width": 30,
       "height": 17
     },
     "price": {
       "x": 552,
-      "y": 661,
-      "width": 25,
+      "y": 699,
+      "width": 40,
+      "height": 13
+    },
+    "value": 170.5
+  },
+  "梦都": {
+    "name": {
+      "x": 412,
+      "y": 715,
+      "width": 30,
       "height": 16
     },
-    "value": 338
+    "price": {
+      "x": 552,
+      "y": 717,
+      "width": 40,
+      "height": 13
+    },
+    "value": 160.5
   },
-  "中支彩苏": {
+  "红南京": {
     "name": {
-      "x": 414,
-      "y": 679,
+      "x": 412,
+      "y": 734,
+      "width": 44,
+      "height": 17
+    },
+    "price": {
+      "x": 552,
+      "y": 736,
+      "width": 24,
+      "height": 13
+    },
+    "value": 148
+  },
+  "炫赫门": {
+    "name": {
+      "x": 412,
+      "y": 753,
+      "width": 45,
+      "height": 17
+    },
+    "price": {
+      "x": 552,
+      "y": 755,
+      "width": 40,
+      "height": 13
+    },
+    "value": 170.5
+  },
+  "3mg细九五": {
+    "name": {
+      "x": 412,
+      "y": 771,
+      "width": 68,
+      "height": 19
+    },
+    "price": {
+      "x": 551,
+      "y": 772,
+      "width": 54,
+      "height": 16
+    },
+    "value": 970
+  },
+  "软九五": {
+    "name": {
+      "x": 411,
+      "y": 789,
+      "width": 45,
+      "height": 19
+    },
+    "price": {
+      "x": 552,
+      "y": 790,
+      "width": 53,
+      "height": 15
+    },
+    "value": 663
+  },
+  "粗九五": {
+    "name": {
+      "x": 413,
+      "y": 807,
+      "width": 42,
+      "height": 19
+    },
+    "price": {
+      "x": 551,
+      "y": 809,
+      "width": 18,
+      "height": 15
+    },
+    "value": -1
+  },
+  "细支九五": {
+    "name": {
+      "x": 413,
+      "y": 824,
+      "width": 56,
+      "height": 17
+    },
+    "price": {
+      "x": 551,
+      "y": 827,
+      "width": 26,
+      "height": 14
+    },
+    "value": 650
+  },
+  "3克雨花石": {
+    "name": {
+      "x": 413,
+      "y": 843,
+      "width": 65,
+      "height": 16
+    },
+    "price": {
+      "x": 551,
+      "y": 843,
+      "width": 54,
+      "height": 16
+    },
+    "value": 542
+  },
+  "雨花石": {
+    "name": {
+      "x": 413,
+      "y": 862,
+      "width": 42,
+      "height": 18
+    },
+    "price": {
+      "x": 551,
+      "y": 865,
+      "width": 25,
+      "height": 14
+    },
+    "value": 414
+  },
+  "十二钗": {
+    "name": {
+      "x": 412,
+      "y": 880,
+      "width": 44,
+      "height": 19
+    },
+    "price": {
+      "x": 551,
+      "y": 884,
+      "width": 25,
+      "height": 13
+    },
+    "value": 217
+  },
+  "传奇老巴夺": {
+    "name": {
+      "x": 412,
+      "y": 920,
+      "width": 72,
+      "height": 19
+    },
+    "price": {
+      "x": 553,
+      "y": 923,
+      "width": 23,
+      "height": 13
+    },
+    "value": 158
+  },
+  "老巴夺": {
+    "name": {
+      "x": 412,
+      "y": 940,
+      "width": 43,
+      "height": 16
+    },
+    "price": {
+      "x": 552,
+      "y": 942,
+      "width": 41,
+      "height": 13
+    },
+    "value": 108.5
+  },
+  "长丰": {
+    "name": {
+      "x": 412,
+      "y": 957,
+      "width": 30,
+      "height": 16
+    },
+    "price": {
+      "x": 551,
+      "y": 960,
+      "width": 18,
+      "height": 13
+    },
+    "value": 63
+  },
+  "细支虫草": {
+    "name": {
+      "x": 413,
+      "y": 976,
+      "width": 58,
+      "height": 17
+    },
+    "price": {
+      "x": 551,
+      "y": 978,
+      "width": 25,
+      "height": 13
+    },
+    "value": 365
+  },
+  "中支虫草": {
+    "name": {
+      "x": 413,
+      "y": 995,
       "width": 56,
       "height": 16
     },
     "price": {
       "x": 552,
-      "y": 677,
-      "width": 17,
-      "height": 19
-    },
-    "value": -1
-  },
-  "绿大观园": {
-    "name": {
-      "x": 413,
-      "y": 695,
-      "width": 57,
-      "height": 19
-    },
-    "price": {
-      "x": 553,
-      "y": 697,
+      "y": 997,
       "width": 24,
-      "height": 18
+      "height": 12
     },
-    "value": 250
+    "value": 310
   },
-  "薄荷十二钗": {
+  "中支老巴夺": {
     "name": {
       "x": 413,
-      "y": 713,
-      "width": 71,
-      "height": 19
-    },
-    "price": {
-      "x": 553,
-      "y": 715,
-      "width": 23,
-      "height": 18
-    },
-    "value": 181
-  },
-  "小苏": {
-    "name": {
-      "x": 413,
-      "y": 733,
-      "width": 29,
-      "height": 16
-    },
-    "price": {
-      "x": 553,
-      "y": 733,
-      "width": 24,
-      "height": 18
-    },
-    "value": 177
-  },
-  "梦都": {
-    "name": {
-      "x": 413,
-      "y": 751,
-      "width": 29,
-      "height": 17
-    },
-    "price": {
-      "x": 553,
-      "y": 751,
-      "width": 24,
-      "height": 19
-    },
-    "value": 166
-  },
-  "红南京": {
-    "name": {
-      "x": 413,
-      "y": 771,
-      "width": 44,
-      "height": 18
-    },
-    "price": {
-      "x": 553,
-      "y": 770,
-      "width": 25,
-      "height": 18
-    },
-    "value": 153
-  },
-  "炫赫门": {
-    "name": {
-      "x": 413,
-      "y": 788,
-      "width": 44,
-      "height": 17
-    },
-    "price": {
-      "x": 553,
-      "y": 787,
-      "width": 40,
-      "height": 19
-    },
-    "value": 185.5
-  },
-  "3mg细九五": {
-    "name": {
-      "x": 413,
-      "y": 809,
-      "width": 67,
-      "height": 16
-    },
-    "price": {
-      "x": 553,
-      "y": 807,
-      "width": 33,
-      "height": 19
-    },
-    "value": 1025
-  },
-  "软九五": {
-    "name": {
-      "x": 413,
-      "y": 827,
-      "width": 43,
-      "height": 18
-    },
-    "price": {
-      "x": 552,
-      "y": 826,
-      "width": 26,
-      "height": 18
-    },
-    "value": 700
-  },
-  "粗九五": {
-    "name": {
-      "x": 413,
-      "y": 845,
-      "width": 43,
-      "height": 17
-    },
-    "price": {
-      "x": 552,
-      "y": 844,
-      "width": 25,
-      "height": 18
-    },
-    "value": 685
-  },
-  "细支九五": {
-    "name": {
-      "x": 413,
-      "y": 863,
-      "width": 57,
-      "height": 18
-    },
-    "price": {
-      "x": 553,
-      "y": 863,
-      "width": 24,
-      "height": 19
-    },
-    "value": 660
-  },
-  "3克雨花石": {
-    "name": {
-      "x": 413,
-      "y": 883,
-      "width": 64,
-      "height": 17
-    },
-    "price": {
-      "x": 553,
-      "y": 882,
-      "width": 24,
-      "height": 18
-    },
-    "value": 540
-  },
-  "雨花石": {
-    "name": {
-      "x": 413,
-      "y": 900,
-      "width": 43,
-      "height": 18
-    },
-    "price": {
-      "x": 553,
-      "y": 900,
-      "width": 24,
-      "height": 17
-    },
-    "value": 434
-  },
-  "十二钗": {
-    "name": {
-      "x": 413,
-      "y": 918,
-      "width": 43,
-      "height": 17
-    },
-    "price": {
-      "x": 553,
-      "y": 918,
-      "width": 24,
-      "height": 18
-    },
-    "value": 230
-  },
-  "黑招财猫": {
-    "name": {
-      "x": 413,
-      "y": 957,
-      "width": 57,
-      "height": 17
-    },
-    "price": {
-      "x": 553,
-      "y": 957,
-      "width": 40,
-      "height": 17
-    },
-    "value": 141.5
-  },
-  "延安红韵": {
-    "name": {
-      "x": 413,
-      "y": 974,
-      "width": 57,
-      "height": 19
-    },
-    "price": {
-      "x": 553,
-      "y": 974,
-      "width": 25,
-      "height": 19
-    },
-    "value": 180
-  },
-  "中支延安": {
-    "name": {
-      "x": 413,
-      "y": 993,
-      "width": 57,
-      "height": 17
-    },
-    "price": {
-      "x": 553,
-      "y": 993,
-      "width": 25,
-      "height": 17
-    },
-    "value": 172
-  },
-  "长乐吉祥": {
-    "name": {
-      "x": 413,
-      "y": 1010,
-      "width": 57,
-      "height": 18
-    },
-    "price": {
-      "x": 553,
-      "y": 1010,
-      "width": 24,
-      "height": 18
-    },
-    "value": 162
-  },
-  "长乐好猫": {
-    "name": {
-      "x": 413,
-      "y": 1028,
-      "width": 57,
-      "height": 16
-    },
-    "price": {
-      "x": 553,
-      "y": 1028,
-      "width": 40,
-      "height": 18
-    },
-    "value": 135.5
-  },
-  "蓝金丝猴": {
-    "name": {
-      "x": 413,
-      "y": 1048,
-      "width": 57,
-      "height": 15
-    },
-    "price": {
-      "x": 553,
-      "y": 1048,
-      "width": 40,
-      "height": 17
-    },
-    "value": 126.5
-  },
-  "粗长乐好猫": {
-    "name": {
-      "x": 413,
-      "y": 1066,
+      "y": 1012,
       "width": 72,
-      "height": 15
-    },
-    "price": {
-      "x": 553,
-      "y": 1064,
-      "width": 40,
-      "height": 19
-    },
-    "value": 114.5
-  },
-  "金猴王": {
-    "name": {
-      "x": 413,
-      "y": 1084,
-      "width": 42,
-      "height": 15
-    },
-    "price": {
-      "x": 552,
-      "y": 1084,
-      "width": 16,
-      "height": 16
-    },
-    "value": 76
-  },
-  "软延安": {
-    "name": {
-      "x": 413,
-      "y": 1101,
-      "width": 43,
       "height": 16
     },
     "price": {
       "x": 552,
-      "y": 1103,
-      "width": 17,
-      "height": 14
+      "y": 1014,
+      "width": 24,
+      "height": 13
     },
-    "value": 71
+    "value": 144
   },
-  "中支长安印象": {
+  "白沙红昭君": {
     "name": {
-      "x": 414,
-      "y": 1120,
-      "width": 84,
-      "height": 14
+      "x": 413,
+      "y": 1030,
+      "width": 71,
+      "height": 16
     },
     "price": {
-      "x": 551,
-      "y": 1120,
-      "width": 26,
-      "height": 15
+      "x": 552,
+      "y": 1032,
+      "width": 23,
+      "height": 13
     },
-    "value": 205
+    "value": 111
   },
   "天外天": {
     "name": {
       "x": 625,
       "y": 65,
-      "width": 43,
-      "height": 17
+      "width": 44,
+      "height": 18
     },
     "price": {
-      "x": 790,
-      "y": 66,
-      "width": 25,
-      "height": 16
+      "x": 789,
+      "y": 67,
+      "width": 27,
+      "height": 14
     },
     "value": 580
   },
   "软阳光": {
     "name": {
       "x": 625,
-      "y": 82,
+      "y": 84,
       "width": 43,
       "height": 17
     },
     "price": {
-      "x": 791,
-      "y": 82,
-      "width": 24,
-      "height": 18
+      "x": 790,
+      "y": 85,
+      "width": 26,
+      "height": 14
     },
-    "value": 306
+    "value": 305
   },
   "红利群": {
     "name": {
       "x": 624,
       "y": 101,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 791,
-      "y": 101,
-      "width": 24,
-      "height": 18
-    },
-    "value": 172
-  },
-  "夜西湖": {
-    "name": {
-      "x": 625,
-      "y": 119,
       "width": 44,
       "height": 17
     },
     "price": {
-      "x": 791,
-      "y": 119,
-      "width": 24,
+      "x": 790,
+      "y": 103,
+      "width": 42,
+      "height": 14
+    },
+    "value": 171.5
+  },
+  "夜西湖": {
+    "name": {
+      "x": 624,
+      "y": 120,
+      "width": 45,
       "height": 17
     },
-    "value": 174
+    "price": {
+      "x": 790,
+      "y": 122,
+      "width": 26,
+      "height": 14
+    },
+    "value": 170
   },
   "软蓝利群": {
     "name": {
       "x": 625,
-      "y": 137,
+      "y": 138,
       "width": 57,
-      "height": 15
+      "height": 17
     },
     "price": {
-      "x": 791,
-      "y": 137,
-      "width": 24,
-      "height": 16
+      "x": 790,
+      "y": 140,
+      "width": 41,
+      "height": 14
     },
-    "value": 156
-  },
-  "银休闲云端": {
-    "name": {
-      "x": 625,
-      "y": 156,
-      "width": 71,
-      "height": 16
-    },
-    "price": {
-      "x": 791,
-      "y": 157,
-      "width": 31,
-      "height": 13
-    },
-    "value": 1235
+    "value": 155.5
   },
   "金红利群": {
     "name": {
       "x": 625,
       "y": 191,
       "width": 57,
-      "height": 16
+      "height": 18
     },
     "price": {
-      "x": 790,
-      "y": 192,
-      "width": 25,
-      "height": 15
+      "x": 788,
+      "y": 191,
+      "width": 20,
+      "height": 18
     },
-    "value": 770
+    "value": -1
   },
   "休闲利群": {
     "name": {
       "x": 625,
-      "y": 210,
-      "width": 56,
-      "height": 15
+      "y": 209,
+      "width": 57,
+      "height": 17
     },
     "price": {
-      "x": 791,
-      "y": 212,
-      "width": 22,
-      "height": 13
+      "x": 788,
+      "y": 209,
+      "width": 20,
+      "height": 17
     },
-    "value": 640
+    "value": -1
   },
   "细支阳光": {
     "name": {
-      "x": 625,
-      "y": 228,
-      "width": 57,
-      "height": 15
+      "x": 624,
+      "y": 227,
+      "width": 58,
+      "height": 19
     },
     "price": {
-      "x": 790,
+      "x": 789,
       "y": 230,
-      "width": 25,
-      "height": 12
+      "width": 27,
+      "height": 15
     },
-    "value": 343
+    "value": 335
   },
   "盖阳光": {
     "name": {
       "x": 625,
       "y": 246,
-      "width": 42,
-      "height": 15
+      "width": 43,
+      "height": 17
     },
     "price": {
-      "x": 791,
-      "y": 247,
-      "width": 22,
-      "height": 13
+      "x": 788,
+      "y": 246,
+      "width": 20,
+      "height": 18
     },
-    "value": 330
+    "value": -1
   },
   "尊中支利群": {
     "name": {
       "x": 625,
       "y": 263,
-      "width": 70,
-      "height": 15
+      "width": 72,
+      "height": 18
     },
     "price": {
-      "x": 790,
-      "y": 265,
-      "width": 25,
-      "height": 12
+      "x": 789,
+      "y": 266,
+      "width": 27,
+      "height": 14
     },
     "value": 334
   },
   "西子利群": {
     "name": {
       "x": 625,
-      "y": 282,
-      "width": 56,
-      "height": 15
+      "y": 283,
+      "width": 57,
+      "height": 17
     },
     "price": {
-      "x": 790,
-      "y": 284,
-      "width": 25,
-      "height": 12
+      "x": 789,
+      "y": 285,
+      "width": 43,
+      "height": 14
     },
-    "value": 264
+    "value": 262.5
   },
   "青中支利群": {
     "name": {
       "x": 625,
-      "y": 300,
-      "width": 70,
-      "height": 17
+      "y": 302,
+      "width": 72,
+      "height": 18
     },
     "price": {
-      "x": 790,
-      "y": 302,
-      "width": 25,
-      "height": 13
+      "x": 788,
+      "y": 304,
+      "width": 28,
+      "height": 14
     },
-    "value": 258
+    "value": 248
   },
   "新山外山": {
     "name": {
       "x": 625,
       "y": 320,
-      "width": 56,
-      "height": 16
+      "width": 57,
+      "height": 18
     },
     "price": {
-      "x": 790,
+      "x": 789,
       "y": 322,
-      "width": 25,
-      "height": 13
+      "width": 27,
+      "height": 14
     },
-    "value": 249
+    "value": 247
   },
   "国色利群": {
     "name": {
-      "x": 625,
-      "y": 337,
-      "width": 57,
-      "height": 16
+      "x": 624,
+      "y": 338,
+      "width": 58,
+      "height": 18
     },
     "price": {
-      "x": 790,
-      "y": 340,
-      "width": 23,
-      "height": 13
+      "x": 789,
+      "y": 341,
+      "width": 43,
+      "height": 14
     },
-    "value": 228
+    "value": 228.5
   },
   "江南韵": {
     "name": {
       "x": 625,
       "y": 356,
       "width": 43,
-      "height": 15
+      "height": 17
     },
     "price": {
       "x": 789,
-      "y": 356,
-      "width": 25,
-      "height": 16
+      "y": 358,
+      "width": 27,
+      "height": 14
     },
-    "value": 222
+    "value": 213
   },
   "西湖恋(新)": {
     "name": {
       "x": 625,
-      "y": 373,
-      "width": 79,
-      "height": 15
+      "y": 375,
+      "width": 80,
+      "height": 16
     },
     "price": {
-      "x": 791,
-      "y": 374,
-      "width": 22,
+      "x": 790,
+      "y": 376,
+      "width": 42,
       "height": 15
     },
-    "value": 208
+    "value": 193.5
   },
   "软长嘴": {
     "name": {
       "x": 625,
       "y": 392,
       "width": 43,
-      "height": 15
+      "height": 17
     },
     "price": {
-      "x": 791,
-      "y": 390,
-      "width": 39,
-      "height": 19
+      "x": 790,
+      "y": 394,
+      "width": 26,
+      "height": 14
     },
-    "value": 192.5
+    "value": 187
   },
   "硬长嘴": {
     "name": {
       "x": 625,
-      "y": 410,
+      "y": 412,
       "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 791,
-      "y": 410,
-      "width": 22,
       "height": 17
     },
-    "value": 189
+    "price": {
+      "x": 790,
+      "y": 413,
+      "width": 26,
+      "height": 15
+    },
+    "value": 187
   },
   "楼外楼": {
     "name": {
       "x": 625,
-      "y": 429,
+      "y": 431,
       "width": 43,
       "height": 16
     },
     "price": {
-      "x": 792,
-      "y": 428,
-      "width": 23,
-      "height": 18
+      "x": 790,
+      "y": 433,
+      "width": 41,
+      "height": 13
     },
-    "value": 170
+    "value": 169.5
   },
   "记忆黄山": {
     "name": {
-      "x": 625,
-      "y": 467,
-      "width": 56,
-      "height": 18
-    },
-    "price": {
-      "x": 791,
-      "y": 468,
-      "width": 24,
-      "height": 15
-    },
-    "value": 125
-  },
-  "细支黑马": {
-    "name": {
-      "x": 625,
-      "y": 486,
-      "width": 56,
+      "x": 626,
+      "y": 470,
+      "width": 55,
       "height": 15
     },
     "price": {
       "x": 790,
-      "y": 486,
-      "width": 25,
-      "height": 16
+      "y": 471,
+      "width": 42,
+      "height": 13
     },
-    "value": 202
+    "value": 121.5
   },
   "中支方印": {
     "name": {
       "x": 625,
-      "y": 506,
+      "y": 508,
       "width": 57,
-      "height": 15
+      "height": 16
     },
     "price": {
-      "x": 791,
-      "y": 504,
-      "width": 24,
-      "height": 17
+      "x": 790,
+      "y": 509,
+      "width": 42,
+      "height": 14
     },
-    "value": 172
+    "value": 173.5
   },
   "细支方印": {
     "name": {
       "x": 625,
-      "y": 523,
+      "y": 527,
       "width": 57,
       "height": 15
     },
     "price": {
-      "x": 791,
-      "y": 524,
-      "width": 40,
-      "height": 15
+      "x": 790,
+      "y": 528,
+      "width": 42,
+      "height": 14
     },
-    "value": 155.5
+    "value": 157.5
   },
   "盖记忆黄山": {
     "name": {
       "x": 625,
-      "y": 543,
-      "width": 70,
+      "y": 546,
+      "width": 71,
       "height": 15
     },
     "price": {
-      "x": 791,
-      "y": 544,
-      "width": 40,
-      "height": 15
+      "x": 790,
+      "y": 547,
+      "width": 41,
+      "height": 13
     },
-    "value": 101.5
-  },
-  "一品黄山": {
-    "name": {
-      "x": 625,
-      "y": 563,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 791,
-      "y": 563,
-      "width": 31,
-      "height": 16
-    },
-    "value": 79.8
+    "value": 104.5
   },
   "印象黄山": {
     "name": {
       "x": 625,
-      "y": 583,
+      "y": 565,
       "width": 56,
-      "height": 15
+      "height": 16
     },
     "price": {
       "x": 790,
-      "y": 583,
-      "width": 16,
-      "height": 17
+      "y": 566,
+      "width": 34,
+      "height": 14
     },
-    "value": 80
+    "value": 76.5
+  },
+  "一品黄山": {
+    "name": {
+      "x": 625,
+      "y": 584,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 790,
+      "y": 586,
+      "width": 34,
+      "height": 14
+    },
+    "value": 73.3
   },
   "金皖黄山": {
     "name": {
       "x": 625,
-      "y": 679,
-      "width": 56,
-      "height": 16
+      "y": 661,
+      "width": 57,
+      "height": 17
     },
     "price": {
-      "x": 790,
-      "y": 680,
-      "width": 25,
+      "x": 789,
+      "y": 662,
+      "width": 26,
       "height": 15
     },
-    "value": 228
+    "value": 227
   },
   "新皖黄山": {
     "name": {
       "x": 625,
-      "y": 715,
-      "width": 56,
+      "y": 697,
+      "width": 57,
       "height": 17
     },
     "price": {
-      "x": 791,
-      "y": 717,
-      "width": 24,
-      "height": 13
+      "x": 790,
+      "y": 699,
+      "width": 42,
+      "height": 14
     },
-    "value": 129
+    "value": 122.5
   },
-  "中支天都": {
+  "天高云淡": {
     "name": {
-      "x": 625,
-      "y": 734,
-      "width": 56,
-      "height": 15
+      "x": 624,
+      "y": 714,
+      "width": 59,
+      "height": 18
     },
     "price": {
       "x": 789,
-      "y": 734,
-      "width": 17,
-      "height": 15
+      "y": 717,
+      "width": 27,
+      "height": 13
     },
-    "value": -1
+    "value": 600
   },
-  "中支荷花": {
+  "起源真龙": {
+    "name": {
+      "x": 624,
+      "y": 753,
+      "width": 59,
+      "height": 17
+    },
+    "price": {
+      "x": 789,
+      "y": 754,
+      "width": 43,
+      "height": 14
+    },
+    "value": 213.5
+  },
+  "真龙轩云": {
     "name": {
       "x": 625,
-      "y": 771,
+      "y": 770,
       "width": 57,
-      "height": 16
+      "height": 19
     },
     "price": {
       "x": 790,
-      "y": 773,
-      "width": 25,
-      "height": 13
+      "y": 772,
+      "width": 42,
+      "height": 15
     },
-    "value": 375
+    "value": 147.5
   },
-  "细支荷花": {
+  "真龙祥云": {
     "name": {
       "x": 625,
       "y": 789,
-      "width": 56,
-      "height": 17
-    },
-    "price": {
-      "x": 790,
-      "y": 790,
-      "width": 25,
-      "height": 16
-    },
-    "value": 359
-  },
-  "软荷花": {
-    "name": {
-      "x": 625,
-      "y": 809,
-      "width": 42,
-      "height": 15
-    },
-    "price": {
-      "x": 791,
-      "y": 810,
-      "width": 24,
-      "height": 16
-    },
-    "value": 343
-  },
-  "粗荷花": {
-    "name": {
-      "x": 625,
-      "y": 827,
-      "width": 42,
-      "height": 17
-    },
-    "price": {
-      "x": 791,
-      "y": 828,
-      "width": 24,
-      "height": 16
-    },
-    "value": 302
-  },
-  "白玉兰": {
-    "name": {
-      "x": 625,
-      "y": 845,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 791,
-      "y": 848,
-      "width": 22,
-      "height": 14
-    },
-    "value": 140
-  },
-  "软绿钻": {
-    "name": {
-      "x": 625,
-      "y": 863,
-      "width": 43,
-      "height": 17
-    },
-    "price": {
-      "x": 791,
-      "y": 866,
-      "width": 22,
-      "height": 15
-    },
-    "value": 118
-  },
-  "红钻石": {
-    "name": {
-      "x": 624,
-      "y": 883,
-      "width": 43,
-      "height": 16
-    },
-    "price": {
-      "x": 791,
-      "y": 884,
-      "width": 15,
-      "height": 14
-    },
-    "value": 85
-  },
-  "紫钻石": {
-    "name": {
-      "x": 625,
-      "y": 901,
-      "width": 42,
-      "height": 17
-    },
-    "price": {
-      "x": 791,
-      "y": 902,
-      "width": 30,
-      "height": 16
-    },
-    "value": 67.5
-  },
-  "青山绿水": {
-    "name": {
-      "x": 625,
-      "y": 919,
       "width": 57,
-      "height": 16
+      "height": 17
     },
     "price": {
       "x": 789,
-      "y": 918,
-      "width": 26,
+      "y": 791,
+      "width": 43,
+      "height": 14
+    },
+    "value": 134.5
+  },
+  "软红真龙": {
+    "name": {
+      "x": 625,
+      "y": 807,
+      "width": 57,
       "height": 18
     },
-    "value": 710
+    "price": {
+      "x": 790,
+      "y": 809,
+      "width": 34,
+      "height": 15
+    },
+    "value": 73.2
   },
-  "金荷花": {
+  "真龙海韵": {
     "name": {
       "x": 625,
-      "y": 938,
-      "width": 42,
+      "y": 825,
+      "width": 57,
       "height": 17
     },
     "price": {
       "x": 789,
-      "y": 939,
-      "width": 17,
-      "height": 15
+      "y": 827,
+      "width": 27,
+      "height": 14
     },
-    "value": -1
+    "value": 410
   },
-  "小雅": {
+  "蓝刘三姐": {
     "name": {
       "x": 625,
-      "y": 958,
-      "width": 29,
-      "height": 16
+      "y": 843,
+      "width": 57,
+      "height": 17
     },
     "price": {
       "x": 790,
-      "y": 960,
-      "width": 25,
-      "height": 12
+      "y": 845,
+      "width": 26,
+      "height": 14
     },
-    "value": 447
+    "value": 160
+  },
+  "凌云真龙": {
+    "name": {
+      "x": 625,
+      "y": 862,
+      "width": 57,
+      "height": 18
+    },
+    "price": {
+      "x": 790,
+      "y": 864,
+      "width": 26,
+      "height": 15
+    },
+    "value": 145
+  },
+  "真龙炫净": {
+    "name": {
+      "x": 624,
+      "y": 880,
+      "width": 58,
+      "height": 19
+    },
+    "price": {
+      "x": 789,
+      "y": 884,
+      "width": 27,
+      "height": 13
+    },
+    "value": 210
   },
   "莲香": {
     "name": {
-      "x": 855,
+      "x": 854,
       "y": 65,
-      "width": 29,
-      "height": 17
+      "width": 31,
+      "height": 18
     },
     "price": {
-      "x": 1009,
+      "x": 1008,
       "y": 67,
-      "width": 24,
-      "height": 14
+      "width": 25,
+      "height": 15
     },
     "value": 132
   },
   "盖经典": {
     "name": {
-      "x": 854,
-      "y": 82,
+      "x": 855,
+      "y": 84,
       "width": 44,
-      "height": 19
+      "height": 16
     },
     "price": {
-      "x": 1009,
-      "y": 84,
-      "width": 40,
-      "height": 16
+      "x": 1008,
+      "y": 86,
+      "width": 41,
+      "height": 13
     },
     "value": 124.5
   },
@@ -3064,1802 +2749,1712 @@
       "x": 855,
       "y": 102,
       "width": 43,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 102,
-      "width": 40,
       "height": 16
     },
-    "value": 121.5
+    "price": {
+      "x": 1008,
+      "y": 104,
+      "width": 41,
+      "height": 13
+    },
+    "value": 116.5
   },
   "软红五叶神": {
     "name": {
       "x": 855,
-      "y": 137,
+      "y": 121,
       "width": 71,
       "height": 16
     },
     "price": {
-      "x": 1007,
-      "y": 138,
-      "width": 26,
-      "height": 17
+      "x": 1008,
+      "y": 122,
+      "width": 25,
+      "height": 14
     },
-    "value": 242
+    "value": 228
   },
   "金万象日子": {
     "name": {
       "x": 855,
-      "y": 156,
-      "width": 71,
+      "y": 139,
+      "width": 70,
       "height": 15
     },
     "price": {
       "x": 1008,
-      "y": 156,
+      "y": 141,
       "width": 25,
-      "height": 15
+      "height": 13
     },
-    "value": 243
+    "value": 210
   },
   "金尊好日子": {
     "name": {
-      "x": 855,
-      "y": 174,
-      "width": 71,
+      "x": 854,
+      "y": 157,
+      "width": 72,
       "height": 15
     },
     "price": {
       "x": 1008,
-      "y": 175,
+      "y": 158,
       "width": 25,
       "height": 14
     },
-    "value": 215
+    "value": 205
   },
   "春天自在": {
     "name": {
-      "x": 856,
-      "y": 191,
-      "width": 55,
+      "x": 855,
+      "y": 174,
+      "width": 57,
+      "height": 18
+    },
+    "price": {
+      "x": 1009,
+      "y": 176,
+      "width": 24,
+      "height": 14
+    },
+    "value": 196
+  },
+  "世纪经典": {
+    "name": {
+      "x": 855,
+      "y": 192,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 1009,
+      "y": 194,
+      "width": 24,
+      "height": 13
+    },
+    "value": 156
+  },
+  "红五叶神": {
+    "name": {
+      "x": 855,
+      "y": 209,
+      "width": 57,
+      "height": 18
+    },
+    "price": {
+      "x": 1009,
+      "y": 212,
+      "width": 40,
+      "height": 13
+    },
+    "value": 155.5
+  },
+  "新百年喜": {
+    "name": {
+      "x": 855,
+      "y": 229,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 1009,
+      "y": 231,
+      "width": 40,
+      "height": 13
+    },
+    "value": 146.2
+  },
+  "晶彩日子": {
+    "name": {
+      "x": 855,
+      "y": 246,
+      "width": 57,
+      "height": 19
+    },
+    "price": {
+      "x": 1009,
+      "y": 248,
+      "width": 40,
+      "height": 14
+    },
+    "value": 143.5
+  },
+  "祥和日子": {
+    "name": {
+      "x": 855,
+      "y": 283,
+      "width": 57,
       "height": 16
     },
     "price": {
       "x": 1008,
-      "y": 192,
+      "y": 285,
       "width": 25,
-      "height": 16
-    },
-    "value": 190
-  },
-  "世纪经典": {
-    "name": {
-      "x": 856,
-      "y": 209,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 1009,
-      "y": 211,
-      "width": 40,
       "height": 14
     },
-    "value": 167.5
-  },
-  "红五叶神": {
-    "name": {
-      "x": 856,
-      "y": 228,
-      "width": 56,
-      "height": 14
-    },
-    "price": {
-      "x": 1009,
-      "y": 229,
-      "width": 40,
-      "height": 14
-    },
-    "value": 163.3
-  },
-  "新百年喜": {
-    "name": {
-      "x": 856,
-      "y": 246,
-      "width": 56,
-      "height": 14
-    },
-    "price": {
-      "x": 1009,
-      "y": 247,
-      "width": 24,
-      "height": 15
-    },
-    "value": 155
-  },
-  "晶彩日子": {
-    "name": {
-      "x": 856,
-      "y": 264,
-      "width": 55,
-      "height": 14
-    },
-    "price": {
-      "x": 1009,
-      "y": 263,
-      "width": 23,
-      "height": 17
-    },
-    "value": 147
-  },
-  "祥和日子": {
-    "name": {
-      "x": 856,
-      "y": 301,
-      "width": 55,
-      "height": 14
-    },
-    "price": {
-      "x": 1009,
-      "y": 301,
-      "width": 40,
-      "height": 16
-    },
-    "value": 132.5
+    "value": 134
   },
   "新金花悦": {
     "name": {
-      "x": 856,
-      "y": 321,
-      "width": 56,
-      "height": 14
+      "x": 855,
+      "y": 302,
+      "width": 57,
+      "height": 19
     },
     "price": {
-      "x": 1009,
-      "y": 321,
+      "x": 1008,
+      "y": 304,
       "width": 24,
-      "height": 16
+      "height": 14
     },
-    "value": 130
+    "value": 131
   },
   "爱国": {
     "name": {
       "x": 855,
-      "y": 339,
+      "y": 321,
       "width": 30,
-      "height": 14
+      "height": 17
     },
     "price": {
       "x": 1009,
-      "y": 338,
-      "width": 24,
-      "height": 17
+      "y": 323,
+      "width": 25,
+      "height": 13
     },
-    "value": 130
+    "value": 125
   },
   "软珍日子": {
     "name": {
       "x": 855,
-      "y": 355,
+      "y": 339,
       "width": 57,
-      "height": 16
+      "height": 17
     },
     "price": {
-      "x": 1008,
-      "y": 353,
-      "width": 41,
-      "height": 20
+      "x": 1009,
+      "y": 341,
+      "width": 40,
+      "height": 13
     },
-    "value": 123.5
+    "value": 126.2
   },
   "五叶神": {
     "name": {
       "x": 855,
-      "y": 373,
-      "width": 43,
-      "height": 15
+      "y": 357,
+      "width": 44,
+      "height": 16
     },
     "price": {
-      "x": 1009,
-      "y": 373,
-      "width": 24,
-      "height": 17
+      "x": 1008,
+      "y": 359,
+      "width": 41,
+      "height": 13
     },
-    "value": 117
+    "value": 118.5
   },
   "精日子": {
     "name": {
       "x": 855,
-      "y": 392,
-      "width": 42,
-      "height": 15
+      "y": 375,
+      "width": 44,
+      "height": 17
     },
     "price": {
-      "x": 1009,
-      "y": 391,
-      "width": 40,
-      "height": 19
+      "x": 1008,
+      "y": 376,
+      "width": 25,
+      "height": 14
     },
-    "value": 117.5
+    "value": 123
   },
   "祥云日子": {
     "name": {
-      "x": 856,
-      "y": 411,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 1008,
-      "y": 408,
-      "width": 25,
-      "height": 22
-    },
-    "value": 169
-  },
-  "吉祥日子": {
-    "name": {
-      "x": 856,
-      "y": 428,
-      "width": 55,
-      "height": 16
-    },
-    "price": {
-      "x": 1007,
-      "y": 428,
-      "width": 18,
-      "height": 19
-    },
-    "value": -1
-  },
-  "城市之光": {
-    "name": {
       "x": 855,
-      "y": 449,
+      "y": 393,
       "width": 57,
-      "height": 15
+      "height": 16
     },
     "price": {
       "x": 1008,
-      "y": 448,
-      "width": 16,
-      "height": 18
+      "y": 394,
+      "width": 25,
+      "height": 14
     },
-    "value": -1
+    "value": 155
   },
   "大喜": {
     "name": {
       "x": 855,
-      "y": 467,
-      "width": 29,
-      "height": 15
+      "y": 411,
+      "width": 30,
+      "height": 19
     },
     "price": {
-      "x": 1009,
-      "y": 465,
-      "width": 24,
-      "height": 19
+      "x": 1008,
+      "y": 413,
+      "width": 25,
+      "height": 15
     },
     "value": 107
   },
   "春天卡路里": {
     "name": {
       "x": 855,
-      "y": 486,
+      "y": 431,
       "width": 71,
-      "height": 15
+      "height": 17
     },
     "price": {
       "x": 1008,
-      "y": 485,
-      "width": 25,
-      "height": 20
+      "y": 432,
+      "width": 24,
+      "height": 15
     },
-    "value": 200
+    "value": 191
   },
   "勿忘我": {
     "name": {
       "x": 855,
-      "y": 506,
-      "width": 43,
-      "height": 15
+      "y": 450,
+      "width": 44,
+      "height": 16
     },
     "price": {
-      "x": 1009,
-      "y": 505,
-      "width": 23,
-      "height": 17
+      "x": 1008,
+      "y": 452,
+      "width": 25,
+      "height": 13
     },
-    "value": 158
+    "value": 149
   },
   "红火好日子": {
     "name": {
+      "x": 854,
+      "y": 469,
+      "width": 72,
+      "height": 16
+    },
+    "price": {
+      "x": 1008,
+      "y": 471,
+      "width": 25,
+      "height": 13
+    },
+    "value": 148
+  },
+  "红狼": {
+    "name": {
+      "x": 854,
+      "y": 507,
+      "width": 32,
+      "height": 18
+    },
+    "price": {
+      "x": 1008,
+      "y": 510,
+      "width": 41,
+      "height": 13
+    },
+    "value": 131.5
+  },
+  "蓝钻狼": {
+    "name": {
       "x": 855,
-      "y": 524,
-      "width": 71,
-      "height": 14
+      "y": 526,
+      "width": 44,
+      "height": 17
     },
     "price": {
       "x": 1009,
-      "y": 523,
-      "width": 23,
-      "height": 17
+      "y": 528,
+      "width": 40,
+      "height": 14
+    },
+    "value": 116.5
+  },
+  "白狼": {
+    "name": {
+      "x": 855,
+      "y": 545,
+      "width": 30,
+      "height": 16
+    },
+    "price": {
+      "x": 1008,
+      "y": 547,
+      "width": 18,
+      "height": 14
+    },
+    "value": 93
+  },
+  "中支古田": {
+    "name": {
+      "x": 855,
+      "y": 564,
+      "width": 57,
+      "height": 18
+    },
+    "price": {
+      "x": 1008,
+      "y": 566,
+      "width": 25,
+      "height": 14
+    },
+    "value": 355
+  },
+  "中支银狼": {
+    "name": {
+      "x": 855,
+      "y": 584,
+      "width": 58,
+      "height": 16
+    },
+    "price": {
+      "x": 1008,
+      "y": 586,
+      "width": 25,
+      "height": 14
+    },
+    "value": 180
+  },
+  "灰狼": {
+    "name": {
+      "x": 855,
+      "y": 604,
+      "width": 30,
+      "height": 16
+    },
+    "price": {
+      "x": 1008,
+      "y": 606,
+      "width": 25,
+      "height": 13
+    },
+    "value": 166
+  },
+  "纯境狼": {
+    "name": {
+      "x": 855,
+      "y": 624,
+      "width": 44,
+      "height": 16
+    },
+    "price": {
+      "x": 1008,
+      "y": 626,
+      "width": 41,
+      "height": 13
+    },
+    "value": 169.5
+  },
+  "金桥炫影": {
+    "name": {
+      "x": 855,
+      "y": 643,
+      "width": 58,
+      "height": 16
+    },
+    "price": {
+      "x": 1008,
+      "y": 645,
+      "width": 24,
+      "height": 13
     },
     "value": 151
   },
-  "细支爱尚": {
-    "name": {
-      "x": 855,
-      "y": 563,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 564,
-      "width": 39,
-      "height": 15
-    },
-    "value": 137.5
-  },
-  "乐途": {
-    "name": {
-      "x": 855,
-      "y": 583,
-      "width": 29,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 584,
-      "width": 24,
-      "height": 16
-    },
-    "value": 123
-  },
-  "喜满堂": {
-    "name": {
-      "x": 855,
-      "y": 603,
-      "width": 43,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 602,
-      "width": 23,
-      "height": 19
-    },
-    "value": 106
-  },
-  "金满堂": {
-    "name": {
-      "x": 855,
-      "y": 622,
-      "width": 43,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 621,
-      "width": 23,
-      "height": 17
-    },
-    "value": 102
-  },
-  "中支天叶": {
+  "七匹狼奶香": {
     "name": {
       "x": 856,
-      "y": 640,
-      "width": 55,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 640,
-      "width": 23,
-      "height": 17
-    },
-    "value": 945
-  },
-  "细支天叶": {
-    "name": {
-      "x": 855,
       "y": 661,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 661,
-      "width": 23,
-      "height": 16
-    },
-    "value": 790
-  },
-  "大天叶": {
-    "name": {
-      "x": 856,
-      "y": 680,
-      "width": 41,
-      "height": 14
-    },
-    "price": {
-      "x": 1008,
-      "y": 679,
-      "width": 24,
-      "height": 18
-    },
-    "value": 695
-  },
-  "细支天香": {
-    "name": {
-      "x": 855,
-      "y": 698,
-      "width": 57,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 698,
-      "width": 23,
-      "height": 17
-    },
-    "value": 417
-  },
-  "中支天香": {
-    "name": {
-      "x": 856,
-      "y": 716,
-      "width": 55,
-      "height": 16
-    },
-    "price": {
-      "x": 1009,
-      "y": 716,
-      "width": 24,
-      "height": 16
-    },
-    "value": 395
-  },
-  "3mg天叶": {
-    "name": {
-      "x": 856,
-      "y": 734,
-      "width": 51,
-      "height": 14
-    },
-    "price": {
-      "x": 1009,
-      "y": 736,
-      "width": 31,
-      "height": 13
-    },
-    "value": 1220
-  },
-  "中支国色": {
-    "name": {
-      "x": 856,
-      "y": 752,
-      "width": 55,
-      "height": 16
-    },
-    "price": {
-      "x": 1009,
-      "y": 754,
-      "width": 23,
-      "height": 14
-    },
-    "value": 285
-  },
-  "黄金叶大成": {
-    "name": {
-      "x": 856,
-      "y": 772,
       "width": 70,
-      "height": 15
+      "height": 17
     },
     "price": {
-      "x": 1009,
-      "y": 773,
-      "width": 23,
-      "height": 14
+      "x": 1007,
+      "y": 662,
+      "width": 27,
+      "height": 15
     },
-    "value": 239
+    "value": 132
   },
-  "中支乐途": {
-    "name": {
-      "x": 856,
-      "y": 790,
-      "width": 55,
-      "height": 15
-    },
-    "price": {
-      "x": 1010,
-      "y": 791,
-      "width": 20,
-      "height": 15
-    },
-    "value": 181
-  },
-  "中支商鼎": {
-    "name": {
-      "x": 856,
-      "y": 809,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 1010,
-      "y": 810,
-      "width": 38,
-      "height": 15
-    },
-    "value": 161.5
-  },
-  "炫尚": {
+  "七匹狼锋芒": {
     "name": {
       "x": 855,
-      "y": 828,
-      "width": 28,
-      "height": 14
-    },
-    "price": {
-      "x": 1009,
-      "y": 829,
-      "width": 23,
-      "height": 15
-    },
-    "value": 146
-  },
-  "盖乐途": {
-    "name": {
-      "x": 856,
-      "y": 847,
-      "width": 42,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 848,
-      "width": 23,
-      "height": 14
-    },
-    "value": 145
-  },
-  "黄金眼": {
-    "name": {
-      "x": 856,
-      "y": 865,
-      "width": 41,
-      "height": 15
-    },
-    "price": {
-      "x": 1009,
-      "y": 866,
-      "width": 21,
-      "height": 14
-    },
-    "value": 121
-  },
-  "小目标": {
-    "name": {
-      "x": 855,
-      "y": 884,
-      "width": 42,
-      "height": 14
-    },
-    "price": {
-      "x": 1009,
-      "y": 885,
-      "width": 23,
-      "height": 13
-    },
-    "value": 122
-  },
-  "金帝豪": {
-    "name": {
-      "x": 855,
-      "y": 901,
-      "width": 43,
-      "height": 16
+      "y": 679,
+      "width": 71,
+      "height": 17
     },
     "price": {
       "x": 1008,
-      "y": 902,
+      "y": 681,
       "width": 41,
+      "height": 14
+    },
+    "value": 139.5
+  },
+  "金桥单爆": {
+    "name": {
+      "x": 855,
+      "y": 697,
+      "width": 57,
       "height": 17
     },
-    "value": 112.5
+    "price": {
+      "x": 1008,
+      "y": 699,
+      "width": 25,
+      "height": 13
+    },
+    "value": 140
   },
-  "芒果": {
+  "蓝七匹狼": {
     "name": {
-      "x": 856,
-      "y": 921,
-      "width": 28,
-      "height": 14
+      "x": 855,
+      "y": 715,
+      "width": 58,
+      "height": 16
     },
     "price": {
-      "x": 1009,
-      "y": 921,
-      "width": 15,
-      "height": 15
+      "x": 1007,
+      "y": 717,
+      "width": 19,
+      "height": 13
     },
-    "value": 75
+    "value": 80
   },
-  "雪旗渠": {
+  "中支荷花": {
     "name": {
-      "x": 856,
-      "y": 939,
-      "width": 42,
-      "height": 14
+      "x": 855,
+      "y": 753,
+      "width": 57,
+      "height": 17
     },
     "price": {
-      "x": 1009,
-      "y": 939,
-      "width": 16,
-      "height": 14
+      "x": 1008,
+      "y": 755,
+      "width": 41,
+      "height": 13
     },
-    "value": 75
+    "value": 372.5
   },
-  "银旗渠": {
+  "细支荷花": {
     "name": {
       "x": 854,
-      "y": 957,
+      "y": 769,
+      "width": 59,
+      "height": 20
+    },
+    "price": {
+      "x": 1008,
+      "y": 773,
+      "width": 25,
+      "height": 14
+    },
+    "value": 356
+  },
+  "软荷花": {
+    "name": {
+      "x": 855,
+      "y": 789,
+      "width": 43,
+      "height": 18
+    },
+    "price": {
+      "x": 1008,
+      "y": 791,
+      "width": 25,
+      "height": 14
+    },
+    "value": 339
+  },
+  "粗荷花": {
+    "name": {
+      "x": 855,
+      "y": 807,
+      "width": 43,
+      "height": 18
+    },
+    "price": {
+      "x": 1008,
+      "y": 809,
+      "width": 25,
+      "height": 15
+    },
+    "value": 293
+  },
+  "软绿钻": {
+    "name": {
+      "x": 854,
+      "y": 825,
+      "width": 44,
+      "height": 17
+    },
+    "price": {
+      "x": 1009,
+      "y": 827,
+      "width": 24,
+      "height": 13
+    },
+    "value": 120
+  },
+  "红钻石": {
+    "name": {
+      "x": 854,
+      "y": 843,
       "width": 44,
       "height": 17
     },
     "price": {
       "x": 1008,
-      "y": 960,
-      "width": 15,
+      "y": 845,
+      "width": 33,
+      "height": 14
+    },
+    "value": 74.3
+  },
+  "紫钻石": {
+    "name": {
+      "x": 855,
+      "y": 861,
+      "width": 43,
+      "height": 20
+    },
+    "price": {
+      "x": 1008,
+      "y": 865,
+      "width": 33,
+      "height": 14
+    },
+    "value": 59.5
+  },
+  "小雅": {
+    "name": {
+      "x": 855,
+      "y": 882,
+      "width": 30,
+      "height": 17
+    },
+    "price": {
+      "x": 1007,
+      "y": 884,
+      "width": 26,
       "height": 13
     },
-    "value": 71
+    "value": 435
   },
   "黑金刚": {
     "name": {
-      "x": 1072,
-      "y": 65,
+      "x": 1073,
+      "y": 66,
       "width": 44,
-      "height": 17
+      "height": 16
     },
     "price": {
       "x": 1198,
-      "y": 66,
+      "y": 67,
       "width": 25,
-      "height": 16
+      "height": 14
     },
-    "value": 450
+    "value": 428
   },
   "细支小重九": {
     "name": {
-      "x": 1072,
-      "y": 81,
-      "width": 71,
-      "height": 18
+      "x": 1073,
+      "y": 84,
+      "width": 72,
+      "height": 16
     },
     "price": {
       "x": 1198,
-      "y": 81,
+      "y": 86,
       "width": 26,
-      "height": 19
+      "height": 13
     },
-    "value": 410
+    "value": 405
   },
   "小重九": {
     "name": {
       "x": 1073,
-      "y": 101,
-      "width": 43,
-      "height": 17
+      "y": 102,
+      "width": 42,
+      "height": 16
     },
     "price": {
       "x": 1198,
-      "y": 101,
-      "width": 25,
-      "height": 17
+      "y": 104,
+      "width": 26,
+      "height": 13
     },
-    "value": 408
+    "value": 402
   },
   "鑫中支玉溪": {
     "name": {
-      "x": 1072,
-      "y": 118,
-      "width": 71,
-      "height": 19
+      "x": 1073,
+      "y": 121,
+      "width": 72,
+      "height": 16
     },
     "price": {
       "x": 1198,
-      "y": 119,
-      "width": 23,
-      "height": 18
+      "y": 122,
+      "width": 25,
+      "height": 14
     },
-    "value": 211
+    "value": 205
   },
   "软玉溪": {
     "name": {
-      "x": 1072,
-      "y": 136,
+      "x": 1073,
+      "y": 139,
       "width": 43,
-      "height": 17
+      "height": 16
     },
     "price": {
-      "x": 1198,
-      "y": 134,
-      "width": 41,
-      "height": 24
+      "x": 1199,
+      "y": 140,
+      "width": 24,
+      "height": 14
     },
-    "value": 185.5
+    "value": 183
   },
   "熊猫家园": {
     "name": {
       "x": 1073,
       "y": 155,
-      "width": 57,
-      "height": 17
+      "width": 58,
+      "height": 18
     },
     "price": {
-      "x": 1198,
-      "y": 154,
-      "width": 26,
-      "height": 20
+      "x": 1199,
+      "y": 158,
+      "width": 24,
+      "height": 13
     },
-    "value": 148
+    "value": 143
   },
   "细支云龙": {
     "name": {
       "x": 1073,
-      "y": 173,
+      "y": 174,
       "width": 57,
-      "height": 19
+      "height": 18
     },
     "price": {
-      "x": 1197,
-      "y": 172,
-      "width": 27,
-      "height": 20
+      "x": 1198,
+      "y": 176,
+      "width": 25,
+      "height": 15
     },
-    "value": 124
+    "value": 125
   },
   "粗云龙": {
     "name": {
       "x": 1073,
-      "y": 191,
+      "y": 192,
       "width": 43,
       "height": 17
     },
     "price": {
       "x": 1198,
-      "y": 191,
+      "y": 194,
       "width": 25,
-      "height": 17
+      "height": 14
     },
-    "value": 120
+    "value": 122
   },
   "新时代": {
     "name": {
-      "x": 1073,
-      "y": 208,
+      "x": 1074,
+      "y": 209,
       "width": 43,
       "height": 17
     },
     "price": {
       "x": 1199,
-      "y": 209,
-      "width": 22,
-      "height": 16
+      "y": 212,
+      "width": 24,
+      "height": 13
     },
-    "value": 122
+    "value": 123
   },
   "紫云": {
     "name": {
       "x": 1073,
-      "y": 227,
-      "width": 30,
-      "height": 16
+      "y": 228,
+      "width": 29,
+      "height": 17
     },
     "price": {
       "x": 1199,
-      "y": 227,
-      "width": 22,
-      "height": 18
+      "y": 230,
+      "width": 42,
+      "height": 14
     },
-    "value": 112
+    "value": 116.5
   },
   "软紫云": {
     "name": {
-      "x": 1073,
-      "y": 245,
-      "width": 42,
-      "height": 17
+      "x": 1072,
+      "y": 244,
+      "width": 45,
+      "height": 19
     },
     "price": {
-      "x": 1198,
-      "y": 245,
-      "width": 16,
-      "height": 17
+      "x": 1197,
+      "y": 248,
+      "width": 20,
+      "height": 15
     },
-    "value": 97
+    "value": 99
   },
   "白塔山": {
     "name": {
       "x": 1073,
-      "y": 263,
-      "width": 42,
-      "height": 16
+      "y": 264,
+      "width": 43,
+      "height": 17
     },
     "price": {
-      "x": 1198,
-      "y": 262,
-      "width": 16,
-      "height": 18
+      "x": 1197,
+      "y": 266,
+      "width": 19,
+      "height": 14
     },
-    "value": 90
+    "value": 83
   },
   "软白塔": {
     "name": {
       "x": 1073,
-      "y": 280,
-      "width": 42,
+      "y": 283,
+      "width": 43,
       "height": 17
     },
     "price": {
-      "x": 1198,
-      "y": 280,
-      "width": 31,
-      "height": 19
+      "x": 1197,
+      "y": 284,
+      "width": 19,
+      "height": 15
     },
-    "value": 91.5
+    "value": 86
   },
   "细支大重九": {
     "name": {
       "x": 1073,
-      "y": 301,
-      "width": 70,
-      "height": 15
+      "y": 302,
+      "width": 72,
+      "height": 18
     },
     "price": {
       "x": 1198,
-      "y": 300,
-      "width": 23,
-      "height": 18
+      "y": 303,
+      "width": 54,
+      "height": 15
     },
-    "value": 800
+    "value": 762
   },
   "中支大重九": {
     "name": {
-      "x": 1073,
-      "y": 319,
-      "width": 70,
-      "height": 16
+      "x": 1074,
+      "y": 321,
+      "width": 71,
+      "height": 17
     },
     "price": {
       "x": 1198,
-      "y": 318,
-      "width": 23,
-      "height": 18
+      "y": 322,
+      "width": 25,
+      "height": 15
     },
-    "value": 805
+    "value": 795
   },
   "粗大重九": {
     "name": {
       "x": 1073,
-      "y": 338,
-      "width": 56,
-      "height": 16
+      "y": 339,
+      "width": 57,
+      "height": 17
     },
     "price": {
       "x": 1198,
-      "y": 338,
-      "width": 23,
-      "height": 16
+      "y": 340,
+      "width": 25,
+      "height": 15
     },
-    "value": 678
+    "value": 640
   },
   "新玉溪创客": {
     "name": {
-      "x": 1072,
-      "y": 355,
+      "x": 1074,
+      "y": 356,
       "width": 71,
-      "height": 16
+      "height": 17
     },
     "price": {
-      "x": 1199,
-      "y": 355,
-      "width": 21,
-      "height": 16
+      "x": 1198,
+      "y": 358,
+      "width": 26,
+      "height": 14
     },
-    "value": 161
+    "value": 163
   },
   "流金印象": {
     "name": {
       "x": 1073,
-      "y": 373,
+      "y": 375,
       "width": 57,
       "height": 16
     },
     "price": {
-      "x": 1197,
-      "y": 372,
-      "width": 27,
-      "height": 19
-    },
-    "value": 350
-  },
-  "粗和谐": {
-    "name": {
-      "x": 1073,
-      "y": 391,
-      "width": 42,
-      "height": 16
-    },
-    "price": {
       "x": 1198,
-      "y": 393,
-      "width": 25,
+      "y": 376,
+      "width": 26,
       "height": 15
     },
-    "value": 315
-  },
-  "中支和谐": {
-    "name": {
-      "x": 1074,
-      "y": 410,
-      "width": 55,
-      "height": 16
-    },
-    "price": {
-      "x": 1198,
-      "y": 410,
-      "width": 25,
-      "height": 15
-    },
-    "value": 310
+    "value": 352
   },
   "玉溪缤果": {
     "name": {
-      "x": 1073,
-      "y": 429,
+      "x": 1074,
+      "y": 393,
       "width": 56,
-      "height": 15
+      "height": 16
     },
     "price": {
       "x": 1198,
-      "y": 430,
+      "y": 394,
       "width": 25,
       "height": 14
     },
-    "value": 272
+    "value": 227
   },
   "灵感蘑菇": {
     "name": {
       "x": 1073,
-      "y": 449,
+      "y": 412,
       "width": 57,
-      "height": 15
+      "height": 17
     },
     "price": {
       "x": 1198,
-      "y": 449,
-      "width": 25,
+      "y": 413,
+      "width": 26,
       "height": 15
     },
-    "value": 220
+    "value": 203
   },
   "细支绿玉溪": {
     "name": {
       "x": 1073,
-      "y": 467,
-      "width": 70,
+      "y": 431,
+      "width": 73,
       "height": 16
     },
     "price": {
-      "x": 1197,
-      "y": 467,
-      "width": 24,
-      "height": 18
+      "x": 1198,
+      "y": 433,
+      "width": 25,
+      "height": 14
     },
-    "value": 241
+    "value": 220
   },
   "软珍云": {
     "name": {
       "x": 1073,
-      "y": 486,
-      "width": 42,
+      "y": 451,
+      "width": 44,
       "height": 15
     },
     "price": {
-      "x": 1199,
-      "y": 486,
-      "width": 24,
-      "height": 18
+      "x": 1198,
+      "y": 452,
+      "width": 25,
+      "height": 14
     },
-    "value": 192
+    "value": 188
   },
   "玉溪和顺": {
     "name": {
-      "x": 1073,
-      "y": 505,
+      "x": 1074,
+      "y": 469,
       "width": 57,
       "height": 16
     },
     "price": {
-      "x": 1198,
-      "y": 505,
-      "width": 23,
-      "height": 18
-    },
-    "value": 200
-  },
-  "初心": {
-    "name": {
-      "x": 1073,
-      "y": 523,
-      "width": 29,
-      "height": 16
-    },
-    "price": {
       "x": 1199,
-      "y": 522,
-      "width": 38,
-      "height": 20
+      "y": 471,
+      "width": 23,
+      "height": 13
     },
-    "value": 165.5
+    "value": 181
   },
   "细支传奇塔山": {
     "name": {
-      "x": 1072,
-      "y": 542,
+      "x": 1073,
+      "y": 488,
       "width": 85,
       "height": 16
     },
     "price": {
-      "x": 1199,
-      "y": 542,
-      "width": 22,
-      "height": 18
+      "x": 1198,
+      "y": 489,
+      "width": 25,
+      "height": 15
     },
-    "value": 137
+    "value": 135
   },
   "粗苁蓉": {
     "name": {
       "x": 1073,
-      "y": 562,
+      "y": 508,
+      "width": 44,
+      "height": 16
+    },
+    "price": {
+      "x": 1198,
+      "y": 509,
+      "width": 25,
+      "height": 14
+    },
+    "value": 105
+  },
+  "百年塔山": {
+    "name": {
+      "x": 1074,
+      "y": 527,
+      "width": 56,
+      "height": 15
+    },
+    "price": {
+      "x": 1198,
+      "y": 528,
+      "width": 18,
+      "height": 14
+    },
+    "value": 98
+  },
+  "甲软红河": {
+    "name": {
+      "x": 1074,
+      "y": 546,
+      "width": 56,
+      "height": 15
+    },
+    "price": {
+      "x": 1198,
+      "y": 547,
+      "width": 33,
+      "height": 14
+    },
+    "value": 73.5
+  },
+  "玉溪创客": {
+    "name": {
+      "x": 1073,
+      "y": 565,
+      "width": 57,
+      "height": 17
+    },
+    "price": {
+      "x": 1198,
+      "y": 566,
+      "width": 25,
+      "height": 15
+    },
+    "value": 165
+  },
+  "筋斗云": {
+    "name": {
+      "x": 1073,
+      "y": 584,
       "width": 43,
       "height": 16
     },
     "price": {
-      "x": 1199,
-      "y": 561,
-      "width": 22,
-      "height": 19
+      "x": 1197,
+      "y": 586,
+      "width": 27,
+      "height": 14
     },
-    "value": 104
+    "value": 270
   },
-  "百年塔山": {
+  "金百合": {
     "name": {
       "x": 1073,
-      "y": 582,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 1199,
-      "y": 579,
-      "width": 38,
-      "height": 23
-    },
-    "value": 100.5
-  },
-  "甲软红河": {
-    "name": {
-      "x": 1073,
-      "y": 602,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 1197,
-      "y": 598,
-      "width": 20,
-      "height": 22
-    },
-    "value": 74
-  },
-  "细钓鱼台": {
-    "name": {
-      "x": 1072,
-      "y": 621,
-      "width": 58,
-      "height": 16
-    },
-    "price": {
-      "x": 1197,
-      "y": 620,
-      "width": 17,
-      "height": 18
-    },
-    "value": -1
-  },
-  "硬玉溪": {
-    "name": {
-      "x": 1072,
-      "y": 640,
-      "width": 44,
-      "height": 15
-    },
-    "price": {
-      "x": 1197,
-      "y": 639,
-      "width": 17,
-      "height": 19
-    },
-    "value": -1
-  },
-  "传奇老巴夺": {
-    "name": {
-      "x": 1073,
-      "y": 679,
-      "width": 70,
-      "height": 16
-    },
-    "price": {
-      "x": 1199,
-      "y": 678,
-      "width": 24,
-      "height": 18
-    },
-    "value": 158
-  },
-  "老巴夺": {
-    "name": {
-      "x": 1072,
-      "y": 697,
+      "y": 624,
       "width": 44,
       "height": 17
     },
     "price": {
       "x": 1198,
-      "y": 695,
-      "width": 41,
-      "height": 22
-    },
-    "value": 112.5
-  },
-  "长丰": {
-    "name": {
-      "x": 1072,
-      "y": 715,
-      "width": 31,
-      "height": 17
-    },
-    "price": {
-      "x": 1198,
-      "y": 714,
-      "width": 17,
-      "height": 19
-    },
-    "value": 66
-  },
-  "细支虫草": {
-    "name": {
-      "x": 1072,
-      "y": 733,
-      "width": 58,
-      "height": 17
-    },
-    "price": {
-      "x": 1198,
-      "y": 732,
-      "width": 25,
-      "height": 18
-    },
-    "value": 370
-  },
-  "中支虫草": {
-    "name": {
-      "x": 1073,
-      "y": 751,
-      "width": 57,
-      "height": 18
-    },
-    "price": {
-      "x": 1198,
-      "y": 751,
-      "width": 25,
-      "height": 19
-    },
-    "value": 308
-  },
-  "中支老巴夺": {
-    "name": {
-      "x": 1073,
-      "y": 769,
-      "width": 71,
-      "height": 20
-    },
-    "price": {
-      "x": 1199,
-      "y": 770,
-      "width": 24,
-      "height": 18
-    },
-    "value": 147
-  },
-  "白沙红昭君": {
-    "name": {
-      "x": 1073,
-      "y": 789,
-      "width": 70,
-      "height": 16
-    },
-    "price": {
-      "x": 1199,
-      "y": 789,
-      "width": 24,
-      "height": 17
+      "y": 625,
+      "width": 26,
+      "height": 14
     },
     "value": 103
   },
-  "中支黑兰州": {
+  "跨越": {
+    "name": {
+      "x": 1072,
+      "y": 642,
+      "width": 32,
+      "height": 17
+    },
+    "price": {
+      "x": 1198,
+      "y": 644,
+      "width": 25,
+      "height": 14
+    },
+    "value": 197
+  },
+  "长征果树": {
     "name": {
       "x": 1073,
-      "y": 827,
-      "width": 71,
+      "y": 661,
+      "width": 57,
+      "height": 17
+    },
+    "price": {
+      "x": 1198,
+      "y": 662,
+      "width": 34,
+      "height": 15
+    },
+    "value": 71.2
+  },
+  "大国酒": {
+    "name": {
+      "x": 1073,
+      "y": 679,
+      "width": 43,
+      "height": 17
+    },
+    "price": {
+      "x": 1198,
+      "y": 680,
+      "width": 53,
+      "height": 15
+    },
+    "value": 675
+  },
+  "细支国酒": {
+    "name": {
+      "x": 1072,
+      "y": 696,
+      "width": 58,
+      "height": 19
+    },
+    "price": {
+      "x": 1198,
+      "y": 698,
+      "width": 54,
+      "height": 15
+    },
+    "value": 625
+  },
+  "福贵": {
+    "name": {
+      "x": 1073,
+      "y": 715,
+      "width": 29,
+      "height": 16
+    },
+    "price": {
+      "x": 1198,
+      "y": 717,
+      "width": 25,
+      "height": 14
+    },
+    "value": 385
+  },
+  "贵烟福中支": {
+    "name": {
+      "x": 1073,
+      "y": 734,
+      "width": 72,
+      "height": 16
+    },
+    "price": {
+      "x": 1198,
+      "y": 736,
+      "width": 25,
+      "height": 14
+    },
+    "value": 305
+  },
+  "贵烟红中支": {
+    "name": {
+      "x": 1073,
+      "y": 753,
+      "width": 72,
+      "height": 16
+    },
+    "price": {
+      "x": 1198,
+      "y": 755,
+      "width": 25,
+      "height": 14
+    },
+    "value": 240
+  },
+  "贵烟山水": {
+    "name": {
+      "x": 1072,
+      "y": 770,
+      "width": 58,
+      "height": 19
+    },
+    "price": {
+      "x": 1197,
+      "y": 773,
+      "width": 26,
+      "height": 15
+    },
+    "value": 202
+  },
+  "贵烟萃": {
+    "name": {
+      "x": 1073,
+      "y": 789,
+      "width": 43,
+      "height": 17
+    },
+    "price": {
+      "x": 1198,
+      "y": 791,
+      "width": 24,
+      "height": 14
+    },
+    "value": 151
+  },
+  "新红喜贵": {
+    "name": {
+      "x": 1074,
+      "y": 807,
+      "width": 56,
       "height": 18
     },
     "price": {
       "x": 1198,
-      "y": 826,
-      "width": 39,
-      "height": 19
+      "y": 809,
+      "width": 25,
+      "height": 15
     },
-    "value": 261.5
+    "value": 139
   },
-  "兰州青中支": {
+  "磨砂贵烟": {
     "name": {
-      "x": 1072,
-      "y": 844,
-      "width": 72,
-      "height": 18
+      "x": 1073,
+      "y": 825,
+      "width": 58,
+      "height": 16
+    },
+    "price": {
+      "x": 1198,
+      "y": 827,
+      "width": 25,
+      "height": 14
+    },
+    "value": 129
+  },
+  "贵烟魔力": {
+    "name": {
+      "x": 1073,
+      "y": 843,
+      "width": 57,
+      "height": 16
     },
     "price": {
       "x": 1198,
       "y": 845,
       "width": 25,
-      "height": 17
+      "height": 14
     },
-    "value": 180
-  },
-  "珍品黑兰州": {
-    "name": {
-      "x": 1072,
-      "y": 862,
-      "width": 72,
-      "height": 19
-    },
-    "price": {
-      "x": 1199,
-      "y": 863,
-      "width": 24,
-      "height": 20
-    },
-    "value": 153
-  },
-  "如意兰州": {
-    "name": {
-      "x": 1072,
-      "y": 882,
-      "width": 58,
-      "height": 18
-    },
-    "price": {
-      "x": 1198,
-      "y": 882,
-      "width": 16,
-      "height": 18
-    },
-    "value": 94
-  },
-  "蓝兰州": {
-    "name": {
-      "x": 1073,
-      "y": 900,
-      "width": 43,
-      "height": 17
-    },
-    "price": {
-      "x": 1198,
-      "y": 898,
-      "width": 32,
-      "height": 20
-    },
-    "value": 66.5
+    "value": 370
   },
   "X娇子": {
     "name": {
       "x": 1262,
       "y": 66,
       "width": 38,
-      "height": 15
+      "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 66,
-      "width": 16,
-      "height": 16
+      "y": 67,
+      "width": 18,
+      "height": 15
     },
-    "value": 95
+    "value": 92
   },
   "朝天门": {
     "name": {
       "x": 1263,
-      "y": 82,
-      "width": 43,
-      "height": 17
+      "y": 84,
+      "width": 44,
+      "height": 16
     },
     "price": {
-      "x": 1388,
-      "y": 82,
-      "width": 31,
-      "height": 18
+      "x": 1387,
+      "y": 85,
+      "width": 19,
+      "height": 15
     },
-    "value": 65.5
+    "value": 66
   },
   "珍品龙凤": {
     "name": {
       "x": 1263,
       "y": 102,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 1388,
-      "y": 102,
-      "width": 24,
-      "height": 15
-    },
-    "value": 163
-  },
-  "陈皮长城": {
-    "name": {
-      "x": 1263,
-      "y": 118,
-      "width": 58,
-      "height": 19
-    },
-    "price": {
-      "x": 1388,
-      "y": 121,
-      "width": 24,
-      "height": 13
-    },
-    "value": 126
-  },
-  "红娇子": {
-    "name": {
-      "x": 1263,
-      "y": 136,
-      "width": 42,
-      "height": 17
-    },
-    "price": {
-      "x": 1388,
-      "y": 140,
-      "width": 32,
-      "height": 13
-    },
-    "value": 78.5
-  },
-  "五粮浓香": {
-    "name": {
-      "x": 1263,
-      "y": 154,
-      "width": 56,
-      "height": 18
-    },
-    "price": {
-      "x": 1388,
-      "y": 158,
-      "width": 23,
-      "height": 13
-    },
-    "value": 394
-  },
-  "中支平安": {
-    "name": {
-      "x": 1263,
-      "y": 173,
       "width": 57,
       "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 175,
-      "width": 23,
-      "height": 13
+      "y": 103,
+      "width": 41,
+      "height": 14
+    },
+    "value": 165.5
+  },
+  "陈皮长城": {
+    "name": {
+      "x": 1263,
+      "y": 121,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 1388,
+      "y": 122,
+      "width": 26,
+      "height": 14
+    },
+    "value": 124
+  },
+  "红娇子": {
+    "name": {
+      "x": 1262,
+      "y": 138,
+      "width": 44,
+      "height": 18
+    },
+    "price": {
+      "x": 1388,
+      "y": 140,
+      "width": 34,
+      "height": 14
+    },
+    "value": 73.7
+  },
+  "五粮浓香": {
+    "name": {
+      "x": 1263,
+      "y": 156,
+      "width": 57,
+      "height": 17
+    },
+    "price": {
+      "x": 1388,
+      "y": 158,
+      "width": 25,
+      "height": 14
+    },
+    "value": 380
+  },
+  "中支平安": {
+    "name": {
+      "x": 1263,
+      "y": 174,
+      "width": 57,
+      "height": 18
+    },
+    "price": {
+      "x": 1388,
+      "y": 176,
+      "width": 25,
+      "height": 15
     },
     "value": 300
   },
   "宽窄锦上": {
     "name": {
-      "x": 1263,
+      "x": 1264,
       "y": 210,
       "width": 56,
-      "height": 15
+      "height": 17
     },
     "price": {
-      "x": 1388,
+      "x": 1387,
       "y": 211,
-      "width": 24,
-      "height": 13
+      "width": 27,
+      "height": 15
     },
     "value": 252
   },
   "粗好运": {
     "name": {
       "x": 1263,
-      "y": 228,
+      "y": 229,
       "width": 43,
-      "height": 14
+      "height": 17
     },
     "price": {
       "x": 1388,
-      "y": 229,
-      "width": 24,
+      "y": 231,
+      "width": 25,
       "height": 13
     },
-    "value": 233
+    "value": 224
   },
   "细支千里江山": {
     "name": {
       "x": 1263,
       "y": 245,
-      "width": 84,
-      "height": 16
+      "width": 85,
+      "height": 18
     },
     "price": {
       "x": 1388,
-      "y": 247,
-      "width": 23,
-      "height": 12
+      "y": 248,
+      "width": 26,
+      "height": 14
     },
-    "value": 238
+    "value": 237
   },
   "细支好运": {
     "name": {
       "x": 1263,
       "y": 264,
-      "width": 56,
-      "height": 14
+      "width": 57,
+      "height": 17
     },
     "price": {
       "x": 1388,
-      "y": 264,
-      "width": 23,
-      "height": 13
+      "y": 266,
+      "width": 26,
+      "height": 14
     },
-    "value": 204
+    "value": 199
   },
   "中支天子": {
     "name": {
-      "x": 1263,
-      "y": 282,
+      "x": 1264,
+      "y": 283,
       "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 1389,
-      "y": 282,
-      "width": 22,
-      "height": 15
-    },
-    "value": 189
-  },
-  "五粮醇香": {
-    "name": {
-      "x": 1262,
-      "y": 300,
-      "width": 58,
       "height": 17
     },
     "price": {
       "x": 1389,
-      "y": 301,
-      "width": 22,
+      "y": 285,
+      "width": 40,
       "height": 14
     },
-    "value": 175
+    "value": 182.5
   },
-  "金天子": {
+  "五粮醇香": {
     "name": {
-      "x": 1262,
-      "y": 320,
-      "width": 43,
-      "height": 16
+      "x": 1263,
+      "y": 302,
+      "width": 57,
+      "height": 19
     },
     "price": {
       "x": 1389,
-      "y": 321,
-      "width": 21,
+      "y": 304,
+      "width": 40,
       "height": 14
+    },
+    "value": 168.5
+  },
+  "金天子": {
+    "name": {
+      "x": 1264,
+      "y": 321,
+      "width": 42,
+      "height": 17
+    },
+    "price": {
+      "x": 1388,
+      "y": 322,
+      "width": 24,
+      "height": 15
     },
     "value": 151
   },
   "天子C位": {
     "name": {
-      "x": 1262,
-      "y": 337,
-      "width": 52,
+      "x": 1264,
+      "y": 339,
+      "width": 50,
       "height": 17
     },
     "price": {
       "x": 1388,
-      "y": 337,
-      "width": 26,
-      "height": 17
+      "y": 340,
+      "width": 25,
+      "height": 14
     },
-    "value": 150
+    "value": 153
   },
   "中支格调": {
     "name": {
-      "x": 1263,
-      "y": 355,
-      "width": 57,
-      "height": 16
+      "x": 1264,
+      "y": 356,
+      "width": 56,
+      "height": 17
     },
     "price": {
       "x": 1388,
-      "y": 356,
-      "width": 26,
-      "height": 16
+      "y": 359,
+      "width": 25,
+      "height": 13
     },
-    "value": 123
+    "value": 133
   },
   "细支龙烟呈祥": {
     "name": {
       "x": 1263,
-      "y": 373,
-      "width": 84,
-      "height": 15
+      "y": 375,
+      "width": 85,
+      "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 374,
-      "width": 40,
+      "y": 376,
+      "width": 25,
       "height": 14
     },
-    "value": 126.5
+    "value": 130
   },
   "细支遇见": {
     "name": {
       "x": 1263,
-      "y": 392,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 1388,
       "y": 393,
-      "width": 24,
-      "height": 14
-    },
-    "value": 123
-  },
-  "娇子格调": {
-    "name": {
-      "x": 1263,
-      "y": 410,
       "width": 57,
       "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 411,
-      "width": 26,
-      "height": 16
+      "y": 394,
+      "width": 25,
+      "height": 14
     },
-    "value": 122
+    "value": 116
   },
-  "硬红龙凤": {
+  "娇子格调": {
     "name": {
       "x": 1263,
-      "y": 429,
-      "width": 56,
+      "y": 411,
+      "width": 58,
+      "height": 18
+    },
+    "price": {
+      "x": 1388,
+      "y": 413,
+      "width": 25,
+      "height": 15
+    },
+    "value": 119
+  },
+  "砚红龙凤": {
+    "name": {
+      "x": 1263,
+      "y": 431,
+      "width": 57,
       "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 431,
-      "width": 24,
+      "y": 433,
+      "width": 25,
       "height": 14
     },
-    "value": 112
+    "value": 104
   },
   "长城奶香": {
     "name": {
       "x": 1263,
-      "y": 449,
-      "width": 56,
-      "height": 15
+      "y": 450,
+      "width": 57,
+      "height": 17
     },
     "price": {
       "x": 1388,
-      "y": 448,
-      "width": 41,
-      "height": 19
+      "y": 452,
+      "width": 18,
+      "height": 13
     },
-    "value": 106.5
+    "value": 94
   },
   "魅力朝天门": {
     "name": {
       "x": 1263,
-      "y": 467,
-      "width": 71,
+      "y": 469,
+      "width": 73,
       "height": 16
     },
     "price": {
-      "x": 1388,
-      "y": 466,
-      "width": 16,
-      "height": 18
+      "x": 1387,
+      "y": 471,
+      "width": 18,
+      "height": 13
     },
-    "value": 95
+    "value": 86
   },
   "黑娇子": {
     "name": {
       "x": 1263,
-      "y": 486,
-      "width": 42,
-      "height": 15
+      "y": 488,
+      "width": 43,
+      "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 485,
-      "width": 17,
-      "height": 17
+      "y": 490,
+      "width": 18,
+      "height": 14
     },
-    "value": 76
+    "value": 69
   },
   "细支国宝熊猫": {
     "name": {
       "x": 1263,
-      "y": 503,
-      "width": 85,
-      "height": 20
+      "y": 507,
+      "width": 86,
+      "height": 17
     },
     "price": {
       "x": 1388,
-      "y": 505,
-      "width": 24,
-      "height": 16
+      "y": 509,
+      "width": 25,
+      "height": 15
     },
-    "value": 650
+    "value": 630
   },
   "世纪朝天门": {
     "name": {
-      "x": 1263,
-      "y": 523,
-      "width": 71,
+      "x": 1264,
+      "y": 527,
+      "width": 72,
       "height": 16
     },
     "price": {
-      "x": 1387,
-      "y": 524,
-      "width": 18,
-      "height": 15
+      "x": 1388,
+      "y": 528,
+      "width": 33,
+      "height": 14
     },
-    "value": 72
+    "value": 64.5
   },
   "蓝时代骄子": {
     "name": {
       "x": 1263,
-      "y": 542,
-      "width": 70,
-      "height": 17
-    },
-    "price": {
-      "x": 1387,
-      "y": 544,
-      "width": 33,
+      "y": 546,
+      "width": 72,
       "height": 15
     },
-    "value": 65.5
+    "price": {
+      "x": 1388,
+      "y": 547,
+      "width": 33,
+      "height": 14
+    },
+    "value": 64.5
   },
   "东坡细支": {
     "name": {
-      "x": 1262,
-      "y": 562,
-      "width": 58,
-      "height": 16
+      "x": 1263,
+      "y": 565,
+      "width": 57,
+      "height": 17
     },
     "price": {
-      "x": 1387,
-      "y": 563,
+      "x": 1388,
+      "y": 566,
       "width": 25,
-      "height": 14
+      "height": 15
     },
-    "value": 290
+    "value": 235
   },
-  "红狼": {
+  "紫光": {
     "name": {
-      "x": 1262,
-      "y": 602,
-      "width": 30,
-      "height": 16
-    },
-    "price": {
-      "x": 1388,
+      "x": 1263,
       "y": 604,
+      "width": 30,
+      "height": 17
+    },
+    "price": {
+      "x": 1389,
+      "y": 606,
       "width": 24,
       "height": 14
     },
-    "value": 132
+    "value": 124
   },
-  "蓝钻狼": {
+  "粗腾王阁": {
     "name": {
       "x": 1263,
-      "y": 621,
-      "width": 42,
+      "y": 624,
+      "width": 57,
       "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 622,
-      "width": 24,
-      "height": 15
+      "y": 625,
+      "width": 26,
+      "height": 14
     },
-    "value": 116
+    "value": 103
   },
-  "白狼": {
+  "十二生肖": {
     "name": {
       "x": 1263,
-      "y": 640,
-      "width": 28,
-      "height": 15
+      "y": 643,
+      "width": 57,
+      "height": 16
     },
     "price": {
       "x": 1388,
-      "y": 641,
-      "width": 32,
-      "height": 16
+      "y": 644,
+      "width": 33,
+      "height": 14
     },
-    "value": 89.5
+    "value": 75.5
   },
-  "七匹狼金砖": {
+  "金圣庐山": {
     "name": {
       "x": 1263,
-      "y": 660,
-      "width": 70,
-      "height": 16
-    },
-    "price": {
-      "x": 1387,
-      "y": 660,
-      "width": 17,
+      "y": 661,
+      "width": 57,
       "height": 18
     },
-    "value": -1
+    "price": {
+      "x": 1388,
+      "y": 662,
+      "width": 33,
+      "height": 15
+    },
+    "value": 73.3
   },
-  "中支古田": {
+  "金圣青花瓷": {
     "name": {
-      "x": 1263,
+      "x": 1264,
       "y": 679,
-      "width": 56,
+      "width": 72,
       "height": 17
     },
     "price": {
-      "x": 1387,
-      "y": 678,
-      "width": 25,
-      "height": 17
+      "x": 1388,
+      "y": 680,
+      "width": 53,
+      "height": 15
     },
-    "value": 370
+    "value": 615
   },
-  "中支观海": {
+  "细支国味": {
     "name": {
       "x": 1263,
       "y": 697,
@@ -4867,776 +4462,731 @@
       "height": 16
     },
     "price": {
-      "x": 1387,
-      "y": 698,
+      "x": 1388,
+      "y": 699,
+      "width": 25,
+      "height": 14
+    },
+    "value": 360
+  },
+  "智圣中支": {
+    "name": {
+      "x": 1263,
+      "y": 715,
+      "width": 57,
+      "height": 17
+    },
+    "price": {
+      "x": 1388,
+      "y": 717,
+      "width": 25,
+      "height": 14
+    },
+    "value": 325
+  },
+  "吉品金圣": {
+    "name": {
+      "x": 1263,
+      "y": 734,
+      "width": 57,
+      "height": 17
+    },
+    "price": {
+      "x": 1388,
+      "y": 735,
       "width": 25,
       "height": 15
     },
-    "value": 253
+    "value": 194
   },
-  "中支银狼": {
-    "name": {
-      "x": 1263,
-      "y": 714,
-      "width": 58,
-      "height": 19
-    },
-    "price": {
-      "x": 1388,
-      "y": 716,
-      "width": 24,
-      "height": 16
-    },
-    "value": 190
-  },
-  "灰狼": {
+  "细支青瓷": {
     "name": {
       "x": 1262,
-      "y": 733,
-      "width": 32,
-      "height": 16
-    },
-    "price": {
-      "x": 1388,
-      "y": 734,
-      "width": 24,
-      "height": 15
-    },
-    "value": 172
-  },
-  "纯境狼": {
-    "name": {
-      "x": 1262,
-      "y": 751,
-      "width": 44,
-      "height": 17
-    },
-    "price": {
-      "x": 1389,
       "y": 752,
-      "width": 23,
-      "height": 16
-    },
-    "value": 173
-  },
-  "中支金桥": {
-    "name": {
-      "x": 1263,
-      "y": 771,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 1389,
-      "y": 772,
-      "width": 22,
-      "height": 16
-    },
-    "value": 140
-  },
-  "金桥炫影": {
-    "name": {
-      "x": 1263,
-      "y": 789,
-      "width": 57,
-      "height": 16
-    },
-    "price": {
-      "x": 1389,
-      "y": 789,
-      "width": 22,
+      "width": 59,
       "height": 18
-    },
-    "value": 145
-  },
-  "七匹狼奶香": {
-    "name": {
-      "x": 1263,
-      "y": 809,
-      "width": 70,
-      "height": 15
-    },
-    "price": {
-      "x": 1389,
-      "y": 808,
-      "width": 22,
-      "height": 18
-    },
-    "value": 134
-  },
-  "七匹狼锋芒": {
-    "name": {
-      "x": 1263,
-      "y": 827,
-      "width": 70,
-      "height": 17
-    },
-    "price": {
-      "x": 1389,
-      "y": 826,
-      "width": 22,
-      "height": 19
-    },
-    "value": 137
-  },
-  "金桥单爆": {
-    "name": {
-      "x": 1263,
-      "y": 845,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 1389,
-      "y": 845,
-      "width": 22,
-      "height": 18
-    },
-    "value": 137
-  },
-  "蓝七匹狼": {
-    "name": {
-      "x": 1263,
-      "y": 863,
-      "width": 57,
-      "height": 17
     },
     "price": {
       "x": 1388,
-      "y": 863,
-      "width": 31,
-      "height": 18
+      "y": 754,
+      "width": 25,
+      "height": 14
     },
-    "value": 84.5
+    "value": 155
   },
-  "大华黄金眼": {
+  "老版人杰地灵": {
     "name": {
-      "x": 1453,
-      "y": 65,
-      "width": 70,
-      "height": 16
+      "x": 1262,
+      "y": 770,
+      "width": 86,
+      "height": 19
     },
     "price": {
-      "x": 1551,
-      "y": 67,
-      "width": 23,
-      "height": 15
-    },
-    "value": 175
-  },
-  "迎春长白山": {
-    "name": {
-      "x": 1453,
-      "y": 82,
-      "width": 69,
-      "height": 18
-    },
-    "price": {
-      "x": 1551,
-      "y": 84,
-      "width": 23,
+      "x": 1387,
+      "y": 772,
+      "width": 26,
       "height": 16
     },
     "value": 158
   },
-  "黄大华": {
+  "金圣青瓷": {
     "name": {
-      "x": 1453,
-      "y": 101,
-      "width": 43,
+      "x": 1263,
+      "y": 807,
+      "width": 57,
+      "height": 19
+    },
+    "price": {
+      "x": 1387,
+      "y": 809,
+      "width": 27,
+      "height": 15
+    },
+    "value": 142
+  },
+  "更上一层楼": {
+    "name": {
+      "x": 1262,
+      "y": 824,
+      "width": 72,
+      "height": 19
+    },
+    "price": {
+      "x": 1388,
+      "y": 827,
+      "width": 26,
+      "height": 14
+    },
+    "value": 113
+  },
+  "大华黄金眼": {
+    "name": {
+      "x": 1452,
+      "y": 66,
+      "width": 71,
+      "height": 15
+    },
+    "price": {
+      "x": 1550,
+      "y": 67,
+      "width": 25,
+      "height": 13
+    },
+    "value": 200
+  },
+  "迎春长白山": {
+    "name": {
+      "x": 1452,
+      "y": 84,
+      "width": 72,
       "height": 16
     },
     "price": {
       "x": 1551,
-      "y": 102,
-      "width": 23,
-      "height": 16
+      "y": 86,
+      "width": 24,
+      "height": 13
     },
-    "value": 130
+    "value": 159
+  },
+  "黄大华": {
+    "name": {
+      "x": 1453,
+      "y": 102,
+      "width": 43,
+      "height": 15
+    },
+    "price": {
+      "x": 1551,
+      "y": 104,
+      "width": 24,
+      "height": 13
+    },
+    "value": 120
   },
   "中支都宝": {
     "name": {
       "x": 1453,
-      "y": 118,
+      "y": 121,
       "width": 57,
-      "height": 18
+      "height": 16
     },
     "price": {
       "x": 1551,
-      "y": 119,
-      "width": 23,
-      "height": 18
+      "y": 122,
+      "width": 24,
+      "height": 13
     },
     "value": 100
   },
   "777长白山": {
     "name": {
       "x": 1453,
-      "y": 137,
+      "y": 139,
       "width": 66,
-      "height": 15
+      "height": 16
     },
     "price": {
       "x": 1551,
-      "y": 137,
-      "width": 23,
-      "height": 16
+      "y": 141,
+      "width": 24,
+      "height": 12
     },
-    "value": 135
+    "value": 136
   },
   "长白山人参": {
     "name": {
       "x": 1452,
-      "y": 156,
+      "y": 157,
       "width": 71,
-      "height": 15
-    },
-    "price": {
-      "x": 1549,
-      "y": 156,
-      "width": 17,
       "height": 16
     },
-    "value": -1
-  },
-  "人参缘": {
-    "name": {
-      "x": 1452,
-      "y": 174,
-      "width": 43,
-      "height": 17
-    },
     "price": {
-      "x": 1549,
-      "y": 174,
-      "width": 17,
-      "height": 17
+      "x": 1550,
+      "y": 158,
+      "width": 25,
+      "height": 13
     },
-    "value": -1
+    "value": 230
   },
   "长白山粗神韵": {
     "name": {
       "x": 1453,
-      "y": 191,
+      "y": 174,
       "width": 84,
-      "height": 16
+      "height": 17
     },
     "price": {
       "x": 1551,
-      "y": 192,
-      "width": 23,
-      "height": 14
+      "y": 176,
+      "width": 24,
+      "height": 13
     },
-    "value": 168
+    "value": 158
   },
   "细人民大会堂": {
     "name": {
-      "x": 1453,
-      "y": 208,
-      "width": 84,
-      "height": 17
+      "x": 1452,
+      "y": 191,
+      "width": 85,
+      "height": 18
     },
     "price": {
       "x": 1551,
-      "y": 211,
+      "y": 194,
       "width": 24,
-      "height": 14
+      "height": 13
     },
-    "value": 145
+    "value": 137
   },
   "中支九美": {
     "name": {
-      "x": 1452,
-      "y": 225,
-      "width": 59,
-      "height": 19
+      "x": 1453,
+      "y": 210,
+      "width": 56,
+      "height": 18
     },
     "price": {
-      "x": 1550,
-      "y": 227,
-      "width": 25,
-      "height": 17
+      "x": 1551,
+      "y": 212,
+      "width": 24,
+      "height": 13
     },
-    "value": 149
+    "value": 152
   },
   "蓝阿里山": {
     "name": {
       "x": 1453,
-      "y": 245,
+      "y": 228,
       "width": 56,
-      "height": 16
+      "height": 17
     },
     "price": {
       "x": 1551,
-      "y": 245,
+      "y": 231,
       "width": 23,
-      "height": 18
+      "height": 13
     },
-    "value": 162
+    "value": 161
   },
   "阿里山宝相花": {
     "name": {
-      "x": 1453,
-      "y": 263,
-      "width": 84,
+      "x": 1452,
+      "y": 246,
+      "width": 85,
       "height": 16
     },
     "price": {
-      "x": 1550,
-      "y": 262,
-      "width": 16,
-      "height": 18
+      "x": 1551,
+      "y": 247,
+      "width": 24,
+      "height": 14
     },
-    "value": -1
+    "value": 174
   },
   "黄阿里山": {
     "name": {
-      "x": 1453,
-      "y": 282,
-      "width": 56,
-      "height": 15
-    },
-    "price": {
-      "x": 1550,
-      "y": 280,
-      "width": 16,
-      "height": 17
-    },
-    "value": 99
-  },
-  "紫光": {
-    "name": {
-      "x": 1453,
-      "y": 318,
-      "width": 29,
+      "x": 1452,
+      "y": 264,
+      "width": 58,
       "height": 17
     },
     "price": {
       "x": 1551,
-      "y": 319,
-      "width": 39,
-      "height": 17
+      "y": 266,
+      "width": 23,
+      "height": 14
     },
-    "value": 124.5
+    "value": 101
   },
-  "粗腾王阁": {
+  "秦山香韵": {
     "name": {
       "x": 1452,
-      "y": 335,
+      "y": 302,
       "width": 58,
-      "height": 19
-    },
-    "price": {
-      "x": 1550,
-      "y": 336,
-      "width": 40,
-      "height": 19
-    },
-    "value": 107.5
-  },
-  "十二生肖": {
-    "name": {
-      "x": 1452,
-      "y": 354,
-      "width": 58,
-      "height": 19
-    },
-    "price": {
-      "x": 1549,
-      "y": 354,
-      "width": 17,
-      "height": 18
-    },
-    "value": 74
-  },
-  "金圣庐山": {
-    "name": {
-      "x": 1452,
-      "y": 372,
-      "width": 57,
       "height": 17
     },
     "price": {
       "x": 1550,
-      "y": 372,
-      "width": 18,
-      "height": 18
+      "y": 304,
+      "width": 26,
+      "height": 14
     },
-    "value": 73
-  },
-  "软白金圣": {
-    "name": {
-      "x": 1452,
-      "y": 390,
-      "width": 57,
-      "height": 18
-    },
-    "price": {
-      "x": 1550,
-      "y": 390,
-      "width": 33,
-      "height": 20
-    },
-    "value": 72.5
-  },
-  "金圣青花瓷": {
-    "name": {
-      "x": 1452,
-      "y": 410,
-      "width": 72,
-      "height": 16
-    },
-    "price": {
-      "x": 1550,
-      "y": 409,
-      "width": 25,
-      "height": 19
-    },
-    "value": 615
-  },
-  "细支国味": {
-    "name": {
-      "x": 1452,
-      "y": 428,
-      "width": 57,
-      "height": 16
-    },
-    "price": {
-      "x": 1550,
-      "y": 428,
-      "width": 25,
-      "height": 18
-    },
-    "value": 355
-  },
-  "智圣中支": {
-    "name": {
-      "x": 1453,
-      "y": 447,
-      "width": 56,
-      "height": 18
-    },
-    "price": {
-      "x": 1550,
-      "y": 447,
-      "width": 25,
-      "height": 19
-    },
-    "value": 325
-  },
-  "吉品金圣": {
-    "name": {
-      "x": 1453,
-      "y": 467,
-      "width": 56,
-      "height": 16
-    },
-    "price": {
-      "x": 1551,
-      "y": 466,
-      "width": 24,
-      "height": 17
-    },
-    "value": 198
-  },
-  "细支青瓷": {
-    "name": {
-      "x": 1453,
-      "y": 485,
-      "width": 58,
-      "height": 18
-    },
-    "price": {
-      "x": 1551,
-      "y": 486,
-      "width": 24,
-      "height": 16
-    },
-    "value": 155
-  },
-  "老版人杰地灵": {
-    "name": {
-      "x": 1453,
-      "y": 505,
-      "width": 84,
-      "height": 17
-    },
-    "price": {
-      "x": 1550,
-      "y": 506,
-      "width": 24,
-      "height": 16
-    },
-    "value": 159
-  },
-  "金圣青瓷": {
-    "name": {
-      "x": 1453,
-      "y": 542,
-      "width": 57,
-      "height": 17
-    },
-    "price": {
-      "x": 1550,
-      "y": 541,
-      "width": 25,
-      "height": 20
-    },
-    "value": 141
-  },
-  "更上一层楼": {
-    "name": {
-      "x": 1452,
-      "y": 562,
-      "width": 72,
-      "height": 17
-    },
-    "price": {
-      "x": 1550,
-      "y": 561,
-      "width": 24,
-      "height": 20
-    },
-    "value": 113
-  },
-  "冰雪": {
-    "name": {
-      "x": 1452,
-      "y": 581,
-      "width": 30,
-      "height": 17
-    },
-    "price": {
-      "x": 1548,
-      "y": 580,
-      "width": 19,
-      "height": 22
-    },
-    "value": -1
-  },
-  "泰山香韵": {
-    "name": {
-      "x": 1452,
-      "y": 620,
-      "width": 58,
-      "height": 18
-    },
-    "price": {
-      "x": 1550,
-      "y": 619,
-      "width": 24,
-      "height": 19
-    },
-    "value": 380
+    "value": 373
   },
   "泰山望岳": {
     "name": {
       "x": 1452,
-      "y": 638,
+      "y": 321,
       "width": 58,
       "height": 17
     },
     "price": {
-      "x": 1551,
-      "y": 639,
-      "width": 24,
-      "height": 19
+      "x": 1550,
+      "y": 322,
+      "width": 25,
+      "height": 15
     },
-    "value": 155
+    "value": 158
   },
   "泰山青秀": {
     "name": {
       "x": 1452,
-      "y": 659,
+      "y": 338,
       "width": 58,
       "height": 18
     },
     "price": {
-      "x": 1551,
-      "y": 656,
-      "width": 40,
-      "height": 22
+      "x": 1550,
+      "y": 340,
+      "width": 25,
+      "height": 15
     },
-    "value": 118.5
-  },
-  "泰山宏图": {
-    "name": {
-      "x": 1452,
-      "y": 678,
-      "width": 58,
-      "height": 17
-    },
-    "price": {
-      "x": 1551,
-      "y": 678,
-      "width": 39,
-      "height": 19
-    },
-    "value": 112.5
+    "value": 117
   },
   "泰山儒风": {
     "name": {
       "x": 1452,
-      "y": 697,
+      "y": 357,
       "width": 58,
       "height": 17
     },
     "price": {
       "x": 1550,
-      "y": 695,
+      "y": 358,
       "width": 25,
-      "height": 19
+      "height": 14
     },
-    "value": 244
-  },
-  "泰山合悦": {
-    "name": {
-      "x": 1452,
-      "y": 714,
-      "width": 58,
-      "height": 18
-    },
-    "price": {
-      "x": 1550,
-      "y": 715,
-      "width": 25,
-      "height": 18
-    },
-    "value": 180
+    "value": 238
   },
   "中支将军": {
     "name": {
       "x": 1453,
-      "y": 732,
+      "y": 374,
       "width": 57,
-      "height": 18
+      "height": 17
     },
     "price": {
-      "x": 1550,
-      "y": 733,
+      "x": 1551,
+      "y": 376,
       "width": 25,
-      "height": 17
+      "height": 14
     },
     "value": 175
   },
   "泰山颜悦": {
     "name": {
       "x": 1452,
-      "y": 750,
-      "width": 57,
-      "height": 19
+      "y": 392,
+      "width": 58,
+      "height": 18
     },
     "price": {
-      "x": 1550,
-      "y": 751,
-      "width": 25,
-      "height": 19
+      "x": 1551,
+      "y": 394,
+      "width": 40,
+      "height": 14
     },
-    "value": 165
+    "value": 163.5
   },
   "心悦": {
     "name": {
       "x": 1452,
-      "y": 770,
+      "y": 411,
       "width": 30,
-      "height": 18
+      "height": 17
     },
     "price": {
       "x": 1551,
-      "y": 771,
+      "y": 413,
       "width": 24,
-      "height": 17
+      "height": 14
     },
-    "value": 135
+    "value": 134
   },
   "白泰山将军": {
     "name": {
-      "x": 1453,
-      "y": 787,
-      "width": 70,
-      "height": 18
+      "x": 1452,
+      "y": 431,
+      "width": 72,
+      "height": 16
     },
     "price": {
       "x": 1551,
-      "y": 788,
-      "width": 23,
-      "height": 18
+      "y": 433,
+      "width": 25,
+      "height": 14
     },
     "value": 113
   },
   "泰山将军": {
     "name": {
       "x": 1452,
-      "y": 807,
+      "y": 449,
       "width": 58,
       "height": 17
     },
     "price": {
       "x": 1550,
-      "y": 806,
-      "width": 16,
-      "height": 20
+      "y": 451,
+      "width": 33,
+      "height": 14
     },
-    "value": 89
+    "value": 88.5
   },
   "哈德门醇香": {
     "name": {
       "x": 1452,
-      "y": 827,
-      "width": 71,
-      "height": 18
+      "y": 469,
+      "width": 72,
+      "height": 16
     },
     "price": {
       "x": 1550,
-      "y": 826,
-      "width": 18,
-      "height": 18
+      "y": 470,
+      "width": 33,
+      "height": 14
     },
-    "value": 76
+    "value": 74.5
   },
   "泰山八喜": {
     "name": {
       "x": 1452,
-      "y": 844,
-      "width": 57,
-      "height": 18
+      "y": 488,
+      "width": 58,
+      "height": 16
     },
     "price": {
       "x": 1550,
-      "y": 845,
-      "width": 18,
-      "height": 17
+      "y": 489,
+      "width": 34,
+      "height": 14
     },
-    "value": 68
+    "value": 58.5
   },
-  "泰山黑豹": {
+  "三五双冰": {
     "name": {
       "x": 1452,
-      "y": 863,
+      "y": 527,
+      "width": 58,
+      "height": 15
+    },
+    "price": {
+      "x": 1550,
+      "y": 528,
+      "width": 25,
+      "height": 14
+    },
+    "value": 270
+  },
+  "经典三五": {
+    "name": {
+      "x": 1452,
+      "y": 546,
       "width": 58,
       "height": 18
     },
     "price": {
-      "x": 1549,
-      "y": 863,
-      "width": 17,
-      "height": 19
+      "x": 1550,
+      "y": 548,
+      "width": 25,
+      "height": 14
     },
-    "value": -1
+    "value": 220
   },
-  "泰山静五": {
+  "细支紫冰": {
     "name": {
-      "x": 1453,
-      "y": 883,
-      "width": 56,
+      "x": 1452,
+      "y": 564,
+      "width": 58,
       "height": 16
     },
     "price": {
-      "x": 1549,
-      "y": 883,
-      "width": 16,
+      "x": 1550,
+      "y": 568,
+      "width": 25,
+      "height": 12
+    },
+    "value": 248
+  },
+  "爱喜幻变": {
+    "name": {
+      "x": 1452,
+      "y": 584,
+      "width": 58,
+      "height": 16
+    },
+    "price": {
+      "x": 1550,
+      "y": 586,
+      "width": 25,
+      "height": 14
+    },
+    "value": 212
+  },
+  "三五冰炫": {
+    "name": {
+      "x": 1453,
+      "y": 604,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 1550,
+      "y": 606,
+      "width": 25,
+      "height": 14
+    },
+    "value": 220
+  },
+  "七星蓝天": {
+    "name": {
+      "x": 1453,
+      "y": 624,
+      "width": 57,
+      "height": 16
+    },
+    "price": {
+      "x": 1550,
+      "y": 626,
+      "width": 25,
+      "height": 13
+    },
+    "value": 205
+  },
+  "宝亨宝珠": {
+    "name": {
+      "x": 1452,
+      "y": 643,
+      "width": 58,
+      "height": 16
+    },
+    "price": {
+      "x": 1550,
+      "y": 646,
+      "width": 25,
+      "height": 13
+    },
+    "value": 200
+  },
+  "万宝路冰爵": {
+    "name": {
+      "x": 1452,
+      "y": 662,
+      "width": 72,
+      "height": 16
+    },
+    "price": {
+      "x": 1550,
+      "y": 664,
+      "width": 25,
+      "height": 13
+    },
+    "value": 202
+  },
+  "盖白万": {
+    "name": {
+      "x": 1452,
+      "y": 679,
+      "width": 44,
       "height": 17
     },
-    "value": -1
+    "price": {
+      "x": 1551,
+      "y": 682,
+      "width": 24,
+      "height": 12
+    },
+    "value": 192
+  },
+  "细支白建牌": {
+    "name": {
+      "x": 1452,
+      "y": 697,
+      "width": 72,
+      "height": 16
+    },
+    "price": {
+      "x": 1551,
+      "y": 699,
+      "width": 24,
+      "height": 13
+    },
+    "value": 180
+  },
+  "白三五": {
+    "name": {
+      "x": 1452,
+      "y": 716,
+      "width": 43,
+      "height": 15
+    },
+    "price": {
+      "x": 1550,
+      "y": 717,
+      "width": 25,
+      "height": 14
+    },
+    "value": 210
+  },
+  "盖红万": {
+    "name": {
+      "x": 1452,
+      "y": 734,
+      "width": 44,
+      "height": 17
+    },
+    "price": {
+      "x": 1551,
+      "y": 736,
+      "width": 24,
+      "height": 13
+    },
+    "value": 167
+  },
+  "软白万": {
+    "name": {
+      "x": 1452,
+      "y": 753,
+      "width": 44,
+      "height": 18
+    },
+    "price": {
+      "x": 1551,
+      "y": 755,
+      "width": 25,
+      "height": 14
+    },
+    "value": 172
+  },
+  "爱喜薄荷": {
+    "name": {
+      "x": 1452,
+      "y": 769,
+      "width": 58,
+      "height": 20
+    },
+    "price": {
+      "x": 1550,
+      "y": 773,
+      "width": 25,
+      "height": 14
+    },
+    "value": 195
+  },
+  "蓝爱喜": {
+    "name": {
+      "x": 1452,
+      "y": 789,
+      "width": 45,
+      "height": 18
+    },
+    "price": {
+      "x": 1549,
+      "y": 790,
+      "width": 26,
+      "height": 15
+    },
+    "value": 125
+  },
+  "国际三五": {
+    "name": {
+      "x": 1452,
+      "y": 807,
+      "width": 57,
+      "height": 18
+    },
+    "price": {
+      "x": 1549,
+      "y": 809,
+      "width": 26,
+      "height": 14
+    },
+    "value": 233
+  },
+  "细支老版三五": {
+    "name": {
+      "x": 1452,
+      "y": 825,
+      "width": 85,
+      "height": 16
+    },
+    "price": {
+      "x": 1550,
+      "y": 827,
+      "width": 25,
+      "height": 13
+    },
+    "value": 212
+  },
+  "软红万": {
+    "name": {
+      "x": 1452,
+      "y": 843,
+      "width": 44,
+      "height": 16
+    },
+    "price": {
+      "x": 1551,
+      "y": 845,
+      "width": 25,
+      "height": 14
+    },
+    "value": 153
+  },
+  "三五天越": {
+    "name": {
+      "x": 1452,
+      "y": 863,
+      "width": 58,
+      "height": 16
+    },
+    "price": {
+      "x": 1551,
+      "y": 865,
+      "width": 24,
+      "height": 13
+    },
+    "value": 163
   }
 }

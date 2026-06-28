@@ -320,7 +320,7 @@ export default function ImportPage() {
           handleClearSelection();
         }
       } else {
-        alert('录入拦截: ' + res.message);
+        alert('录入拦截: ' + (res.error || '未知错误'));
       }
     } catch (e) {
       alert('录入异常');

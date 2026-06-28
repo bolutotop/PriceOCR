@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import path from 'path';
 import fs from 'fs/promises';
@@ -1594,10 +1594,10 @@ export async function scanImageLocal(formData: FormData): Promise<OcrResult> {
     await fs.unlink(originalPath).catch(()=>{});
     return { success: true, parsedData: sortedData };
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[OCR Error]', error);
     await fs.unlink(originalPath).catch(()=>{});
-    return { success: false, error: error.message };
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 

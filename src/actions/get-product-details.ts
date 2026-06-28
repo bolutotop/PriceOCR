@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { format } from 'date-fns';
 
 export async function getProductDetails(productId: string) {
+  try {
   const product = await prisma.product.findUnique({
     where: { id: productId },
     include: {
@@ -17,7 +18,7 @@ export async function getProductDetails(productId: string) {
   if (!product) return null;
 
   // 将历史数据按日期分组，合并快递和广货的价格用于画双折线图
-  const chartDataMap: Record<string, any> = {};
+  const chartDataMap: Record<string, { date: string; expressPrice?: number; guanghuoPrice?: number }> = {};
 
   product.priceHistory.forEach(record => {
     // 过滤掉断货的 -1 价格，不画在折线图上
@@ -47,4 +48,8 @@ export async function getProductDetails(productId: string) {
     latestExpressPrice: latestExpress ? latestExpress.price : null,
     latestGuanghuoPrice: latestGuanghuo ? latestGuanghuo.price : null,
   };
+  } catch (error) {
+    console.error('[getProductDetails]', error);
+    return null;
+  }
 }

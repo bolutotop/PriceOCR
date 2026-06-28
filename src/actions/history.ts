@@ -1,9 +1,7 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 // 1. 获取所有历史上传记录
 export async function getUploadHistory() {

@@ -15,6 +15,7 @@ export type DashboardItem = {
 };
 
 export async function getDashboardData(): Promise<DashboardItem[]> {
+  try {
   const products = await prisma.product.findMany({
     include: {
       priceHistory: {
@@ -88,4 +89,8 @@ export async function getDashboardData(): Promise<DashboardItem[]> {
 
   // 过滤掉没有任何报价的死数据
   return formatted.filter(item => item.expressPrice !== null || item.guanghuoPrice !== null);
+  } catch (error) {
+    console.error('[getDashboardData]', error);
+    return [];
+  }
 }

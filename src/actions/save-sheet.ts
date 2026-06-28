@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import prisma from '@/lib/prisma'; 
 import { ParsedItem } from './ocr';
@@ -60,8 +60,8 @@ export async function savePriceSheet(
     });
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('保存报价单失败:', error);
-    return { success: false, message: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }

@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import prisma from '@/lib/prisma';
 
@@ -51,9 +51,9 @@ export async function updateProductPrice(productId: string, marketType: 'EXPRESS
       });
       return { success: true };
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("更新价格失败:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 

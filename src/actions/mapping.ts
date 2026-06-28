@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
@@ -22,9 +22,9 @@ export async function getAllProducts() {
       select: { id: true, name: true }
     });
     return { success: true, data: products };
-  } catch (error: any) {
+  } catch (error) {
     console.error('获取商品列表失败:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 
@@ -82,9 +82,9 @@ export async function getMappingTasks() {
     ];
 
     return { success: true, data: { guanghuoProducts: guanghuoOptions, expressOnlyProducts } };
-  } catch (error: any) {
+  } catch (error) {
     console.error('获取映射任务失败:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 
@@ -168,9 +168,9 @@ export async function mergeProducts(targetId: string, sourceId: string) {
     revalidatePath('/mapping');
     
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     console.error('合并商品失败:', error);
-    return { success: false, error: error.message || '合并失败' };
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) || '合并失败' };
   }
 }
 
@@ -184,9 +184,9 @@ export async function getMappings() {
       orderBy: { name: 'asc' }
     });
     return { success: true, data: aliases };
-  } catch (error: any) {
+  } catch (error) {
     console.error('获取映射关系失败:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 
@@ -199,8 +199,8 @@ export async function deleteMapping(aliasId: string) {
     revalidatePath('/');
     revalidatePath('/mapping');
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error) {
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 

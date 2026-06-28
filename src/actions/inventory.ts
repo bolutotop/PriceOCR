@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
@@ -10,9 +10,9 @@ export async function getInventory() {
       orderBy: { updatedAt: 'desc' }
     });
     return { success: true, data: items };
-  } catch (error: any) {
+  } catch (error) {
     console.error('Failed to get inventory:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 
@@ -24,8 +24,8 @@ export async function createInventoryItem(name: string, price: number, quantity:
     });
     revalidatePath('/');
     return { success: true, data: item };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error) {
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 
@@ -38,8 +38,8 @@ export async function updateInventoryItem(id: string, data: { name?: string; pri
     });
     revalidatePath('/');
     return { success: true, data: item };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error) {
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }
 
@@ -51,7 +51,7 @@ export async function deleteInventoryItem(id: string) {
     });
     revalidatePath('/');
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error) {
+    return { success: false, error: (error instanceof Error ? error.message : String(error)) };
   }
 }

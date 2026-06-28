@@ -1,5 +1,6 @@
 import * as tencentcloud from "tencentcloud-sdk-nodejs";
 import fs from 'fs/promises';
+import { TENCENT_OCR_REGION, TENCENT_OCR_ENDPOINT, TENCENT_OCR_TIMEOUT } from '@/lib/constants';
 
 const OcrClient = tencentcloud.ocr.v20181119.Client;
 
@@ -32,22 +33,21 @@ export async function runTencentOcr(source: { type: 'url' | 'file', payload: str
   }
 
   // 走香港同城节点，保证速度
-  const clientConfig = {
+  const client = new OcrClient({
     credential: {
       secretId: process.env.TENCENT_SECRET_ID,
       secretKey: process.env.TENCENT_SECRET_KEY,
     },
-    region: "ap-hongkong", 
+    region: TENCENT_OCR_REGION,
     profile: {
       httpProfile: {
-        endpoint: "ocr.ap-hongkong.tencentcloudapi.com",
-        reqTimeout: 60000, 
+        endpoint: TENCENT_OCR_ENDPOINT,
+        reqTimeout: TENCENT_OCR_TIMEOUT,
       },
     },
-  };
-  const client = new OcrClient(clientConfig);
+  });
 
-  const params: any = {};
+  const params: Record<string, unknown> = {};
   
   if (source.type === 'url') {
     params.ImageUrl = source.payload;

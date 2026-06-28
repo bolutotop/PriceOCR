@@ -1,5 +1,6 @@
 import * as tencentcloud from "tencentcloud-sdk-nodejs";
 import fs from 'fs/promises';
+import { TENCENT_OCR_REGION, TENCENT_OCR_ENDPOINT, TENCENT_OCR_TIMEOUT } from '@/lib/constants';
 
 const OcrClient = tencentcloud.ocr.v20181119.Client;
 
@@ -7,27 +8,26 @@ const OcrClient = tencentcloud.ocr.v20181119.Client;
  * 调用腾讯云 RecognizeTableAccurateOCR（表格精确识别）接口
  * 专门用于截图类表格图片的解析
  */
-export async function runTencentTableOcr(source: { type: 'url' | 'file', payload: string }): Promise<any> {
+export async function runTencentTableOcr(source: { type: 'url' | 'file'; payload: string }) {
   if (!process.env.TENCENT_SECRET_ID || !process.env.TENCENT_SECRET_KEY) {
     throw new Error("配置缺失: 未读取到腾讯云密钥，请检查 .env 文件");
   }
 
-  const clientConfig = {
+  const client = new OcrClient({
     credential: {
       secretId: process.env.TENCENT_SECRET_ID,
       secretKey: process.env.TENCENT_SECRET_KEY,
     },
-    region: "ap-hongkong",
+    region: TENCENT_OCR_REGION,
     profile: {
       httpProfile: {
-        endpoint: "ocr.ap-hongkong.tencentcloudapi.com",
-        reqTimeout: 60000,
+        endpoint: TENCENT_OCR_ENDPOINT,
+        reqTimeout: TENCENT_OCR_TIMEOUT,
       },
     },
-  };
-  const client = new OcrClient(clientConfig);
+  });
 
-  const params: any = {};
+  const params: Record<string, unknown> = {};
 
   if (source.type === 'url') {
     params.ImageUrl = source.payload;
